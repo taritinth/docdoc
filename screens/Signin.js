@@ -1,36 +1,56 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
-function Signin(props) {
+export default function Signin(props) {
   return (
     <View style={styles.container}>
       <Text style={styles.docDoc}>Doc Doc</Text>
       <Text style={styles.username}>Username</Text>
-      <View style={styles.rect}></View>
+      <TextInput style={styles.input} placeholder="Username"></TextInput>
       <Text style={styles.password}>Password</Text>
-      <View style={styles.rect1}></View>
+      <TextInput style={styles.input} placeholder="Password"></TextInput>
       <Text style={styles.forgetPassword}>forget password?</Text>
-      <TouchableOpacity style={styles.cupertinoButtonInfo}>
-        <Text style={styles.signin}>Sign In</Text>
+      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+        <View style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </View>
       </TouchableOpacity>
       <Text style={styles.dontHaveAccount}>Don’t have account?</Text>
     </View>
   );
 }
 
-export default Signin;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor:'red',
     alignItems: "center",
+    justifyContent: "center",
     padding: 30,
   },
   docDoc: {
-    color: "#121212",
+    color: "#32B5FF",
+    fontWeight: "bold",
     fontSize: 72,
-    marginTop: 110,
+    marginBottom: 50,
+  },
+  input: {
+    marginTop: 10,
+    width: "100%",
+    backgroundColor: "#F6F6F6",
+    height: 50,
+    // borderWidth: 1,
+    // borderColor: "#d3d3d3",
+    paddingVertical: 5,
+    paddingHorizontal: 30,
+    borderRadius: 30,
   },
   rect: {
     width: 270,
@@ -43,30 +63,55 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6E6E6",
   },
   username: {
-    color: "#121212",
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#595959",
+    fontWeight: "bold",
     alignSelf: "flex-start",
   },
   password: {
-    color: "#121212",
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#595959",
+    fontWeight: "bold",
     alignSelf: "flex-start",
-    marginTop:50,
+    marginTop: 25,
   },
   forgetPassword: {
-    color: "#121212",
+    marginTop: 10,
+    color: "#595959",
+    alignSelf: "flex-end",
   },
   cupertinoButtonInfo: {
+    marginTop: 50,
     height: 50,
-    width: 280,
+    width: "100%",
     backgroundColor: "blue",
+    alignItems: "center",
+    justifyContent: "center",
   },
   dontHaveAccount: {
-    color: "#121212",
+    color: "#595959",
+    textDecorationLine: "underline",
     height: 20,
     width: 130,
     marginTop: 15,
   },
-  signin: {
-    color: "#FFFFFF",
+  button: {
+    alignSelf: "stretch",
+    marginTop: 40,
+  },
+  buttonContainer: {
+    backgroundColor: "#32B5FF",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontFamily: "open-sans",
+    fontSize: 18,
   },
 });
