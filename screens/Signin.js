@@ -8,10 +8,10 @@ import {
   TextInput,
 } from "react-native";
 
-export default function Signin(props) {
+export default function SignIn(props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.docDoc}>Doc Doc</Text>
+      <Text style={styles.title}>Doc Doc</Text>
       <Text style={styles.username}>Username</Text>
       <TextInput style={styles.input} placeholder="Username"></TextInput>
       <Text style={styles.password}>Password</Text>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 30,
   },
-  docDoc: {
+  title: {
     color: "#32B5FF",
     fontWeight: "bold",
     fontSize: 72,
