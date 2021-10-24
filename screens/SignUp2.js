@@ -39,7 +39,9 @@ const styles = StyleSheet.create({
   title: {
     color: "#525252",
     fontWeight: "bold",
-    fontSize: 50,
+    fontSize: 40,
+    marginLeft: 10,
+    marginBottom: 110,
     marginBottom: 50,
     alignSelf: "flex-start",
   },
