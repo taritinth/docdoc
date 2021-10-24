@@ -1,4 +1,3 @@
-import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,49 +5,24 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, { Component, useState } from "react";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
-export default function AppointmentList(props) {
-  const [listappointment, setlistappointment] = useState([1, 2, 3, 4, 5, 6]);
-  const [ispress, setispress] = useState(true);
-  //   setlistappointment();
+export default function TabViewExample() {
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: "first", title: "Upcoming" },
+    { key: "second", title: "History" },
+  ]);
+  const [listAppointment, setListAppointment] = useState([1, 2, 3, 4, 5, 6]);
 
-  return (
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="AppointmentList">
-    //     <Stack.Screen
-    //       name="AppointmentList"
-    //       options={{
-    //         title: "AppointmentList",
-    //         headerStyle: { backgroundColor: "orange" },
-    //       }}
-    //     />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+  const FirstRoute = () => (
     <View style={styles.container}>
-      <View style={styles.toolbars}>
-        <TouchableOpacity
-          style={(styles.upcoming, !ispress ? styles.btnpress : 0)}
-          onPress={() => {
-            return setispress(false);
-          }}
-        >
-          <Text style={styles.textupcoming}>Upcoming</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={(styles.history, ispress ? styles.btnpress : 0)}
-          onPress={() => {
-            return setispress(true);
-          }}
-        >
-          <Text style={styles.texthistory}>History</Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView>
-        {listappointment.map((element) => {
+        {listAppointment.map((element) => {
           return (
             <View style={styles.appointment} key={element}>
               <View style={styles.appointmentdetail}>
@@ -76,6 +50,64 @@ export default function AppointmentList(props) {
         })}
       </ScrollView>
     </View>
+  );
+
+  const SecondRoute = () => (
+    <View style={styles.container}>
+      <ScrollView>
+        {listAppointment.map((element) => {
+          return (
+            <View style={styles.appointment} key={element}>
+              <View style={styles.appointmentdetail}>
+                <Text>Date</Text>
+                <Text>3 June 2021</Text>
+              </View>
+              <View style={styles.appointmentdetail}>
+                <Text>Time</Text>
+                <Text>10.30 am</Text>
+              </View>
+              <View style={styles.appointmentdetail}>
+                <Text>Doctor</Text>
+                <Text>Dr.JimRoBo</Text>
+              </View>
+              <View style={styles.appointmentdetail}>
+                <Text>Type</Text>
+                <Text>RoBo</Text>
+              </View>
+              <View style={styles.appointmentdetail}>
+                <Text>Place</Text>
+                <Text>Robo Center</Text>
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+
+  const renderScene = SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+  });
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: "#32B5FF" }}
+      style={{ backgroundColor: "white" }}
+      activeColor="black"
+      inactiveColor="#A8A8A8"
+    />
+  );
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    />
   );
 }
 
