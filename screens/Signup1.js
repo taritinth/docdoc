@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
+  Button,
   TouchableOpacity,
   TextInput,
 } from "react-native";
@@ -11,17 +12,13 @@ export default function Signup2(props) {
   return (
     <View style={styles.container}>
       <Text style={styles.signup}>Sign up</Text>
-      <Text style={styles.username}>Username</Text>
-      <TextInput style={styles.input} placeholder="Username"></TextInput>
-      <Text style={styles.password}>Password</Text>
-      <TextInput
-        secureTextEntry={true}
-        style={styles.input}
-        placeholder="Password"
-      ></TextInput>
+      <Text style={styles.fullname}>Fullname</Text>
+      <TextInput style={styles.input} placeholder="Fullname"></TextInput>
+      <Text style={styles.phone}>Phone</Text>
+      <TextInput style={styles.input} placeholder="Phone"></TextInput>
       <TouchableOpacity style={styles.button} activeOpacity={0.8}>
         <View style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -52,14 +49,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 30,
   },
-  username: {
+  fullname: {
     fontSize: 18,
     marginLeft: 10,
     color: "#595959",
     fontWeight: "bold",
     alignSelf: "flex-start",
   },
-  password: {
+  phone: {
     fontSize: 18,
     marginLeft: 10,
     color: "#595959",
@@ -67,11 +64,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginTop: 25,
   },
-  forgetPassword: {
-    marginTop: 10,
-    color: "#595959",
-    alignSelf: "flex-end",
-  },
+
   button: {
     alignSelf: "stretch",
     marginTop: 40,
