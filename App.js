@@ -3,11 +3,13 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Signin from "./screens/Signin";
 import Signup2 from "./screens/SignUp2 ";
+import AppointmentList from "./screens/AppointmentList";
 
 export default function App() {
   return (
     // <Signin></Signin>
-    <Signup2></Signup2>
+    // <Signup2></Signup2>
+    <AppointmentList></AppointmentList>
   );
 }
 
