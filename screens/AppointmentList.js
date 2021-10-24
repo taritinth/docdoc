@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffffff",
     borderRadius: 4,
     flexDirection: "row",
+    shadowColor: "#0000000",
+    elevation: 8,
   },
   textupcoming: {
     fontSize: 24,

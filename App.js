@@ -10,6 +10,7 @@ export default function App() {
   return (
     // <Signin></Signin>
     // <Signup2></Signup2>
+    // <Signup1></Signup1>
     <AppointmentList></AppointmentList>
   );
 }
