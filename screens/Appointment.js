@@ -1,39 +1,62 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 
 export default function Index(props) {
   return (
     <View style={styles.container}>
       <Text style={styles.appointment}>Appointment</Text>
-      <Text style={styles.july}>July</Text>
+      <TouchableOpacity
+        style={[styles.button, , { marginLeft: 20 }]}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.buttonText}>
+          July
+          {"  "}
+          {/* <Icon name={"location-arrow"} size={22} color={"white"} /> */}
+        </Text>
+      </TouchableOpacity>
 
       <View style={styles.rect}>
-        <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-          <View style={styles.buttondate}>
-            <Text style={styles.buttonText}>Sun</Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <View style={[styles.buttondate, { marginLeft: 25 }]}>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Sun</Text>
             <Text style={styles.buttonText}>1</Text>
           </View>
-          <View style={styles.buttondate}>
-            <Text style={styles.buttonText}>Mon</Text>
+          <View style={[styles.buttondate, { backgroundColor: "#32B5FF" }]}>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Mon</Text>
             <Text style={styles.buttonText}>2</Text>
           </View>
           <View style={styles.buttondate}>
-            <Text style={styles.buttonText}>Tue</Text>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Tue</Text>
             <Text style={styles.buttonText}>3</Text>
           </View>
           <View style={styles.buttondate}>
-            <Text style={styles.buttonText}>Wed</Text>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Wed</Text>
             <Text style={styles.buttonText}>4</Text>
           </View>
           <View style={styles.buttondate}>
-            <Text style={styles.buttonText}>Thu</Text>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Thu</Text>
             <Text style={styles.buttonText}>5</Text>
           </View>
-        </TouchableOpacity>
+          <View style={styles.buttondate}>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Fri</Text>
+            <Text style={styles.buttonText}>5</Text>
+          </View>
+          <View style={styles.buttondate}>
+            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Sat</Text>
+            <Text style={styles.buttonText}>5</Text>
+          </View>
+        </ScrollView>
       </View>
 
       <Text style={styles.morningSlots}>Morning Slots</Text>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+      <View style={styles.buttons} activeOpacity={0.8}>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>10.00 a.m.</Text>
         </View>
@@ -43,20 +66,16 @@ export default function Index(props) {
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>11.00 a.m.</Text>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>11.30 a.m.</Text>
         </View>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>12.00 a.m.</Text>
         </View>
-        <View style={styles.buttonContainer2}>
-          <Text style={styles.buttonText}></Text>
-        </View>
-      </TouchableOpacity>
+      </View>
+
       <Text style={styles.afternoonSlots}>Afternoon Slots</Text>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+      <View style={styles.buttons} activeOpacity={0.8}>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>01.00 p.m.</Text>
         </View>
@@ -66,23 +85,16 @@ export default function Index(props) {
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>02.00 p.m.</Text>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>02.30 p.m.</Text>
         </View>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>03.00 p.m.</Text>
         </View>
-        <View style={styles.buttonContainer2}>
-          <Text style={styles.buttonText}></Text>
-        </View>
-      </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity style={styles.button2} activeOpacity={0.8}>
-        <View style={styles.button3}>
-          <Text style={styles.buttonText2}>Comfirm Appointment</Text>
-        </View>
+      <TouchableOpacity style={styles.button3} activeOpacity={0.8}>
+        <Text style={styles.buttonText2}>Comfirm Appointment</Text>
       </TouchableOpacity>
     </View>
   );
@@ -90,25 +102,27 @@ export default function Index(props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
-    margin: 20,
+    // paddingHorizontal: 20,
+    // margin: 20,
     flex: 1,
+    backgroundColor: "#F8F8F8",
   },
   rect: {
-    width: "100%",
-    height: 90,
     marginTop: 20,
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    // shadowColor: "#000000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
+    // elevation: 5,
+    paddingVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
   },
   appointment: {
-    fontFamily: "open-sans",
     color: "#121212",
     fontSize: 22,
     marginTop: 1,
@@ -116,15 +130,15 @@ const styles = StyleSheet.create({
   },
 
   morningSlots: {
-    fontFamily: "open-sans",
+    paddingHorizontal: 20,
     color: "#121212",
     fontSize: 17,
-    marginTop: 50,
+    marginTop: 30,
     marginLeft: 2,
     marginBottom: 10,
   },
   afternoonSlots: {
-    fontFamily: "open-sans",
+    paddingHorizontal: 20,
     color: "#121212",
     fontSize: 17,
     marginTop: 30,
@@ -137,11 +151,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  buttons: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    paddingHorizontal: 20,
+  },
   buttonContainer: {
     backgroundColor: "#ffffff",
-    width: 110,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    width: "30%",
+    padding: 10,
+    margin: 5,
     borderRadius: 5,
     shadowColor: "#000000",
     shadowOffset: {
@@ -150,7 +169,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 3,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -161,9 +180,9 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "BLACK",
-    fontFamily: "open-sans",
-    fontSize: 16,
+    color: "black",
+
+    fontSize: 14,
   },
 
   button2: {
@@ -173,43 +192,44 @@ const styles = StyleSheet.create({
   },
 
   button3: {
+    marginTop: 120,
+    marginHorizontal: 20,
     backgroundColor: "#32B5FF",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+    // alignSelf: "flex-end",
   },
   buttonText2: {
     color: "white",
-    fontFamily: "open-sans",
+
     fontSize: 18,
   },
 
   july: {
-    fontFamily: "open-sans",
     color: "#121212",
     fontSize: 20,
     marginTop: 40,
   },
   buttondate: {
     backgroundColor: "#ffff",
-    width: 60,
-    paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    height: 70,
-    marginBottom: 7,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 3.84,
+    elevation: 3,
+    height: 85,
+    // marginBottom: 7,
     marginLeft: 5,
     marginRight: 5,
+    marginVertical: 10,
     alignItems: "center",
     justifyContent: "center",
   },
