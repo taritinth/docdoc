@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,6 +8,19 @@ import {
 } from "react-native";
 
 export default function Index(props) {
+  const [days, setday] = useState([
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+  ]);
+  const [dates, setdate] = useState([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+  ]);
   return (
     <View style={styles.container}>
       <Text style={styles.appointment}>Appointment</Text>
@@ -16,7 +29,7 @@ export default function Index(props) {
         activeOpacity={0.8}
       >
         <Text style={styles.buttonText}>
-          July
+          August
           {"  "}
           {/* <Icon name={"location-arrow"} size={22} color={"white"} /> */}
         </Text>
@@ -24,34 +37,16 @@ export default function Index(props) {
 
       <View style={styles.rect}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View style={[styles.buttondate, { marginLeft: 25 }]}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Sun</Text>
-            <Text style={styles.buttonText}>1</Text>
-          </View>
-          <View style={[styles.buttondate, { backgroundColor: "#32B5FF" }]}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Mon</Text>
-            <Text style={styles.buttonText}>2</Text>
-          </View>
-          <View style={styles.buttondate}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Tue</Text>
-            <Text style={styles.buttonText}>3</Text>
-          </View>
-          <View style={styles.buttondate}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Wed</Text>
-            <Text style={styles.buttonText}>4</Text>
-          </View>
-          <View style={styles.buttondate}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Thu</Text>
-            <Text style={styles.buttonText}>5</Text>
-          </View>
-          <View style={styles.buttondate}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Fri</Text>
-            <Text style={styles.buttonText}>5</Text>
-          </View>
-          <View style={styles.buttondate}>
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Sat</Text>
-            <Text style={styles.buttonText}>5</Text>
-          </View>
+          {dates.map((date, key) => {
+            return (
+              <View key={date} style={[styles.buttondate, { marginLeft: 25 }]}>
+                <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
+                  {days[key % 7]}
+                </Text>
+                <Text style={styles.buttonText}>{key + 1}</Text>
+              </View>
+            );
+          })}
         </ScrollView>
       </View>
 
@@ -102,21 +97,11 @@ export default function Index(props) {
 
 const styles = StyleSheet.create({
   container: {
-    // paddingHorizontal: 20,
-    // margin: 20,
     flex: 1,
     backgroundColor: "#F8F8F8",
   },
   rect: {
     marginTop: 20,
-    // shadowColor: "#000000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2,
-    // },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 3.84,
-    // elevation: 5,
     paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -174,34 +159,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonContainer2: {
-    backgroundColor: "#ffffff",
-    width: 110,
-  },
-
   buttonText: {
     color: "black",
 
     fontSize: 14,
   },
 
-  button2: {
-    alignSelf: "stretch",
-    marginTop: 50,
-    marginBottom: 5,
-  },
-
-  button3: {
-    marginTop: 120,
-    marginHorizontal: 20,
-    backgroundColor: "#32B5FF",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-    // alignSelf: "flex-end",
-  },
   buttonText2: {
     color: "white",
 
@@ -218,15 +181,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2,
-    // },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 3.84,
     elevation: 3,
     height: 85,
-    // marginBottom: 7,
     marginLeft: 5,
     marginRight: 5,
     marginVertical: 10,
