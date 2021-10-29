@@ -19,7 +19,13 @@ export default function SignUp2(props) {
         style={styles.input}
         placeholder="Password"
       ></TextInput>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={() => {
+          navigation.navigate("Signin");
+        }}
+      >
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </View>

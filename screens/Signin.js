@@ -17,12 +17,26 @@ export default function SignIn(props) {
       <Text style={styles.password}>Password</Text>
       <TextInput style={styles.input} placeholder="Password"></TextInput>
       <Text style={styles.forgetPassword}>forget password?</Text>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      >
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Sign In</Text>
         </View>
       </TouchableOpacity>
-      <Text style={styles.dontHaveAccount}>Don’t have account?</Text>
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={() => {
+          navigation.navigate("Signup1");
+        }}
+      >
+        <Text style={styles.dontHaveAccount}>Don’t have account?</Text>
+      </TouchableOpacity>
     </View>
   );
 }

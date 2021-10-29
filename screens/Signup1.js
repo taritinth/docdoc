@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 
-export default function SignUp2(props) {
+const SignUp1 = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
@@ -16,14 +16,20 @@ export default function SignUp2(props) {
       <TextInput style={styles.input} placeholder="Fullname"></TextInput>
       <Text style={styles.phone}>Phone</Text>
       <TextInput style={styles.input} placeholder="Phone"></TextInput>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={() => {
+          navigation.navigate("Signup2");
+        }}
+      >
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Next</Text>
         </View>
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -83,3 +89,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+export default SignUp1;
