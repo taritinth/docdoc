@@ -21,7 +21,7 @@ const Signin = ({ navigation }) => {
         style={styles.button}
         activeOpacity={0.8}
         onPress={() => {
-          navigation.navigate("Home");
+          navigation.navigate("NavigationTabbar");
         }}
       >
         <View style={styles.buttonContainer}>

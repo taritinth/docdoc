@@ -9,6 +9,7 @@ import SignUp2 from "./SignUp2";
 import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Home from "./Home";
+import NavigationTabbar from "./NavigationTabbar";
 const docdocNavigator = createNativeStackNavigator();
 
 export default function Header() {
@@ -21,7 +22,11 @@ export default function Header() {
         }}
       >
         <docdocNavigator.Screen name="Signin" component={SignIn} />
-        <docdocNavigator.Screen name="Home" component={Home} />
+        <docdocNavigator.Screen
+          name="NavigationTabbar"
+          component={NavigationTabbar}
+          options={{ headerShown: false }}
+        />
         <docdocNavigator.Screen name="Signup1" component={SignUp1} />
         <docdocNavigator.Screen name="Signup2" component={SignUp2} />
         <docdocNavigator.Screen name="Appointment" component={Appointment} />
