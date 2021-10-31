@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 
-export default function SignIn(props) {
+const Signin = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Doc Doc</Text>
@@ -39,7 +39,7 @@ export default function SignIn(props) {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -128,3 +128,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+export default Signin;

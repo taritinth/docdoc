@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "react-native";
 
-export default function SignUp2(props) {
+const Signup2 = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
@@ -32,7 +32,7 @@ export default function SignUp2(props) {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -97,3 +97,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+export default Signup2;
