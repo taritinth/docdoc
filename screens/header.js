@@ -19,6 +19,7 @@ export default function Header() {
         screenOptions={{
           headerStyle: { backgroundColor: "#32B5FF" },
           headerTintColor: "white",
+          headerShown: false,
         }}
       >
         <docdocNavigator.Screen name="Signin" component={SignIn} />
