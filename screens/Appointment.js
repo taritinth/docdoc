@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 export default function Index(props) {
-  const [days, setday] = useState([
+  const [days, setDays] = useState([
     "Sun",
     "Mon",
     "Tue",
@@ -17,10 +17,38 @@ export default function Index(props) {
     "Fri",
     "Sat",
   ]);
-  const [dates, setdate] = useState([
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+
+  const [months, setMonths] = useState([
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ]);
+
+  let dateBubble = [];
+  let month = 11; // 0-11
+  let year = 2021;
+  let numOfDays = new Date(year, month, 0).getDate();
+
+  for (let i = 1; i <= numOfDays; i++) {
+    dateBubble.push(
+      <View key={i} style={[styles.buttondate, { marginLeft: 25 }]}>
+        <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
+          {days[new Date(year, month, i).getDay()]}
+        </Text>
+        <Text style={styles.buttonText}>{i}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.appointment}>Appointment</Text>
@@ -29,7 +57,7 @@ export default function Index(props) {
         activeOpacity={0.8}
       >
         <Text style={styles.buttonText}>
-          August
+          {months[month]}
           {"  "}
           {/* <Icon name={"location-arrow"} size={22} color={"white"} /> */}
         </Text>
@@ -37,16 +65,7 @@ export default function Index(props) {
 
       <View style={styles.rect}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {dates.map((date, key) => {
-            return (
-              <View key={date} style={[styles.buttondate, { marginLeft: 25 }]}>
-                <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
-                  {days[key % 7]}
-                </Text>
-                <Text style={styles.buttonText}>{key + 1}</Text>
-              </View>
-            );
-          })}
+          {dateBubble}
         </ScrollView>
       </View>
 
@@ -183,8 +202,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     elevation: 3,
     height: 85,
-    marginLeft: 5,
-    marginRight: 5,
+    minWidth: 70,
     marginVertical: 10,
     alignItems: "center",
     justifyContent: "center",
