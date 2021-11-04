@@ -1,19 +1,52 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome5, AntDesign, Ionicons } from "@expo/vector-icons";
-import AppointmentList from "./AppointmentList";
 import Home from "./Home";
 import Message from "./Message";
 import Profile from "./Profile";
+import Editprofile from "./Editprofile";
+import SignIn from "./Signin";
+import SignUp1 from "./Signup1";
+import SignUp2 from "./SignUp2";
+import Appointment from "./Appointment";
+import AppointmentList from "./AppointmentList";
 
+const docdocNavigator = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
-
-export default function NavigationTabbar() {
+export default function Navigation() {
   return (
-    // <NavigationContainer>
+    <NavigationContainer>
+      <docdocNavigator.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: "#32B5FF" },
+          headerTintColor: "white",
+          headerShown: false,
+        }}
+      >
+        <docdocNavigator.Screen name="Signin" component={SignIn} />
+        <docdocNavigator.Screen
+          name="NavigationTabbar"
+          component={NavigationTabbar}
+          options={{ headerShown: false }}
+        />
+        <docdocNavigator.Screen name="Signup1" component={SignUp1} />
+        <docdocNavigator.Screen name="Signup2" component={SignUp2} />
+        <docdocNavigator.Screen name="Appointment" component={Appointment} />
+        <docdocNavigator.Screen
+          name="AppointmentList"
+          component={AppointmentList}
+        />
+        <docdocNavigator.Screen name="Editprofile" component={Editprofile} />
+      </docdocNavigator.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const NavigationTabbar = () => {
+  return (
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
@@ -47,9 +80,8 @@ export default function NavigationTabbar() {
       <BottomTab.Screen name="Appointment" component={AppointmentList} />
       <BottomTab.Screen name="Profile" component={Profile} />
     </BottomTab.Navigator>
-    // </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -85,7 +85,12 @@ const Profile = ({ navigation }) => {
           style={styles.profileimg}
           source={require("../assets/Boss_4.png")}
         />
-        <TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            navigation.navigate("Editprofile");
+          }}
+        >
           <FontAwesome5
             style={styles.editprofile}
             name="edit"

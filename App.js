@@ -7,8 +7,8 @@ import { StyleSheet, Text, View } from "react-native";
 // import Appointment from "./screens/Appointment";
 // import AppointmentList from "./screens/AppointmentList";
 // import Home from "./screens/Home";
-import NavigationTabbar from "./screens/NavigationTabbar.js";
-import Header from "./screens/header";
+import Navigation from "./screens/Navigation.js";
+// import Header from "./screens/header";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -35,7 +35,7 @@ export default function App() {
     //     />
     //   </Stack.Navigator>
     // </NavigationContainer>
-    <Header></Header>
+    <Navigation></Navigation>
   );
 }
 
