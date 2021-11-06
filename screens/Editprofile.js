@@ -19,6 +19,8 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 const Editprofile = ({ navigation }) => {
+  let [selectedImage, setSelectedImage] = React.useState(null);
+
   let openImagePickerAsync = async () => {
     let permissionResult =
       await ImagePicker.requestCameraRollPermissionsAsync();
@@ -29,26 +31,37 @@ const Editprofile = ({ navigation }) => {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log(pickerResult);
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage({ localUri: pickerResult.uri });
   };
   const [username, changeUsername] = React.useState("");
   const [phone, changePhone] = React.useState("");
   const [password, changePassword] = React.useState("");
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.image}>
-        {/* <Image
+  function img() {
+    if (selectedImage !== null) {
+      return (
+        <Image
+          source={{ uri: selectedImage.localUri }}
           style={styles.profileimg}
-          source={require("../assets/Boss_4.png")}
-        /> */}
+        />
+      );
+    } else {
+      return (
         <TouchableOpacity
           onPress={openImagePickerAsync}
           style={styles.profileimg}
-        >
-          <Text style={styles.buttonText2}>Pick a photo</Text>
-        </TouchableOpacity>
-      </View>
+        ></TouchableOpacity>
+      );
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.image}>{img()}</View>
 
       <View style={styles.editprofile}>
         <Ionicons name="person-outline" size={24} color="black" />
@@ -109,15 +122,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
-  },
-  button2: {
-    backgroundColor: "blue",
-    padding: 20,
-    borderRadius: 5,
-  },
-  buttonText2: {
-    fontSize: 20,
-    color: "#fff",
   },
   image: {
     zIndex: 1,
