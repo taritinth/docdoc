@@ -21,8 +21,8 @@ export default function Navigation() {
     <NavigationContainer>
       <docdocNavigator.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: "#32B5FF" },
-          headerTintColor: "white",
+          headerStyle: { backgroundColor: "#F8F8F8" },
+          headerTintColor: "#000",
           headerShown: false,
         }}
       >
@@ -34,7 +34,11 @@ export default function Navigation() {
         />
         <docdocNavigator.Screen name="Signup1" component={SignUp1} />
         <docdocNavigator.Screen name="Signup2" component={SignUp2} />
-        <docdocNavigator.Screen name="Appointment" component={Appointment} />
+        <docdocNavigator.Screen
+          name="Appointment2"
+          component={Appointment}
+          options={{ title: "Create Appointment", headerShown: true }}
+        />
         <docdocNavigator.Screen
           name="AppointmentList"
           component={AppointmentList}
