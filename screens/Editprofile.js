@@ -19,7 +19,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 const Editprofile = ({ navigation }) => {
-  let [selectedImage, setSelectedImage] = React.useState(null);
+  let [selectedImage, setSelectedImage] = useState(null);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -34,7 +34,6 @@ const Editprofile = ({ navigation }) => {
     if (pickerResult.cancelled === true) {
       return;
     }
-
     setSelectedImage({ localUri: pickerResult.uri });
   };
   const [username, changeUsername] = React.useState("");
@@ -43,6 +42,7 @@ const Editprofile = ({ navigation }) => {
 
   function img() {
     if (selectedImage !== null) {
+      console.log(selectedImage.localUri);
       return (
         <Image
           source={{ uri: selectedImage.localUri }}
@@ -50,6 +50,7 @@ const Editprofile = ({ navigation }) => {
         />
       );
     } else {
+      
       return (
         <TouchableOpacity
           onPress={openImagePickerAsync}
@@ -58,12 +59,13 @@ const Editprofile = ({ navigation }) => {
       );
     }
   }
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.image}>{img()}</View>
 
-      <View style={styles.editprofile}>
+      <View style={styles}>
         <Ionicons name="person-outline" size={24} color="black" />
         <TextInput
           style={styles.profile}
@@ -71,7 +73,7 @@ const Editprofile = ({ navigation }) => {
           onChangeText={changeUsername}
         ></TextInput>
       </View>
-      <View style={styles.editprofile}>
+      <View style={styles}>
         <Feather name="phone" size={24} color="black" />
         <TextInput
           style={styles.profile}
@@ -79,7 +81,7 @@ const Editprofile = ({ navigation }) => {
           onChangeText={changePhone}
         ></TextInput>
       </View>
-      <View style={styles.editprofile}>
+      <View style={styles}>
         <FontAwesome name="key" size={24} color="black" />
         <TextInput
           style={styles.profile}
@@ -111,7 +113,9 @@ const Editprofile = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>BACK</Text>
         </View>
+        
       </TouchableOpacity>
+
     </View>
   );
 };
@@ -127,9 +131,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: -80,
   },
-  editprofile: {
-    display: "inline",
-  },
+  // editprofile: {
+  //   display: "inline",
+  // },
   profileimg: {
     width: 200,
     height: 200,
@@ -155,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom:20,
   },
   buttonText: {
     color: "white",

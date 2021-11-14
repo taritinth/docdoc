@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,15 +8,18 @@ import {
 } from "react-native";
 
 const Signup2 = ({ navigation }) => {
+  const [username , setUsername] = useState("")
+  const [password , setPassword] = useState("")
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
       <Text style={styles.username}>Username</Text>
-      <TextInput style={styles.input} placeholder="Username"></TextInput>
+      <TextInput style={styles.input} placeholder="Username" onChangeText={(username) => setUsername(username)}></TextInput>
       <Text style={styles.password}>Password</Text>
       <TextInput
         secureTextEntry={true}
         style={styles.input}
+        onChangeText={(password) => setPassword(password)}
         placeholder="Password"
       ></TextInput>
       <TouchableOpacity

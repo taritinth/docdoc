@@ -8,7 +8,12 @@ import {
   TextInput,
 } from "react-native";
 
+
 const SignUp1 = ({ navigation }) => {
+  const [name , setName] = useState("")
+  const [phone , setPhone] = useState("")
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>

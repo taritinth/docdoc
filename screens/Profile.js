@@ -9,77 +9,38 @@ import {
   Easing,
   Animated,
   Image,
+
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import firebase from "../database/firebaseDB"; 
 
-function star() {
-  return (
-    <View style={styles.twelvePointBurst}>
-      <View style={styles.twelvePointBurstMain} />
-      <View style={styles.twelvePointBurst30} />
-      <View style={styles.twelvePointBurst60} />
-    </View>
-  );
-}
+
 
 const Profile = ({ navigation }) => {
-  const cycle = useRef(new Animated.Value(0)).current;
-  const rotate = useRef(new Animated.Value(0)).current;
-  //   useEffect(() => {
-  //     animate;
-  //   });
+  const [fullname, setFullname] = useState("");
+  const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
 
   useEffect(() => {
-    Animated.loop(
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(rotate, {
-            toValue: 1,
-            duration: 8000,
-            easing: Easing.ease,
-            useNativeDriver: true,
-          }),
-          Animated.timing(rotate, {
-            toValue: 0,
-            duration: 8000,
-            easing: Easing.ease,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.timing(cycle, {
-            toValue: 20,
-            duration: 8000,
-            useNativeDriver: true,
-            // easing: Easing.ease,
-          }),
-
-          Animated.timing(cycle, {
-            toValue: 0,
-            duration: 8000,
-            useNativeDriver: true,
-            // easing: Easing.ease,
-          }),
-        ]),
-      ])
-    ).start();
-  });
-
-  const spin = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
+    console.log("1");
+    console.log(firebase);
+    subjDoc
+    .get((res) => {
+      
+    })
+    .then((res) => {
+      if (res.exists) {
+        console.log(res.data());
+        const subj = res.data();
+        setFullname(subj.fullname)
+      } else {
+        console.log(info);
+        console.log("Document does not exist!!");
+      }
+    });
+  }, [])
 
   return (
     <View style={styles.container}>
-      <Animated.View
-        style={{
-          transform: [{ scale: cycle }, { rotate: spin }],
-        }}
-      >
-        {star()}
-      </Animated.View>
-
       <View style={styles.image}>
         <Image
           style={styles.profileimg}
@@ -99,7 +60,8 @@ const Profile = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.profile}>SAPUN</Text>
+      <Text style={styles.profile}
+         >{fullname}</Text>
       <TouchableOpacity>
         <Text style={styles.logout}>Logout</Text>
       </TouchableOpacity>
@@ -114,37 +76,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
-  },
-  twelvePointBurst: {
-    zIndex: -10,
-    position: "relative",
-    // alignSelf: "center",
-    // alignItems: "center",
-    // justifyContent: "center",
-    // flex: 1,
-  },
-  twelvePointBurstMain: {
-    width: 80,
-    height: 80,
-    backgroundColor: "orange",
-  },
-  twelvePointBurst30: {
-    width: 80,
-    height: 80,
-    position: "absolute",
-    backgroundColor: "orange",
-    top: 0,
-    right: 0,
-    transform: [{ rotate: "30deg" }],
-  },
-  twelvePointBurst60: {
-    width: 80,
-    height: 80,
-    position: "absolute",
-    backgroundColor: "orange",
-    top: 0,
-    right: 0,
-    transform: [{ rotate: "60deg" }],
   },
   image: {
     zIndex: 1,
