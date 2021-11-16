@@ -19,16 +19,10 @@ const Signup2 = ({ route, navigation }) => {
   useEffect(() => {
     setName(route.params.fullname);
     setPhone(route.params.phone);
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.replace("NavigationTabbar");
-      }
-    });
-
-    return unsubscribe;
   }, []);
 
   const handleSignUp = () => {
+    // if (password.length > 6 && )
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {

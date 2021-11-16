@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -24,6 +24,16 @@ const Signin = ({ navigation }) => {
       .catch((error) => alert(error.message));
   };
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("NavigationTabbar");
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Doc Doc</Text>
@@ -40,6 +50,7 @@ const Signin = ({ navigation }) => {
         value={password}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
+        secureTextEntry={true}
       ></TextInput>
 
       <TouchableOpacity

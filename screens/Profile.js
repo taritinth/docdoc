@@ -13,9 +13,24 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { auth } from "../database/firebaseDB";
 // import firebase from "../database/firebaseDB";
+import { app } from "../database/firebaseDB";
 
 const Profile = ({ navigation }) => {
-  const [fullname, setFullname] = useState("");
+  // const [fullname, setFullname] = useState("");
+  const [userinfo, setUserinfo] = useState([]);
+
+  const subjCollection = app
+    .firestore()
+    .collection("user")
+    .doc(auth.currentUser.uid);
+
+  useEffect(() => {
+    subjCollection.get().then((res) => {
+      // console.log(res.data());
+      setUserinfo(res.data());
+      // console.log(userinfo);
+    });
+  }, []);
 
   const handleSignOut = () => {
     auth
@@ -44,12 +59,9 @@ const Profile = ({ navigation }) => {
           <FontAwesome5 name="edit" size={36} color="black" />
         </TouchableOpacity>
       </View>
-      <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity
-        onPress={handleSignOut}
-        style={{ backgroundColor: "red" }}
-      >
-        <Text style={styles.logout}>Logout</Text>
+      <Text style={{ fontSize: 18 }}>Name: {userinfo.fullname}</Text>
+      <TouchableOpacity onPress={handleSignOut} style={styles.logout}>
+        <Text style={{ color: "red" }}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -82,9 +94,9 @@ const styles = StyleSheet.create({
     // position: "absolute",
   },
   logout: {
-    // position: "relative",
+    position: "relative",
     top: 50,
-    color: "red",
+    // backgroundColor: "red",
   },
   editprofile: {
     flexDirection: "row-reverse",

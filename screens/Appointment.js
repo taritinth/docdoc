@@ -38,8 +38,6 @@ export default function Appointment({ navigation }) {
   ]);
 
   // fdsUMdSk22QtffilTDnS, qknN4caIqdpf1izJVwHO
-  const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
-  const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
 
   const [month, setMonth] = useState(10); // 0-11
   const [year, setYear] = useState(2021);
@@ -47,6 +45,24 @@ export default function Appointment({ navigation }) {
   const [selectdate, setSelectdate] = useState(datenow);
   const [selecttime, setSelecttime] = useState("10.00 a.m.");
   const subjCollection = app.firestore().collection("appointment");
+
+  const [userinfo, setUserinfo] = useState([]);
+
+  const userInfojCollection = app
+    .firestore()
+    .collection("user")
+    .doc(auth.currentUser.uid);
+
+  useEffect(() => {
+    userInfojCollection.get().then((res) => {
+      // console.log(res.data());
+      setUserinfo(res.data());
+      // console.log(userinfo);
+    });
+  }, []);
+
+  const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
+  const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
 
   let dateBubble = [];
   let numOfDays = new Date(year, month, 0).getDate();
