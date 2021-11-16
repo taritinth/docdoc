@@ -43,12 +43,9 @@ const Profile = ({ navigation }) => {
   // const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containers}>
       <View style={styles.image}>
-        <Image
-          style={styles.profileimg}
-          source={require("../assets/Boss_4.png")}
-        />
+        <Image style={styles.profileimg} source={{ uri: userinfo.image }} />
         <TouchableOpacity
           style={styles.editprofile}
           activeOpacity={0.8}
@@ -68,7 +65,7 @@ const Profile = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  containers: {
     flex: 1,
     // backgroundColor:'orange',
     alignItems: "center",

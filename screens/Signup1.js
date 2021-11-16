@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useValidation } from "react-native-form-validator";
 
 const SignUp1 = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -16,7 +17,6 @@ const SignUp1 = ({ navigation }) => {
   let [selectedImage, setSelectedImage] = useState(null);
 
   let openImagePickerAsync = async () => {
-
     let permissionResult =
       await ImagePicker.requestCameraRollPermissionsAsync();
 
@@ -34,7 +34,6 @@ const SignUp1 = ({ navigation }) => {
 
   function img() {
     if (selectedImage !== null) {
-
       return (
         <TouchableOpacity onPress={openImagePickerAsync}>
           <Image
@@ -50,6 +49,31 @@ const SignUp1 = ({ navigation }) => {
           style={styles.profileimg}
         ></TouchableOpacity>
       );
+    }
+  }
+
+  const [iserror, setIserror] = useState(false);
+
+  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
+    useValidation({
+      state: { name, phone, selectedImage },
+    });
+
+  function checkvalidate() {
+    validate({
+      name: { required: true },
+      phone: { minlength: 9, maxlength: 10, required: true, numbers: true },
+      selectedImage: { required: true },
+    });
+    if (getErrorMessages) {
+      alert(getErrorMessages());
+      // setIserror(false);
+    } else {
+      navigation.navigate("Signup2", {
+        fullname: name,
+        phone: phone,
+        image: selectedImage,
+      });
     }
   }
 
@@ -73,9 +97,7 @@ const SignUp1 = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
-        onPress={() => {
-          navigation.navigate("Signup2", { fullname: name, phone: phone,image:selectedImage });
-        }}
+        onPress={() => checkvalidate()}
       >
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Next</Text>

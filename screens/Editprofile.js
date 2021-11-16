@@ -50,7 +50,6 @@ const Editprofile = ({ navigation }) => {
         />
       );
     } else {
-      
       return (
         <TouchableOpacity
           onPress={openImagePickerAsync}
@@ -59,7 +58,6 @@ const Editprofile = ({ navigation }) => {
       );
     }
   }
-  
 
   return (
     <View style={styles.container}>
@@ -113,9 +111,7 @@ const Editprofile = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>BACK</Text>
         </View>
-        
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -159,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom:20,
+    marginBottom: 20,
   },
   buttonText: {
     color: "white",
