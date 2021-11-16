@@ -15,10 +15,14 @@ const Signup2 = ({ route, navigation }) => {
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const { signup1 } = route.params;
+  const [image, setImage] = useState("");
 
   useEffect(() => {
+    console.log(route.params);
     setName(route.params.fullname);
     setPhone(route.params.phone);
+    setImage(route.params.image.localUri);
+    console.log(route.params.image.localUri);
   }, []);
 
   const handleSignUp = () => {
@@ -32,6 +36,7 @@ const Signup2 = ({ route, navigation }) => {
           username: username,
           phone: phone,
           fullname: name,
+          image: image
         });
         console.log(user.uid);
         console.log("Registered with:", user.email);
@@ -68,6 +73,12 @@ const Signup2 = ({ route, navigation }) => {
         style={[styles.button, styles.buttonContainer]}
       >
         <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Signup1")}
+        style={[styles.button, styles.buttonContainer]}
+      >
+        <Text style={styles.buttonText}>BACK</Text>
       </TouchableOpacity>
     </View>
   );
