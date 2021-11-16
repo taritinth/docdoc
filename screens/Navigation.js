@@ -10,9 +10,11 @@ import Profile from "./Profile";
 import Editprofile from "./Editprofile";
 import SignIn from "./Signin";
 import SignUp1 from "./Signup1";
-import SignUp2 from "./SignUp2";
+import SignUp2 from "./SignUp2";  
 import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
+import Login from "./LoginScreen";
+import Forgetpassword from "./forgetpassword";
 
 const docdocNavigator = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -34,6 +36,8 @@ export default function Navigation() {
         />
         <docdocNavigator.Screen name="Signup1" component={SignUp1} />
         <docdocNavigator.Screen name="Signup2" component={SignUp2} />
+        <docdocNavigator.Screen name="Login" component={Login} />
+        <docdocNavigator.Screen name="Forgetpassword" component={Forgetpassword} />
         <docdocNavigator.Screen
           name="Appointment2"
           component={Appointment}

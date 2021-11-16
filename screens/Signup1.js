@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component , useState} from "react";
 import {
   StyleSheet,
   View,
@@ -18,14 +18,20 @@ const SignUp1 = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
       <Text style={styles.fullname}>Fullname</Text>
-      <TextInput style={styles.input} placeholder="Fullname"></TextInput>
+      <TextInput style={styles.input} 
+      placeholder="Fullname"
+      onChangeText={(text)=> setName(text)}
+      ></TextInput>
+
       <Text style={styles.phone}>Phone</Text>
-      <TextInput style={styles.input} placeholder="Phone"></TextInput>
+      <TextInput style={styles.input} placeholder="Phone"
+      onChangeText={(text)=> setPhone(text)}
+      ></TextInput>
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
         onPress={() => {
-          navigation.navigate("Signup2");
+          navigation.navigate("Signup2", {fullname: name, phone: phone});
         }}
       >
         <View style={styles.buttonContainer}>

@@ -12,32 +12,25 @@ import {
 
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import firebase from "../database/firebaseDB"; 
+import { auth } from "../database/firebaseAuth"
+// import firebase from "../database/firebaseDB"; 
 
 
 
 const Profile = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
-  const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
 
-  useEffect(() => {
-    console.log("1");
-    console.log(firebase);
-    subjDoc
-    .get((res) => {
-      
-    })
-    .then((res) => {
-      if (res.exists) {
-        console.log(res.data());
-        const subj = res.data();
-        setFullname(subj.fullname)
-      } else {
-        console.log(info);
-        console.log("Document does not exist!!");
-      }
-    });
-  }, [])
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.replace("Signin")
+      })
+      .catch(error => alert(error.message))
+  }
+  // const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
+
+
 
   return (
     <View style={styles.container}>
@@ -60,9 +53,8 @@ const Profile = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.profile}
-         >{fullname}</Text>
-      <TouchableOpacity>
+      <Text>Email: {auth.currentUser?.email}</Text>
+      <TouchableOpacity onPress={handleSignOut}>
         <Text style={styles.logout}>Logout</Text>
       </TouchableOpacity>
     </View>
