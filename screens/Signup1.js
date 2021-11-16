@@ -1,4 +1,4 @@
-import React, { Component , useState} from "react";
+import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,32 +6,75 @@ import {
   Button,
   TouchableOpacity,
   TextInput,
+  Image,
 } from "react-native";
-
+import * as ImagePicker from "expo-image-picker";
 
 const SignUp1 = ({ navigation }) => {
-  const [name , setName] = useState("")
-  const [phone , setPhone] = useState("")
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  let [selectedImage, setSelectedImage] = useState(null);
 
+  let openImagePickerAsync = async () => {
+
+    let permissionResult =
+      await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setSelectedImage({ localUri: pickerResult.uri });
+  };
+
+  function img() {
+    if (selectedImage !== null) {
+
+      return (
+        <TouchableOpacity onPress={openImagePickerAsync}>
+          <Image
+            source={{ uri: selectedImage.localUri }}
+            style={styles.profileimg}
+          />
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={openImagePickerAsync}
+          style={styles.profileimg}
+        ></TouchableOpacity>
+      );
+    }
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
+      <View style={styles.image}>{img()}</View>
       <Text style={styles.fullname}>Fullname</Text>
-      <TextInput style={styles.input} 
-      placeholder="Fullname"
-      onChangeText={(text)=> setName(text)}
+      <TextInput
+        style={styles.input}
+        placeholder="Fullname"
+        onChangeText={(text) => setName(text)}
       ></TextInput>
 
       <Text style={styles.phone}>Phone</Text>
-      <TextInput style={styles.input} placeholder="Phone"
-      onChangeText={(text)=> setPhone(text)}
+      <TextInput
+        style={styles.input}
+        placeholder="Phone"
+        onChangeText={(text) => setPhone(text)}
       ></TextInput>
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
         onPress={() => {
-          navigation.navigate("Signup2", {fullname: name, phone: phone});
+          navigation.navigate("Signup2", { fullname: name, phone: phone,image:selectedImage });
         }}
       >
         <View style={styles.buttonContainer}>
@@ -49,6 +92,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
+  },
+  image: {
+    zIndex: 1,
+    top: -80,
   },
   title: {
     color: "#525252",
@@ -81,6 +128,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "flex-start",
     marginTop: 25,
+  },
+  profileimg: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    overflow: "hidden",
+    borderWidth: 2,
+    alignSelf: "center",
   },
 
   button: {
