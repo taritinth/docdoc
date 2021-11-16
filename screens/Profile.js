@@ -9,13 +9,10 @@ import {
   Easing,
   Animated,
   Image,
-
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { auth } from "../database/firebaseAuth"
-// import firebase from "../database/firebaseDB"; 
-
-
+import { auth } from "../database/firebaseDB";
+// import firebase from "../database/firebaseDB";
 
 const Profile = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
@@ -24,13 +21,11 @@ const Profile = ({ navigation }) => {
     auth
       .signOut()
       .then(() => {
-        navigation.replace("Signin")
+        navigation.replace("Signin");
       })
-      .catch(error => alert(error.message))
-  }
+      .catch((error) => alert(error.message));
+  };
   // const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
-
-
 
   return (
     <View style={styles.container}>
@@ -40,21 +35,20 @@ const Profile = ({ navigation }) => {
           source={require("../assets/Boss_4.png")}
         />
         <TouchableOpacity
+          style={styles.editprofile}
           activeOpacity={0.8}
           onPress={() => {
             navigation.navigate("Editprofile");
           }}
         >
-          <FontAwesome5
-            style={styles.editprofile}
-            name="edit"
-            size={36}
-            color="black"
-          />
+          <FontAwesome5 name="edit" size={36} color="black" />
         </TouchableOpacity>
       </View>
       <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity onPress={handleSignOut}>
+      <TouchableOpacity
+        onPress={handleSignOut}
+        style={{ backgroundColor: "red" }}
+      >
         <Text style={styles.logout}>Logout</Text>
       </TouchableOpacity>
     </View>
@@ -70,8 +64,7 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   image: {
-    zIndex: 1,
-    top: -200,
+    top: -100,
     // backgroundColor: "red",
     // marginBottom: 1,
     // alignSelf: "center",
@@ -86,18 +79,18 @@ const styles = StyleSheet.create({
   },
   profile: {
     fontSize: 30,
-    position: "absolute",
+    // position: "absolute",
   },
   logout: {
-    position: "relative",
+    // position: "relative",
     top: 50,
     color: "red",
   },
   editprofile: {
+    flexDirection: "row-reverse",
     right: 0,
     bottom: 0,
     position: "absolute",
-    // top: -10,
   },
 });
 

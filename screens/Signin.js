@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { auth, app } from "../database/firebaseAuth";
+import { auth, app } from "../database/firebaseDB";
 
 const Signin = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -19,12 +19,10 @@ const Signin = ({ navigation }) => {
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with:", user.email);
-        navigation.navigate("NavigationTabbar")
+        navigation.navigate("NavigationTabbar");
       })
       .catch((error) => alert(error.message));
   };
-
-
 
   return (
     <View style={styles.container}>
@@ -51,9 +49,8 @@ const Signin = ({ navigation }) => {
           navigation.navigate("Forgetpassword");
         }}
       >
-      <Text style={styles.forgetPassword} >forget password?</Text>
-        </TouchableOpacity>
-
+        <Text style={styles.forgetPassword}>forget password?</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { auth, app } from "../database/firebaseAuth";
+import { auth, app } from "../database/firebaseDB";
 
 const Signup2 = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
@@ -15,8 +15,6 @@ const Signup2 = ({ route, navigation }) => {
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const { signup1 } = route.params;
-
-
 
   useEffect(() => {
     setName(route.params.fullname);

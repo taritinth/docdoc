@@ -7,21 +7,22 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { auth, app } from "../database/firebaseAuth";
+import { auth, app } from "../database/firebaseDB";
 
 const Signin = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
-
   const forgotPassword = () => {
-    auth.sendPasswordResetEmail(email)
+    auth
+      .sendPasswordResetEmail(email)
       .then(function (user) {
-        alert('Please check your email...')
-        navigation.navigate("Signin")
-      }).catch(function (e) {
-        console.log(e)
+        alert("Please check your email...");
+        navigation.navigate("Signin");
       })
-  }
+      .catch(function (e) {
+        console.log(e);
+      });
+  };
 
   return (
     <View style={styles.container}>
