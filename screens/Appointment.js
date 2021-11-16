@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { Entypo } from "@expo/vector-icons";
+import { app } from "../database/firebaseDB";
 
 export default function Appointment({ navigation }) {
   const [days, setDays] = useState([
@@ -36,12 +37,19 @@ export default function Appointment({ navigation }) {
     "Dec",
   ]);
 
-  let dateBubble = [];
+  // fdsUMdSk22QtffilTDnS, qknN4caIqdpf1izJVwHO
+  const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
+  const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
+
   const [month, setMonth] = useState(10); // 0-11
   const [year, setYear] = useState(2021);
-  let numOfDays = new Date(year, month, 0).getDate();
   const datenow = new Date().getDate();
   const [selectdate, setSelectdate] = useState(datenow);
+  const [selecttime, setSelecttime] = useState("10.00 a.m.");
+  const subjCollection = app.firestore().collection("appointment");
+
+  let dateBubble = [];
+  let numOfDays = new Date(year, month, 0).getDate();
 
   const [morningTime, setMorningTime] = useState([
     "10.00 a.m.",
@@ -59,7 +67,16 @@ export default function Appointment({ navigation }) {
     "03.00 p.m.",
   ]);
 
-  const [selecttime, setSelecttime] = useState("10.00 a.m.");
+  function storeSubject() {
+    subjCollection.add({
+      appointmented: appointmented,
+      appointmenter: appointmenter,
+      month: months[month],
+      year: year,
+      date: selectdate,
+      time: selecttime,
+    });
+  }
 
   for (let i = datenow; i <= numOfDays; i++) {
     dateBubble.push(
@@ -185,7 +202,8 @@ export default function Appointment({ navigation }) {
         style={styles.confirmButton}
         activeOpacity={0.8}
         onPress={() => {
-          alert("Successfully");
+          storeSubject();
+          alert("add Successfully");
           navigation.navigate("Appointment");
         }}
       >

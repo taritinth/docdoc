@@ -7,8 +7,9 @@ import {
   ScrollView,
   useWindowDimensions,
 } from "react-native";
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { app } from "../database/firebaseDB";
 
 export default function TabViewExample() {
   const layout = useWindowDimensions();
@@ -18,32 +19,83 @@ export default function TabViewExample() {
     { key: "second", title: "History" },
   ]);
   const [listAppointment, setListAppointment] = useState([1, 2, 3, 4, 5, 6]);
+  let unsubscribe, unsubscribedoctor;
+  const subjCollection = app.firestore().collection("appointment");
+  const subjCollectiondoctor = app
+    .firestore()
+    .collection("doctor")
+    .doc("fdsUMdSk22QtffilTDnS");
+  // const [month, setMonth] = useState(""); // 0-11
+  // const [year, setYear] = useState("");
+  // const [date, setDate] = useState("");
+  // const [time, setTime] = useState("");
+  const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
+  const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
+
+  const [listinfoappoint, setListinfoappoint] = useState([]);
+  const [listdoc, setListdoc] = useState("");
+
+  const getCollection = (querySnapshot) => {
+    const all_data = [];
+    querySnapshot.forEach((res) => {
+      const { time, month, year, date, appointmented, appointmenter } =
+        res.data();
+      all_data.push({
+        appointmenter,
+        appointmented,
+        month,
+        year,
+        date,
+        time,
+      });
+    });
+    // console.log(all_data);
+    setListinfoappoint(
+      all_data.filter(
+        (data) =>
+          data.appointmenter == appointmenter &&
+          data.appointmented == appointmented
+      )
+    );
+  };
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    unsubscribe = subjCollection.onSnapshot(getCollection);
+    subjCollectiondoctor.get().then((res) => {
+      // console.log("tuu");
+      setListdoc(res.data());
+      // console.log(listdoc);
+    });
+  }, []);
 
   const FirstRoute = () => (
     <View style={styles.container}>
       <ScrollView>
-        {listAppointment.map((element) => {
+        {listinfoappoint.map((element, index) => {
           return (
-            <View style={styles.appointment} key={element}>
+            <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
                 <Text>Date</Text>
-                <Text>3 June 2021</Text>
+                <Text>
+                  {element.date} {element.month} {element.year}
+                </Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Time</Text>
-                <Text>10.30 am</Text>
+                <Text>{element.time}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>Dr.JimRoBo</Text>
+                <Text>{listdoc.name}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
-                <Text>RoBo</Text>
+                <Text>{listdoc.type}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Place</Text>
-                <Text>Robo Center</Text>
+                <Text>{listdoc.place}</Text>
               </View>
             </View>
           );
