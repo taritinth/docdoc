@@ -45,10 +45,7 @@ const Profile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.image}>
-        <Image
-          style={styles.profileimg}
-          source={require("../assets/Boss_4.png")}
-        />
+        <Image style={styles.profileimg} source={{ uri: userinfo.image }} />
         <TouchableOpacity
           style={styles.editprofile}
           activeOpacity={0.8}
