@@ -12,16 +12,55 @@ import {
   Image,
   Button,
   Alert,
+  FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 // import MapView, { Marker } from "react-native-maps";
+import { app, auth } from "../database/firebaseDB";
+// import * as firebase from "firebase";
+import Loading from "../components/Loading";
 
-const Chat = ({ navigation }) => {
-  let [inputMethod, setInputMethod] = useState("text");
-  let [text, setText] = useState("");
-  let [messages, setMessages] = useState("");
-  let [scrollView, setScrollView] = useState(null);
+const Chat = ({ route, navigation }) => {
+  const [inputMethod, setInputMethod] = useState("text");
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [scrollView, setScrollView] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const { chatId, partnerInfo } = route.params;
+
+  useEffect(() => {
+    const subscriber = app
+      .firestore()
+      .collection("chats")
+      .doc(chatId)
+      .collection("messages")
+      .orderBy("timestamp", "asc") // Sorted by date in ascending direction
+      .onSnapshot((querySnapshot) => {
+        let chatMessages = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          chatMessages.push(data);
+        });
+        if (loading) {
+          setLoading(false);
+        }
+
+        setMessages(chatMessages);
+      });
+
+    navigation.setOptions({ title: "Unknown" });
+
+    return () => {
+      subscriber();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
 
   const onPressImage = () => {
     if (inputMethod == "image") {
@@ -36,6 +75,19 @@ const Chat = ({ navigation }) => {
     }, 100);
   };
 
+  const onPressCalendar = () => {
+    if (inputMethod == "calendar") {
+      setInputMethod("text");
+      return;
+    }
+
+    Keyboard.dismiss();
+
+    setTimeout(() => {
+      setInputMethod("calendar");
+    }, 100);
+  };
+
   const onFocusTextInput = () => {
     setInputMethod("text");
   };
@@ -46,14 +98,71 @@ const Chat = ({ navigation }) => {
 
   const onPressSendMessage = () => {
     if (text) {
-      let msgObj = { id: Date.now(), type: "text", message: text };
+      // let msgObj = { id: Date.now(), type: "text", message: text };
 
-      setText("");
-      setMessages((messages) => [...messages, msgObj]);
+      // Get a new write batch
+      // var batch = app.firestore().batch();
+
+      // var ref1 = app
+      //   .firestore()
+      //   .collection("chats")
+      //   .doc(chatId)
+      //   .collection("messages");
+
+      // batch.add(ref1, {
+      //   type: inputMethod,
+      //   sentBy: auth.currentUser.uid,
+      //   messageText: text,
+      //   timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      // });
+
+      // var ref2 = app.firestore().collection("chats").doc(chatId);
+
+      // batch.update(ref2, {
+      //   lastMessageType: inputMethod,
+      //   lastSentBy: auth.currentUser.uid,
+      //   lastMessageText: text,
+      //   lastTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      // });
+
+      // // Commit the batch
+      // batch.commit().then(function () {
+      //   setText("");
+      // });
+
+      const timestamp = new Date().getTime();
+
+      app
+        .firestore()
+        .collection("chats")
+        .doc(chatId)
+        .collection("messages")
+        .add({
+          type: inputMethod,
+          sentBy: auth.currentUser.uid,
+          messageText: text,
+          timestamp: timestamp,
+        })
+        .then((docRef) => {
+          app
+            .firestore()
+            .collection("chats")
+            .doc(chatId)
+            .update({
+              lastMessageId: docRef.id,
+              lastMessageType: inputMethod,
+              lastSentBy: auth.currentUser.uid,
+              lastMessageText: text,
+              lastTimestamp: timestamp,
+            })
+            .then((res) => {
+              setText("");
+            });
+        });
     }
   };
 
-  const handleLongPress = (id) => {
+  const handleLongPress = (msgId) => {
     Alert.alert(
       "Delete message?",
       "Are you sure to permanently delete this message?",
@@ -66,7 +175,13 @@ const Chat = ({ navigation }) => {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            setMessages(messages.filter((msg) => msg.id != id));
+            const delSubjDoc = app
+              .firestore()
+              .collection("chats")
+              .doc(chatId)
+              .collection("messages")
+              .doc(msgId);
+            delSubjDoc.delete().then((res) => {});
           },
         },
       ]
@@ -87,15 +202,24 @@ const Chat = ({ navigation }) => {
               case "text":
                 return (
                   <TouchableOpacity
-                    style={[
-                      styles.myChatBubble,
-                      { backgroundColor: "#0a95ff" },
-                    ]}
+                    style={
+                      msg.sentBy == auth.currentUser.uid
+                        ? styles.myChatBubble
+                        : styles.otherChatBubble
+                    }
                     key={msg.id}
                     activeOpacity={0.9}
                     onLongPress={() => handleLongPress(msg.id)}
                   >
-                    <Text style={[styles.myChatText]}>{msg.message}</Text>
+                    <Text
+                      style={
+                        msg.sentBy == auth.currentUser.uid
+                          ? styles.myChatText
+                          : styles.otherChatText
+                      }
+                    >
+                      {msg.messageText}
+                    </Text>
                   </TouchableOpacity>
                 );
               case "image":
@@ -117,6 +241,20 @@ const Chat = ({ navigation }) => {
             <Text>image</Text>
           </View>
         );
+      case "calendar":
+        return (
+          <View style={styles.inputMethodEditor}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Appointment2", {
+                  appointmented: "fdsUMdSk22QtffilTDnS",
+                })
+              }
+            >
+              <Text>Appointment</Text>
+            </TouchableOpacity>
+          </View>
+        );
       default:
         break;
     }
@@ -132,6 +270,13 @@ const Chat = ({ navigation }) => {
             onPress={() => onPressImage()}
           >
             <Icon name={"image"} size={22} color={"#ced4da"} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.toolbarItem}
+            onPress={() => onPressCalendar()}
+          >
+            <Icon name={"calendar"} size={22} color={"#ced4da"} />
           </TouchableOpacity>
           <TextInput
             value={text}
@@ -154,6 +299,10 @@ const Chat = ({ navigation }) => {
     );
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <View style={styles.container}>
       {renderMessages()}
@@ -171,13 +320,14 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "white",
+    paddingTop: 20,
   },
   inputMethodEditor: {
     height: 282,
     backgroundColor: "white",
   },
   toolbar: {
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     borderTopColor: "#e2e2e2",
     backgroundColor: "white",
     paddingHorizontal: 10,
@@ -193,7 +343,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "#d3d3d3",
     paddingVertical: 5,
     paddingHorizontal: 15,
@@ -212,11 +362,15 @@ const styles = StyleSheet.create({
   myChatBubble: {
     alignSelf: "flex-end",
     maxWidth: "70%",
+    backgroundColor: "#0a95ff",
     borderRadius: 30,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginVertical: 5,
     marginHorizontal: 10,
+  },
+  otherChatText: {
+    color: "black",
   },
   myChatText: {
     color: "white",
@@ -241,3 +395,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+export default Chat;

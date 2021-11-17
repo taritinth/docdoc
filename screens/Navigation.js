@@ -14,6 +14,7 @@ import SignUp2 from "./SignUp2";
 import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
+import Chat from "./Chat";
 
 const docdocNavigator = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -38,6 +39,11 @@ export default function Navigation() {
         <docdocNavigator.Screen
           name="Forgetpassword"
           component={Forgetpassword}
+        />
+        <docdocNavigator.Screen
+          name="Chat"
+          component={Chat}
+          options={{ title: "Chat", headerShown: true }}
         />
         <docdocNavigator.Screen
           name="Appointment2"
