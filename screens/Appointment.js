@@ -45,6 +45,7 @@ export default function Appointment({ navigation }) {
   const [selectdate, setSelectdate] = useState(datenow);
   const [selecttime, setSelecttime] = useState("10.00 a.m.");
   const subjCollection = app.firestore().collection("appointment");
+  const [doctorinfo, setDoctorinfo] = useState("");
 
   const [userinfo, setUserinfo] = useState([]);
 
@@ -53,11 +54,20 @@ export default function Appointment({ navigation }) {
     .collection("user")
     .doc(auth.currentUser.uid);
 
+  const docInfojCollection = app
+    .firestore()
+    .collection("doctor")
+    .doc("fdsUMdSk22QtffilTDnS");
+
   useEffect(() => {
     userInfojCollection.get().then((res) => {
       // console.log(res.data());
       setUserinfo(res.data());
       // console.log(userinfo);
+    });
+    docInfojCollection.get().then((res) => {
+      setDoctorinfo(res.data());
+      console.log(res.data().appointmentlist[0]);
     });
   }, []);
 
@@ -92,6 +102,45 @@ export default function Appointment({ navigation }) {
       date: selectdate,
       time: selecttime,
     });
+  }
+  // 01.00 p.m.19Sep2021
+  function checktime(time, index) {
+    console.log("aaaa");
+    if (false && doctorinfo.appointmentlist) {
+      console.log("view");
+      return (
+        <View
+          style={[styles.buttonContainer, { backgroundColor: "red" }]}
+          key={index}
+        >
+          <Text
+            style={[styles.buttonText, selecttime == time && { color: "#fff" }]}
+          >
+            {time}
+          </Text>
+        </View>
+      );
+    } else {
+      console.log(time, index);
+      return (
+        <TouchableOpacity
+          style={[
+            styles.buttonContainer,
+            selecttime == time ? styles.selecteddate : styles.notselectdate,
+          ]}
+          key={index}
+          onPress={() => {
+            setSelecttime(time);
+          }}
+        >
+          <Text
+            style={[styles.buttonText, selecttime == time && { color: "#fff" }]}
+          >
+            {time}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
   }
 
   for (let i = datenow; i <= numOfDays; i++) {
@@ -184,34 +233,10 @@ export default function Appointment({ navigation }) {
           );
         })}
       </View>
-
+      {/* afternoon time */}
       <Text style={styles.afternoonSlots}>Afternoon Slots</Text>
       <View style={styles.buttons} activeOpacity={0.8}>
-        {afternoonTime.map((atime, index) => {
-          return (
-            <TouchableOpacity
-              style={[
-                styles.buttonContainer,
-                selecttime == atime
-                  ? styles.selecteddate
-                  : styles.notselectdate,
-              ]}
-              key={index}
-              onPress={() => {
-                setSelecttime(atime);
-              }}
-            >
-              <Text
-                style={[
-                  styles.buttonText,
-                  selecttime == atime && { color: "#fff" },
-                ]}
-              >
-                {atime}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+        {afternoonTime.map((atime, index) => checktime(atime, index))}
       </View>
 
       <TouchableOpacity
