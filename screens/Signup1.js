@@ -1,3 +1,5 @@
+"use strict";
+
 import React, { Component, useState } from "react";
 import {
   StyleSheet,
@@ -14,7 +16,10 @@ import { useValidation } from "react-native-form-validator";
 const SignUp1 = ({ navigation }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  let [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [errorphone, setErrorphone] = useState(!true);
+  const [errorname, setErrorname] = useState(!true);
+  const [countchar, setCountchar] = useState(0);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -54,20 +59,16 @@ const SignUp1 = ({ navigation }) => {
 
   const [iserror, setIserror] = useState(false);
 
-  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
-    useValidation({
-      state: { name, phone, selectedImage },
-    });
+  function showerror(error) {
+    return <Text style={{ color: "red" }}>{error}</Text>;
+  }
 
   function checkvalidate() {
-    validate({
-      name: { required: true },
-      phone: { minlength: 9, maxlength: 10, required: true, numbers: true },
-      selectedImage: { required: true },
-    });
-    if (getErrorMessages) {
-      alert(getErrorMessages());
+    if (errorphone || errorname || countchar > 0) {
+      alert("Name or Phone is false");
       // setIserror(false);
+    } else if (!selectedImage || !name || !phone) {
+      alert("Please enter image or name or phone");
     } else {
       navigation.navigate("Signup2", {
         fullname: name,
@@ -83,17 +84,36 @@ const SignUp1 = ({ navigation }) => {
       <View style={styles.image}>{img()}</View>
       <Text style={styles.fullname}>Fullname</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, errorname && styles.iserror]}
         placeholder="Fullname"
-        onChangeText={(text) => setName(text)}
+        onChangeText={(text) => {
+          if (text.length < 1) {
+            setErrorname(true);
+          } else {
+            setErrorname(false);
+            setName(text);
+          }
+        }}
       ></TextInput>
+      {errorname && showerror("Name minLength is 1")}
 
       <Text style={styles.phone}>Phone</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, errorphone && styles.iserror]}
         placeholder="Phone"
-        onChangeText={(text) => setPhone(text)}
+        maxLength={10}
+        onChangeText={(text) => {
+          if (text.length < 9) {
+            setErrorphone(true);
+            // setCountchar(countchar + 1);
+          } else {
+            setErrorphone(false);
+            setPhone(text);
+          }
+        }}
       ></TextInput>
+      {errorphone && showerror("Phonenumber minLength is 9 or charracter")}
+
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
@@ -135,6 +155,10 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 30,
     borderRadius: 30,
+  },
+  iserror: {
+    borderWidth: 1,
+    borderColor: "red",
   },
   fullname: {
     fontSize: 18,

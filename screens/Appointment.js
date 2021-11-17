@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { Entypo } from "@expo/vector-icons";
-import { app } from "../database/firebaseDB";
+import { app, auth } from "../database/firebaseDB";
 
 export default function Appointment({ navigation }) {
   const [days, setDays] = useState([
