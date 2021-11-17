@@ -69,9 +69,10 @@ export default function TabViewExample() {
     // sort by ????
     all_data.sort((item2, item1) => {
       return (
-        item1.date < item2.date &&
-        months.findIndex((element) => element == item1.month) <=
-          months.findIndex((element) => element == item2.month)
+        item1.date < item2.date
+        // &&
+        // months.findIndex((element) => element == item1.month) <=
+        //   months.findIndex((element) => element == item2.month)
       );
       // console.log(item2);
     });
@@ -92,7 +93,8 @@ export default function TabViewExample() {
         (data) =>
           data.appointmenter == appointmenter &&
           data.appointmented == appointmented &&
-          months.findIndex((element) => element == data.month) <
+          data.date < datenow &&
+          months.findIndex((element) => element == data.month) <=
             new Date().getMonth()
       )
     );
@@ -108,6 +110,16 @@ export default function TabViewExample() {
       // console.log(listdoc);
     });
   }, []);
+
+  // delete appointment
+  function deleteSubject(key) {
+    alert(key);
+    // const delSubjDoc = firebase.firestore().collection("appointment").doc(key);
+    // delSubjDoc.delete().then((res) => {
+    //   Alert.alert("Deleting Alert", "Delete Complete");
+    //   navigation.navigate("Appointment");
+    // });
+  }
 
   const FirstRoute = () => (
     <View style={styles.container}>
@@ -138,7 +150,12 @@ export default function TabViewExample() {
                 <Text>{listdoc.place}</Text>
               </View>
               {datenow + 1 <= element.date ? (
-                <TouchableOpacity style={[styles.appointmentdetail]}>
+                <TouchableOpacity
+                  style={[styles.appointmentdetail]}
+                  onPress={() => {
+                    deleteSubject(element.key);
+                  }}
+                >
                   <Text style={styles.cancel}>Cancel</Text>
                 </TouchableOpacity>
               ) : (
