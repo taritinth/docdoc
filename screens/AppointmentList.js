@@ -37,6 +37,21 @@ export default function TabViewExample() {
   const [listinhistory, setListinhistory] = useState([]);
   const [listdoc, setListdoc] = useState("");
 
+  const [months, setMonths] = useState([
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ]);
+
   const getCollection = (querySnapshot) => {
     const all_data = [];
     querySnapshot.forEach((res) => {
@@ -51,23 +66,37 @@ export default function TabViewExample() {
         time,
       });
     });
+    // sort by ????
+    all_data.sort((item2, item1) => {
+      return (
+        item1.date < item2.date &&
+        months.findIndex((element) => element == item1.month) <=
+          months.findIndex((element) => element == item2.month)
+      );
+      // console.log(item2);
+    });
     // console.log(all_data);
     setListinfoappoint(
       all_data.filter(
         (data) =>
           data.appointmenter == appointmenter &&
           data.appointmented == appointmented &&
-          data.date >= datenow
+          data.date >= datenow &&
+          months.findIndex((element) => element == data.month) >=
+            new Date().getMonth()
       )
     );
+
     setListinhistory(
       all_data.filter(
         (data) =>
           data.appointmenter == appointmenter &&
           data.appointmented == appointmented &&
-          data.date < datenow
+          months.findIndex((element) => element == data.month) <
+            new Date().getMonth()
       )
     );
+    // console.log(listinfoappoint);
   };
 
   useEffect(() => {
@@ -127,9 +156,9 @@ export default function TabViewExample() {
   const SecondRoute = () => (
     <View style={styles.container}>
       <ScrollView>
-        {listinhistory.map((element) => {
+        {listinhistory.map((element, index) => {
           return (
-            <View style={styles.appointment} key={element}>
+            <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
                 <Text>Date</Text>
                 <Text>
