@@ -29,11 +29,28 @@ export default function TabViewExample() {
   // const [year, setYear] = useState("");
   // const [date, setDate] = useState("");
   // const [time, setTime] = useState("");
+  const datenow = new Date().getDate();
   const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
   const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
 
   const [listinfoappoint, setListinfoappoint] = useState([]);
+  const [listinhistory, setListinhistory] = useState([]);
   const [listdoc, setListdoc] = useState("");
+
+  const [months, setMonths] = useState([
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ]);
 
   const getCollection = (querySnapshot) => {
     const all_data = [];
@@ -49,14 +66,39 @@ export default function TabViewExample() {
         time,
       });
     });
+    // sort by ????
+    all_data.sort((item2, item1) => {
+      return (
+        item1.date < item2.date
+        // &&
+        // months.findIndex((element) => element == item1.month) <=
+        //   months.findIndex((element) => element == item2.month)
+      );
+      // console.log(item2);
+    });
     // console.log(all_data);
     setListinfoappoint(
       all_data.filter(
         (data) =>
           data.appointmenter == appointmenter &&
-          data.appointmented == appointmented
+          data.appointmented == appointmented &&
+          data.date >= datenow &&
+          months.findIndex((element) => element == data.month) >=
+            new Date().getMonth()
       )
     );
+
+    setListinhistory(
+      all_data.filter(
+        (data) =>
+          data.appointmenter == appointmenter &&
+          data.appointmented == appointmented &&
+          data.date < datenow &&
+          months.findIndex((element) => element == data.month) <=
+            new Date().getMonth()
+      )
+    );
+    // console.log(listinfoappoint);
   };
 
   useEffect(() => {
@@ -68,6 +110,16 @@ export default function TabViewExample() {
       // console.log(listdoc);
     });
   }, []);
+
+  // delete appointment
+  function deleteSubject(key) {
+    alert(key);
+    // const delSubjDoc = firebase.firestore().collection("appointment").doc(key);
+    // delSubjDoc.delete().then((res) => {
+    //   Alert.alert("Deleting Alert", "Delete Complete");
+    //   navigation.navigate("Appointment");
+    // });
+  }
 
   const FirstRoute = () => (
     <View style={styles.container}>
@@ -97,6 +149,20 @@ export default function TabViewExample() {
                 <Text>Place</Text>
                 <Text>{listdoc.place}</Text>
               </View>
+              {datenow + 1 <= element.date ? (
+                <TouchableOpacity
+                  style={[styles.appointmentdetail]}
+                  onPress={() => {
+                    deleteSubject(element.key);
+                  }}
+                >
+                  <Text style={styles.cancel}>Cancel</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={[styles.appointmentdetail]}>
+                  <Text style={styles.noncancel}>Cancel</Text>
+                </View>
+              )}
             </View>
           );
         })}
@@ -107,28 +173,34 @@ export default function TabViewExample() {
   const SecondRoute = () => (
     <View style={styles.container}>
       <ScrollView>
-        {listAppointment.map((element) => {
+        {listinhistory.map((element, index) => {
           return (
-            <View style={styles.appointment} key={element}>
+            <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
                 <Text>Date</Text>
-                <Text>3 June 2021</Text>
+                <Text>
+                  {element.date} {element.month} {element.year}
+                </Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Time</Text>
-                <Text>10.30 am</Text>
+                <Text>{element.time}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>Dr.JimRoBo</Text>
+                <Text>{listdoc.name}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
-                <Text>RoBo</Text>
+                <Text>{listdoc.type}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Place</Text>
-                <Text>Robo Center</Text>
+                <Text>{listdoc.place}</Text>
+              </View>
+              <View style={styles.appointmentdetail}>
+                <Text>Status</Text>
+                <Text style={{ color: "green" }}>treated</Text>
               </View>
             </View>
           );
@@ -209,5 +281,21 @@ const styles = StyleSheet.create({
     // flex: 1,
     padding: 10,
     width: "33%",
+  },
+  cancel: {
+    color: "red",
+    padding: 10,
+    textAlign: "center",
+    borderColor: "red",
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  noncancel: {
+    color: "gray",
+    padding: 10,
+    textAlign: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
   },
 });

@@ -16,8 +16,8 @@ import { auth } from "../database/firebaseDB";
 import { app } from "../database/firebaseDB";
 
 const Profile = ({ navigation }) => {
-  // const [fullname, setFullname] = useState("");
   const [userinfo, setUserinfo] = useState([]);
+  const [image, setImage] = useState("")
 
   const subjCollection = app
     .firestore()
@@ -26,9 +26,8 @@ const Profile = ({ navigation }) => {
 
   useEffect(() => {
     subjCollection.get().then((res) => {
-      // console.log(res.data());
       setUserinfo(res.data());
-      // console.log(userinfo);
+      setImage(res.data().image)
     });
   }, []);
 
@@ -45,10 +44,7 @@ const Profile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.image}>
-        <Image
-          style={styles.profileimg}
-          source={require("../assets/Boss_4.png")}
-        />
+        <Image style={styles.profileimg} source={{ uri: image }} />
         <TouchableOpacity
           style={styles.editprofile}
           activeOpacity={0.8}

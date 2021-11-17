@@ -1,30 +1,30 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\phawit-s\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add expo-image-picker@~11.0.3
+  C:\Program Files (x86)\nodejs\node.exe C:\Users\fluke\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
 
 PATH: 
-  C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\phawit-s\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\phawit-s\AppData\Local\Programs\Python\Python39\;C:\Users\phawit-s\AppData\Local\Microsoft\WindowsApps;C:\Users\phawit-s\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.2\bin;;C:\Users\phawit-s\AppData\Roaming\npm;C:\Users\phawit-s\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\JetBrains\IntelliJ IDEA 2021.2\bin;;C:\Program Files\Java\jdk-11.0.12\bin;C:\ffmpeg\bin;C:\Users\phawit-s\AppData\Local\GitHubDesktop\bin
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\nodejs\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\src\flutter\bin;C:\Program Files\Java;C:\Program Files\Java\java-se-8u41-ri\bin;C:\Program Files\Java\java-se-8u41-ri;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Users\fluke\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\fluke\AppData\Local\Programs\Python\Python36\;C:\Users\fluke\anaconda3;C:\Users\fluke\anaconda3\Library\mingw-w64\bin;C:\Users\fluke\anaconda3\Library\usr\bin;C:\Users\fluke\anaconda3\Library\bin;C:\Users\fluke\anaconda3\Scripts;C:\Users\fluke\AppData\Local\Microsoft\WindowsApps;C:\Users\fluke\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\fluke\AppData\Roaming\npm;C:\src\flutter\bin;C:\Users\fluke\AppData\Local\Android\Sdk;C:\Users\fluke\AppData\Local\Android\Sdk\tools;C:\Users\fluke\AppData\Local\Android\Sdk\tools\bin;C:\Users\fluke\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\JetBrains\IntelliJ IDEA 2021.2\bin;;C:\Program Files\Java\jdk-11.0.12\bin;C:\Users\fluke\AppData\Local\GitHubDesktop\bin;C:\Users\fluke\AppData\Local\Temp\chocolatey\rabbitmq;
 
 Yarn version: 
   1.22.11
 
 Node version: 
-  14.17.4
+  14.17.0
 
 Platform: 
-  win32 x64
+  win32 ia32
 
 Trace: 
   Error: https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.29.tgz: Request failed "404 Not Found"
-      at ResponseError.ExtendableBuiltin (C:\Users\phawit-s\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:696:66)
-      at new ResponseError (C:\Users\phawit-s\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:802:124)
-      at Request.<anonymous> (C:\Users\phawit-s\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67062:16)
-      at Request.emit (events.js:400:28)
-      at Request.module.exports.Request.onRequestResponse (C:\Users\phawit-s\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141640:10)
-      at ClientRequest.emit (events.js:400:28)
+      at ResponseError.ExtendableBuiltin (C:\Users\fluke\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:696:66)
+      at new ResponseError (C:\Users\fluke\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:802:124)
+      at Request.<anonymous> (C:\Users\fluke\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67062:16)
+      at Request.emit (events.js:376:20)
+      at Request.module.exports.Request.onRequestResponse (C:\Users\fluke\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141640:10)
+      at ClientRequest.emit (events.js:376:20)
       at HTTPParser.parserOnIncomingClient (_http_client.js:647:27)
       at HTTPParser.parserOnHeadersComplete (_http_common.js:126:17)
+      at HTTPParser.execute (<anonymous>)
       at TLSSocket.socketOnData (_http_client.js:515:22)
-      at TLSSocket.emit (events.js:400:28)
 
 npm manifest: 
   {
@@ -38,22 +38,27 @@ npm manifest:
     },
     "dependencies": {
       "@react-navigation/bottom-tabs": "^6.0.9",
+      "@react-navigation/core": "^6.1.0",
       "@react-navigation/native": "^6.0.6",
       "@react-navigation/native-stack": "^6.2.5",
-      "expo": "~43.0.0",
-      "expo-status-bar": "~1.1.0",
-      "react": "17.0.1",
-      "react-dom": "17.0.1",
-      "react-native": "^0.66.1",
+      "expo": "~42.0.1",
+      "expo-image-picker": "^11.0.3",
+      "expo-status-bar": "~1.0.4",
+      "firebase": "8.2.3",
+      "react": "16.13.1",
+      "react-dom": "16.13.1",
+      "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+      "react-native-form-validator": "^0.5.1",
       "react-native-image-picker": "^4.1.2",
       "react-native-pager-view": "^5.4.7",
-      "react-native-safe-area-context": "3.3.2",
-      "react-native-screens": "~3.8.0",
+      "react-native-safe-area-context": "3.2.0",
+      "react-native-screens": "~3.4.0",
+      "react-native-select-dropdown": "^1.4.0",
       "react-native-tab-view": "^3.1.1",
-      "react-native-web": "0.17.1"
+      "react-native-web": "~0.13.12"
     },
     "devDependencies": {
-      "@babel/core": "^7.12.9"
+      "@babel/core": "^7.9.0"
     },
     "private": true
   }

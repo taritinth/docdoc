@@ -1,4 +1,6 @@
-import React, { Component , useState} from "react";
+"use strict";
+
+import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,33 +8,116 @@ import {
   Button,
   TouchableOpacity,
   TextInput,
+  Image,
 } from "react-native";
-
+import * as ImagePicker from "expo-image-picker";
+import { useValidation } from "react-native-form-validator";
 
 const SignUp1 = ({ navigation }) => {
-  const [name , setName] = useState("")
-  const [phone , setPhone] = useState("")
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [errorphone, setErrorphone] = useState(!true);
+  const [errorname, setErrorname] = useState(!true);
+  const [countchar, setCountchar] = useState(0);
 
+  let openImagePickerAsync = async () => {
+    let permissionResult =
+      await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setSelectedImage({ localUri: pickerResult.uri });
+  };
+
+  function img() {
+    if (selectedImage !== null) {
+      return (
+        <TouchableOpacity onPress={openImagePickerAsync}>
+          <Image
+            source={{ uri: selectedImage.localUri }}
+            style={styles.profileimg}
+          />
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={openImagePickerAsync}
+          style={styles.profileimg}
+        ></TouchableOpacity>
+      );
+    }
+  }
+
+  const [iserror, setIserror] = useState(false);
+
+  function showerror(error) {
+    return <Text style={{ color: "red" }}>{error}</Text>;
+  }
+
+  function checkvalidate() {
+    if (errorphone || errorname || countchar > 0) {
+      alert("Name or Phone is false");
+      // setIserror(false);
+    } else if (!selectedImage || !name || !phone) {
+      alert("Please enter image or name or phone");
+    } else {
+      navigation.navigate("Signup2", {
+        fullname: name,
+        phone: phone,
+        image: selectedImage,
+      });
+    }
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
+      <View style={styles.image}>{img()}</View>
       <Text style={styles.fullname}>Fullname</Text>
-      <TextInput style={styles.input} 
-      placeholder="Fullname"
-      onChangeText={(text)=> setName(text)}
+      <TextInput
+        style={[styles.input, errorname && styles.iserror]}
+        placeholder="Fullname"
+        onChangeText={(text) => {
+          if (text.length < 1) {
+            setErrorname(true);
+          } else {
+            setErrorname(false);
+            setName(text);
+          }
+        }}
       ></TextInput>
+      {errorname && showerror("Name minLength is 1")}
 
       <Text style={styles.phone}>Phone</Text>
-      <TextInput style={styles.input} placeholder="Phone"
-      onChangeText={(text)=> setPhone(text)}
+      <TextInput
+        style={[styles.input, errorphone && styles.iserror]}
+        placeholder="Phone"
+        maxLength={10}
+        onChangeText={(text) => {
+          if (text.length < 9) {
+            setErrorphone(true);
+            // setCountchar(countchar + 1);
+          } else {
+            setErrorphone(false);
+            setPhone(text);
+          }
+        }}
       ></TextInput>
+      {errorphone && showerror("Phonenumber minLength is 9 or charracter")}
+
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
-        onPress={() => {
-          navigation.navigate("Signup2", {fullname: name, phone: phone});
-        }}
+        onPress={() => checkvalidate()}
       >
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Next</Text>
@@ -49,6 +134,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
+  },
+  image: {
+    zIndex: 1,
+    top: -80,
   },
   title: {
     color: "#525252",
@@ -67,6 +156,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 30,
   },
+  iserror: {
+    borderWidth: 1,
+    borderColor: "red",
+  },
   fullname: {
     fontSize: 18,
     marginLeft: 10,
@@ -81,6 +174,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "flex-start",
     marginTop: 25,
+  },
+  profileimg: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    overflow: "hidden",
+    borderWidth: 2,
+    alignSelf: "center",
   },
 
   button: {
