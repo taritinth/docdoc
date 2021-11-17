@@ -43,9 +43,9 @@ export default function Appointment({ navigation }) {
   const [year, setYear] = useState(2021);
   const datenow = new Date().getDate();
   const [selectdate, setSelectdate] = useState(datenow);
-  const [selecttime, setSelecttime] = useState("10.00 a.m.");
+  const [selecttime, setSelecttime] = useState();
   const subjCollection = app.firestore().collection("appointment");
-  const [doctorinfo, setDoctorinfo] = useState("");
+  const [doctorinfo, setDoctorinfo] = useState();
 
   const [userinfo, setUserinfo] = useState([]);
 
@@ -59,15 +59,20 @@ export default function Appointment({ navigation }) {
     .collection("doctor")
     .doc("fdsUMdSk22QtffilTDnS");
 
+  // useEffect(() => {
+  //   userInfojCollection.get().then((res) => {
+  //     // console.log(res.data());
+  //     setUserinfo(res.data());
+  //     // console.log(userinfo);
+  //   });
+  // }, []);
+
   useEffect(() => {
-    userInfojCollection.get().then((res) => {
-      // console.log(res.data());
-      setUserinfo(res.data());
-      // console.log(userinfo);
-    });
     docInfojCollection.get().then((res) => {
-      setDoctorinfo(res.data());
-      console.log(res.data().appointmentlist[0]);
+      const a = res.data();
+      // return a;
+      setDoctorinfo(a);
+      // console.log("AAAAAA");
     });
   }, []);
 
@@ -103,11 +108,24 @@ export default function Appointment({ navigation }) {
       time: selecttime,
     });
   }
+
+  function addQueueDoctor(queue) {
+    // alert(queue);
+    let list = [queue];
+    doctorinfo.appointmentlist.forEach((item) => list.push(item));
+    console.log(list);
+    docInfojCollection.update({ appointmentlist: list });
+  }
   // 01.00 p.m.19Sep2021
   function checktime(time, index) {
-    console.log("aaaa");
-    if (false && doctorinfo.appointmentlist) {
-      console.log("view");
+    let issametime = false;
+    doctorinfo.appointmentlist.forEach((item) => {
+      // console.log(time + selectdate + months[month] + year + "----" + item);
+      if (item == time + selectdate + months[month] + year) {
+        issametime = true;
+      }
+    });
+    if (issametime) {
       return (
         <View
           style={[styles.buttonContainer, { backgroundColor: "red" }]}
@@ -120,8 +138,8 @@ export default function Appointment({ navigation }) {
           </Text>
         </View>
       );
-    } else {
-      console.log(time, index);
+    } else if (!issametime) {
+      // console.log(time, index);
       return (
         <TouchableOpacity
           style={[
@@ -205,53 +223,53 @@ export default function Appointment({ navigation }) {
         </ScrollView>
       </View>
 
+      {/* morningtime */}
       <Text style={styles.morningSlots}>Morning Slots</Text>
-      <View style={styles.buttons} activeOpacity={0.8}>
-        {morningTime.map((mtime, index) => {
-          return (
-            <TouchableOpacity
-              style={[
-                styles.buttonContainer,
-                selecttime == mtime
-                  ? styles.selecteddate
-                  : styles.notselectdate,
-              ]}
-              key={index}
-              onPress={() => {
-                setSelecttime(mtime);
-              }}
-            >
-              <Text
-                style={[
-                  styles.buttonText,
-                  selecttime == mtime && { color: "#fff" },
-                ]}
-              >
-                {mtime}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-      {/* afternoon time */}
-      <Text style={styles.afternoonSlots}>Afternoon Slots</Text>
-      <View style={styles.buttons} activeOpacity={0.8}>
-        {afternoonTime.map((atime, index) => checktime(atime, index))}
-      </View>
 
-      <TouchableOpacity
-        style={styles.confirmButton}
-        activeOpacity={0.8}
-        onPress={() => {
-          storeSubject();
-          alert("add Successfully");
-          navigation.navigate("Appointment");
-        }}
-      >
-        <View style={styles.buttonContainer2}>
-          <Text style={styles.buttonText2}>Confirm</Text>
+      {!!doctorinfo ? (
+        <View style={styles.buttons} activeOpacity={0.8}>
+          {morningTime.map((mtime, index) => checktime(mtime, index))}
         </View>
-      </TouchableOpacity>
+      ) : (
+        <Text>loading</Text>
+      )}
+
+      {/* afternoon time */}
+
+      <Text style={styles.afternoonSlots}>Afternoon Slots</Text>
+
+      {!!doctorinfo ? (
+        <View style={styles.buttons} activeOpacity={0.8}>
+          {afternoonTime.map((atime, index) => checktime(atime, index))}
+        </View>
+      ) : (
+        <Text>loading</Text>
+      )}
+
+      {/* checktime(atime, index) */}
+      {!!doctorinfo ? (
+        <TouchableOpacity
+          style={styles.confirmButton}
+          activeOpacity={0.8}
+          onPress={() => {
+            if (!!selecttime) {
+              storeSubject();
+              addQueueDoctor(selecttime + selectdate + months[month] + year);
+              alert("add Successfully");
+              navigation.navigate("Appointment");
+              // console.log(doctorinfo);
+            } else {
+              alert("Please enter time");
+            }
+          }}
+        >
+          <View style={styles.buttonContainer2}>
+            <Text style={styles.buttonText2}>Confirm</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <Text>loading</Text>
+      )}
     </View>
   );
 }
