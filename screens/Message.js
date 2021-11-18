@@ -108,7 +108,7 @@ export default function Message({ navigation }) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={chats}
+        data={chats.sort((a, b) => b.lastTimestamp - a.lastTimestamp)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
