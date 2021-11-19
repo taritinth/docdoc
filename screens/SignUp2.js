@@ -7,6 +7,7 @@ import {
   TextInput,
 } from "react-native";
 import { auth, app } from "../database/firebaseDB";
+import RNPasswordStrengthMeter from "react-native-password-strength-meter";
 
 const Signup2 = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
@@ -16,6 +17,9 @@ const Signup2 = ({ route, navigation }) => {
   const [username, setUsername] = useState("");
   const { signup1 } = route.params;
   const [image, setImage] = useState("");
+  onChange = (password, score, { label, labelColor, activeBarColor }) => {
+    console.log(password, score, { label, labelColor, activeBarColor });
+  };
 
   useEffect(() => {
     console.log(route.params);
@@ -36,7 +40,7 @@ const Signup2 = ({ route, navigation }) => {
           username: username,
           phone: phone,
           fullname: name,
-          image: image
+          image: image,
         });
         console.log(user.uid);
         console.log("Registered with:", user.email);
@@ -61,13 +65,15 @@ const Signup2 = ({ route, navigation }) => {
       ></TextInput>
 
       <Text style={styles.password}>Password</Text>
-      <TextInput
+      {/* <TextInput
         secureTextEntry={true}
         style={styles.input}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
-      ></TextInput>
-
+      ></TextInput> */}
+      <View style={styles.input}>
+        <RNPasswordStrengthMeter onChangeText={this.onChange} meterType="bar" />
+      </View>
       <TouchableOpacity
         onPress={handleSignUp}
         style={[styles.button, styles.buttonContainer]}
