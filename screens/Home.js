@@ -16,6 +16,7 @@ import Signup1 from "./Signup1";
 import Loading from "../components/Loading";
 import { app, auth } from "../database/firebaseDB";
 import { Button } from "react-native-elements";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 
 export default function Home({ navigation }) {
   //   const [coloricon, setColoricon] = useState("AppointmentList");
@@ -39,9 +40,9 @@ export default function Home({ navigation }) {
   const setOneToOneChat = (partnerInfo) => {
     setLoading(true);
 
-    senderId = auth.currentUser.uid;
-    receiverId = partnerInfo.uid;
-    chatDocId = generateDocId(senderId, receiverId);
+    let senderId = auth.currentUser.uid;
+    let receiverId = partnerInfo.uid;
+    let chatDocId = generateDocId(senderId, receiverId);
     const timestamp = new Date().getTime();
 
     app
@@ -132,26 +133,44 @@ export default function Home({ navigation }) {
           onContentSizeChange={() => scrollView.scrollToEnd({ animated: true })}
         >
           {doctors.map((doctor) => (
-            <View style={styles.appointment} key={doctor.uid}>
-              <View>
-                <Text>{doctor.fullname}</Text>
+            <View style={styles.chatbox}>
+              <View style={styles.appointment} key={doctor.uid}>
+                <Image
+                  style={styles.img}
+                  source={{
+                    uri: doctor.image,
+                  }}
+                />
+                <View style={styles.doctordetail}>
+                  <Text style={styles.name}>Dr. {doctor.fullname}</Text>
+                  <Text style={styles.type}>{doctor.type}</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <MaterialIcons
+                      name="location-on"
+                      size={14}
+                      color="gray"
+                      style={{ marginTop: 4 }}
+                    />
+                    <Text style={styles.place}> {doctor.place}</Text>
+                  </View>
+                </View>
               </View>
-              <View>
-                <Button title="แชท" onPress={() => setOneToOneChat(doctor)} />
-              </View>
+
+              <TouchableOpacity
+                activeOpacity={0.9}
+                style={styles.chat}
+                onPress={() => setOneToOneChat(doctor)}
+              >
+                <View style={{ width: "40%" }} />
+                <Ionicons
+                  style={{ marginVertical: 10 }}
+                  name="chatbubble-ellipses-outline"
+                  size={24}
+                  color="black"
+                />
+                <Text style={{ marginVertical: 10 }}> แชท</Text>
+              </TouchableOpacity>
             </View>
-            // <View style={styles.box} key={doctor.uid}>
-            //   <View>
-            //     <Image
-            //       source={{
-            //         uri: doctor.image,
-            //       }}
-            //     />
-            //   </View>
-            //   <View style={[{ flex: 1 }]}>
-            //     <Text>{doctor.fullname}</Text>
-            //   </View>
-            // </View>
           ))}
         </ScrollView>
       </View>
@@ -177,16 +196,57 @@ const styles = StyleSheet.create({
   },
   appointment: {
     flexWrap: "wrap",
-    margin: 10,
     backgroundColor: "#ffffffff",
-    borderRadius: 4,
     flexDirection: "row",
-    shadowColor: "#000000",
-    elevation: 8,
   },
   appointmentdetail: {
     // flex: 1,
     padding: 10,
     width: "33%",
+  },
+  img: {
+    width: 65,
+    height: 65,
+    resizeMode: "cover",
+    alignSelf: "flex-end",
+    borderRadius: 150 / 2,
+    overflow: "hidden",
+    margin: 20,
+  },
+  name: {
+    fontSize: 20,
+    marginTop: 10,
+    color: "#000",
+  },
+  doctordetail: {
+    flexDirection: "column",
+  },
+  type: {
+    alignSelf: "flex-start",
+    backgroundColor: "#BEE0FF",
+    color: "#41698E",
+    padding: 5,
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  place: {
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  chat: {
+    backgroundColor: "#F6F6F6",
+    textAlign: "center",
+    // height: 40,
+    // width: "100%",
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+    flexDirection: "row",
+  },
+  chatbox: {
+    shadowColor: "#000000",
+    flexDirection: "column",
+    margin: 10,
+    borderRadius: 5,
+    elevation: 5,
   },
 });

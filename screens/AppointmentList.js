@@ -119,14 +119,21 @@ export default function TabViewExample() {
     let deleted = list.findIndex(
       (element) => element == item.time + item.date + item.month + item.year
     );
-    console.log(list.length);
-    console.log("----------------------");
-    list.splice(deleted, 1);
-    console.log(list.length);
-    // subjCollectiondoctor.update({ appointmentlist: list });
-    // const delSubjDoc = app.firestore().collection("appointment").doc(item.key);
-    // delSubjDoc.delete();
-    // alert("Delete Complete");
+    // console.log(list);
+    // console.log("----------------------", deleted);
+    if (deleted < 0) {
+      alert("Not found");
+    } else {
+      list.splice(deleted, 1);
+      subjCollectiondoctor.update({ appointmentlist: list });
+      const delSubjDoc = app
+        .firestore()
+        .collection("appointment")
+        .doc(item.key);
+      delSubjDoc.delete();
+      alert("Delete Complete");
+    }
+    // console.log(list);
     // navigation.navigate("Appointment");
   }
 
