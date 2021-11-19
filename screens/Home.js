@@ -132,8 +132,8 @@ export default function Home({ navigation }) {
           }}
           onContentSizeChange={() => scrollView.scrollToEnd({ animated: true })}
         >
-          {doctors.map((doctor) => (
-            <View style={styles.chatbox}>
+          {doctors.map((doctor, index) => (
+            <View style={styles.chatbox} key={index}>
               <View style={styles.appointment} key={doctor.uid}>
                 <Image
                   style={styles.img}

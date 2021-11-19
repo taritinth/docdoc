@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { Component, useState, useEffect } from "react";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { app } from "../database/firebaseDB";
+import { app, auth } from "../database/firebaseDB";
 
 export default function TabViewExample() {
   const layout = useWindowDimensions();
@@ -19,23 +19,19 @@ export default function TabViewExample() {
     { key: "second", title: "History" },
   ]);
   const [listAppointment, setListAppointment] = useState([1, 2, 3, 4, 5, 6]);
-  let unsubscribe, unsubscribedoctor;
-  const subjCollection = app.firestore().collection("appointment");
-  const subjCollectiondoctor = app
+  // let unsubscribe, unsubscribedoctor;
+  const subjCollection = app
     .firestore()
-    .collection("doctor")
-    .doc("fdsUMdSk22QtffilTDnS");
-  // const [month, setMonth] = useState(""); // 0-11
-  // const [year, setYear] = useState("");
-  // const [date, setDate] = useState("");
-  // const [time, setTime] = useState("");
+    .collection("appointment")
+    .where("group", "array-contains", auth.currentUser.uid);
+  const subjCollectiondoctor = app.firestore().collection("doctor");
   const datenow = new Date().getDate();
-  const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
-  const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
+  const [appointmenter, setAppointmenter] = useState();
+  // const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
 
   const [listinfoappoint, setListinfoappoint] = useState([]);
   const [listinhistory, setListinhistory] = useState([]);
-  const [listdoc, setListdoc] = useState("");
+  const [listdoc, setListdoc] = useState([]);
 
   const [months, setMonths] = useState([
     "Jan",
@@ -53,11 +49,15 @@ export default function TabViewExample() {
   ]);
 
   const getCollection = (querySnapshot) => {
-    const all_data = [];
+    let all_data = [];
+    let doctorUid = [];
     querySnapshot.forEach((res) => {
-      const { time, month, year, date, appointmented, appointmenter } =
+      const { time, month, year, date, appointmented, appointmenter, group } =
         res.data();
-      // console.log(res.id);
+      doctorUid.push(res.data().appointmented);
+      setAppointmenter(appointmenter);
+      // getUserById(appointmented);
+      // console.log(res.data());
       all_data.push({
         key: res.id,
         appointmenter,
@@ -66,9 +66,22 @@ export default function TabViewExample() {
         year,
         date,
         time,
+        group,
       });
     });
     // sort by ????
+    // console.log(all_data.appointmented);
+
+    // subjCollectiondoctor = app.firestore().collection("doctor");
+
+    // doctorUid.forEach((userId) => {
+    //   subjCollectiondoctor = subjCollectiondoctor.where(
+    //     "members",
+    //     "==",
+    //     userId
+    //   );
+    // });
+
     all_data.sort((item2, item1) => {
       return (
         item1.date < item2.date
@@ -83,7 +96,7 @@ export default function TabViewExample() {
       all_data.filter(
         (data) =>
           data.appointmenter == appointmenter &&
-          data.appointmented == appointmented &&
+          // data.appointmented == appointmented &&
           data.date >= datenow &&
           months.findIndex((element) => element == data.month) >=
             new Date().getMonth()
@@ -94,7 +107,7 @@ export default function TabViewExample() {
       all_data.filter(
         (data) =>
           data.appointmenter == appointmenter &&
-          data.appointmented == appointmented &&
+          // data.appointmented == appointmented &&
           data.date < datenow &&
           months.findIndex((element) => element == data.month) <=
             new Date().getMonth()
@@ -103,14 +116,121 @@ export default function TabViewExample() {
     // console.log(listinfoappoint);
   };
 
+  const getUserById = (userId) => {
+    console.log(listdoc.filter((user) => user.uid == userId)[0]);
+    return listdoc.filter((user) => user.uid == userId)[0];
+  };
+
   useEffect(() => {
+    const getResult = async () => {
+      let listdoctor = [];
+      await app
+        .firestore()
+        .collection("doctor")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            data.uid = doc.id;
+            listdoctor.push(data);
+            // console.log(data);
+          });
+          setListdoc(listdoctor);
+          // console.log("tuu");
+
+          // listdoctor.push(res.data());
+          // setListdoc(listdoctor);
+          // console.log(listdoctor);
+          // console.log(listdoc);
+        });
+    };
+    getResult();
+
     // Update the document title using the browser API
-    unsubscribe = subjCollection.onSnapshot(getCollection);
-    subjCollectiondoctor.get().then((res) => {
-      // console.log("tuu");
-      setListdoc(res.data());
-      // console.log(listdoc);
-    });
+    const unsubscribe = app
+      .firestore()
+      .collection("appointment")
+      .where("group", "array-contains", auth.currentUser.uid)
+      .onSnapshot((querySnapshot) => {
+        let all_data = [];
+        let doctorUid = [];
+        querySnapshot.forEach((res) => {
+          const {
+            time,
+            month,
+            year,
+            date,
+            appointmented,
+            appointmenter,
+            group,
+          } = res.data();
+          doctorUid.push(res.data().appointmented);
+          setAppointmenter(appointmenter);
+          // getUserById(appointmented);
+          // console.log(res.data());
+          all_data.push({
+            key: res.id,
+            appointmenter,
+            appointmented,
+            month,
+            year,
+            date,
+            time,
+            group,
+          });
+        });
+        // sort by ????
+        // console.log(all_data.appointmented);
+
+        // subjCollectiondoctor = app.firestore().collection("doctor");
+
+        // doctorUid.forEach((userId) => {
+        //   subjCollectiondoctor = subjCollectiondoctor.where(
+        //     "members",
+        //     "==",
+        //     userId
+        //   );
+        // });
+
+        all_data.sort((item2, item1) => {
+          return (
+            item1.date < item2.date
+            // &&
+            // months.findIndex((element) => element == item1.month) <=
+            //   months.findIndex((element) => element == item2.month)
+          );
+          // console.log(item2);
+        });
+        // console.log(all_data);
+        setListinfoappoint(
+          all_data.filter(
+            (data) =>
+              data.appointmenter == appointmenter &&
+              // data.appointmented == appointmented &&
+              data.date >= datenow &&
+              months.findIndex((element) => element == data.month) >=
+                new Date().getMonth()
+          )
+        );
+
+        setListinhistory(
+          all_data.filter(
+            (data) =>
+              data.appointmenter == appointmenter &&
+              // data.appointmented == appointmented &&
+              data.date < datenow &&
+              months.findIndex((element) => element == data.month) <=
+                new Date().getMonth()
+          )
+        );
+        // console.log(listinfoappoint);
+      });
+
+    // .onSnapshot(getCollection);
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   // delete appointment
@@ -141,6 +261,10 @@ export default function TabViewExample() {
     <View style={styles.container}>
       <ScrollView>
         {listinfoappoint.map((element, index) => {
+          console.log(element);
+
+          let doc = getUserById(element.appointmented);
+          // console.log(doc);
           return (
             <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
@@ -155,15 +279,15 @@ export default function TabViewExample() {
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>{listdoc.name}</Text>
+                <Text>{doc.fullname}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
-                <Text>{listdoc.type}</Text>
+                <Text>{doc.type}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Place</Text>
-                <Text>{listdoc.place}</Text>
+                <Text>{doc.workplace}</Text>
               </View>
               {datenow + 1 <= element.date ? (
                 <TouchableOpacity
@@ -204,7 +328,7 @@ export default function TabViewExample() {
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>{listdoc.name}</Text>
+                <Text>{listdoc.fullname}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
