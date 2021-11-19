@@ -28,7 +28,10 @@ const Chat = ({ route, navigation }) => {
   const [scrollView, setScrollView] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { chatId, partnerInfo } = route.params;
+  const [partnerInfo, setPartnerInfo] = useState(null);
+  // const [chatInfo, setChatInfo] = useState(null);
+
+  const { chatId } = route.params;
 
   useEffect(() => {
     const subscriber = app
@@ -44,14 +47,48 @@ const Chat = ({ route, navigation }) => {
           data.id = doc.id;
           chatMessages.push(data);
         });
-        if (loading) {
-          setLoading(false);
-        }
-
         setMessages(chatMessages);
       });
 
-    navigation.setOptions({ title: "Unknown" });
+    // console.log("chat", chat);
+
+    const getResult = async () => {
+      //get chat info
+      let chat;
+      await app
+        .firestore()
+        .collection("chats")
+        .doc(chatId)
+        .get()
+        .then((res) => {
+          chat = res.data();
+        });
+
+      let partnerId = chat.members.filter(
+        (uid) => uid != auth.currentUser.uid
+      )[0];
+      console.log("partnerId", partnerId);
+
+      //get partner info
+      let partner;
+      await app
+        .firestore()
+        .collection("doctor")
+        .doc(partnerId)
+        .get()
+        .then((res) => {
+          partner = res.data();
+          navigation.setOptions({ title: partner.fullname || "Unknown" });
+
+          setPartnerInfo(partner);
+        });
+
+      if (loading) {
+        setLoading(false);
+      }
+    };
+
+    getResult();
 
     return () => {
       subscriber();
@@ -61,6 +98,13 @@ const Chat = ({ route, navigation }) => {
   useEffect(() => {
     console.log(messages);
   }, [messages]);
+
+  const createAppointment = () => {
+    navigation.navigate("Appointment2", {
+      appointmented: partnerInfo.uid,
+      appointmenter: auth.currentUser.uid,
+    });
+  };
 
   const onPressImage = () => {
     if (inputMethod == "image") {
@@ -244,13 +288,7 @@ const Chat = ({ route, navigation }) => {
       case "calendar":
         return (
           <View style={styles.inputMethodEditor}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Appointment2", {
-                  appointmented: "fdsUMdSk22QtffilTDnS",
-                })
-              }
-            >
+            <TouchableOpacity onPress={() => createAppointment()}>
               <Text>Appointment</Text>
             </TouchableOpacity>
           </View>

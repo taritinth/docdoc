@@ -24,8 +24,8 @@ export default function Message({ navigation }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const onPressChat = (chatId, partnerInfo) => {
-    navigation.navigate("Chat", { chatId, partnerInfo });
+  const openChat = (chatId) => {
+    navigation.navigate("Chat", { chatId });
   };
 
   const getUserById = (userId) => {
@@ -111,9 +111,7 @@ export default function Message({ navigation }) {
         data={chats.sort((a, b) => b.lastTimestamp - a.lastTimestamp)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => onPressChat(item.id, item.partnerInfo)}
-          >
+          <TouchableOpacity onPress={() => openChat(item.id)}>
             <View style={styles.box}>
               <View style={styles.section}>
                 <Image
@@ -144,7 +142,7 @@ export default function Message({ navigation }) {
       {/* {chats.map((item) => {
           return (
             <TouchableOpacity
-              onPress={() => onPressChat(item.id, item.partnerInfo)}
+              onPress={() => openChat(item.id, item.partnerInfo)}
               key={item.id}
             >
               <View style={styles.box}>
