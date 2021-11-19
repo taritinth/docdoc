@@ -20,7 +20,17 @@ import * as ImagePicker from "expo-image-picker";
 import { app, auth } from "../database/firebaseDB";
 
 const Editprofile = ({ navigation }) => {
-  let [selectedImage, setSelectedImage] = useState(null);
+  const [username, changeUsername] = React.useState("");
+  const [phone, changePhone] = React.useState("");
+  const [fullname, changeFullname] = React.useState("");
+  const [image, changeImage] = useState("");
+  const [email, changeEmail] = useState("");
+  const subjCollection = app
+    .firestore()
+    .collection("user")
+    .doc(auth.currentUser.uid);
+
+  const [selectedImage, setSelectedImage] = useState(null);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -35,32 +45,25 @@ const Editprofile = ({ navigation }) => {
     if (pickerResult.cancelled === true) {
       return;
     }
-    setSelectedImage({ localUri: pickerResult.uri });
-  };
-  const [username, changeUsername] = React.useState("");
-  const [phone, changePhone] = React.useState("");
-  const [fullname, changeFullname] = React.useState("");
-  const [image, changeImage] = useState("")
-  const [email, changeEmail] = useState("")
 
-  const subjCollection = app
-    .firestore()
-    .collection("user")
-    .doc(auth.currentUser.uid);
+    setSelectedImage({ localUri: pickerResult.uri });
+
+    
+  };
 
   useEffect(() => {
+    console.log("a");
     subjCollection.get().then((res) => {
       changeUsername(res.data().username);
       changePhone(res.data().phone);
       changeFullname(res.data().fullname);
-      changeImage(res.data().image)
-      changeEmail(res.data().email)
+      changeImage(res.data().image);
+      changeEmail(res.data().email);
     });
   }, []);
 
   function img() {
     if (selectedImage !== null) {
-      console.log(selectedImage.localUri);
       return (
         <TouchableOpacity onPress={openImagePickerAsync}>
           <Image
@@ -77,17 +80,32 @@ const Editprofile = ({ navigation }) => {
       );
     }
   }
-  
 
   const editprofile = () => {
-    app.firestore().collection("user").doc(auth.currentUser.uid).set({
-      username: username,
-      phone: phone,
-      email: email,
-      image: selectedImage.localUri,
-      fullname: fullname,
-    });
-    navigation.navigate("Profile");
+    if (!!selectedImage) {
+      console.log("1");
+      app.firestore().collection("user").doc(auth.currentUser.uid).set({
+        username: username,
+        phone: phone,
+        email: email,
+        image: selectedImage.localUri,
+        fullname: fullname,
+      });
+      navigation.navigate("Profile");
+    }else{
+      console.log("2");
+      app.firestore().collection("user").doc(auth.currentUser.uid).set({
+        username: username,
+        phone: phone,
+        email: email,
+        image: image,
+        fullname: fullname,
+      });
+      navigation.navigate("Profile");
+    }
+
+
+    
   };
 
   return (

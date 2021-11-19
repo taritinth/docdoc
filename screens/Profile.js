@@ -14,22 +14,28 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { auth } from "../database/firebaseDB";
 // import firebase from "../database/firebaseDB";
 import { app } from "../database/firebaseDB";
+import { useIsFocused } from '@react-navigation/native';
 
-const Profile = ({ navigation }) => {
+const Profile = ({navigation }) => {
   const [userinfo, setUserinfo] = useState([]);
-  const [image, setImage] = useState("")
+  const [image, setImage] = useState("");
+  const isFocused = useIsFocused();
 
-  const subjCollection = app
-    .firestore()
-    .collection("user")
-    .doc(auth.currentUser.uid);
-
+  
   useEffect(() => {
-    subjCollection.get().then((res) => {
-      setUserinfo(res.data());
-      setImage(res.data().image)
-    });
-  }, []);
+    const subjCollection = app
+      .firestore()
+      .collection("user")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((res) => {
+        setUserinfo(res.data());
+        setImage(res.data().image);
+      });
+    return () => {
+      subjCollection;
+    };
+  }, [isFocused]);
 
   const handleSignOut = () => {
     auth
@@ -39,12 +45,17 @@ const Profile = ({ navigation }) => {
       })
       .catch((error) => alert(error.message));
   };
+
   // const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
 
   return (
     <View style={styles.container}>
       <View style={styles.image}>
-        <Image style={styles.profileimg} source={{ uri: image }} />
+        <Image
+          style={styles.profileimg}
+          source={image ? { uri: image } : null}
+        />
+
         <TouchableOpacity
           style={styles.editprofile}
           activeOpacity={0.8}
