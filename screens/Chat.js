@@ -78,8 +78,10 @@ const Chat = ({ route, navigation }) => {
         .get()
         .then((res) => {
           partner = res.data();
+          partner.uid = res.id;
           navigation.setOptions({ title: partner.fullname || "Unknown" });
 
+          console.log(partner);
           setPartnerInfo(partner);
         });
 
@@ -100,6 +102,8 @@ const Chat = ({ route, navigation }) => {
   }, [messages]);
 
   const createAppointment = () => {
+    console.log(partnerInfo.uid);
+    console.log(auth.currentUser.uid);
     navigation.navigate("Appointment2", {
       appointmented: partnerInfo.uid,
       appointmenter: auth.currentUser.uid,
