@@ -23,6 +23,7 @@
     "react-native-form-validator": "^0.5.1",
     "react-native-image-picker": "^4.1.2",
     "react-native-pager-view": "^5.4.7",
+    "react-native-password-strength-meter": "0.0.5",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-select-dropdown": "^1.4.0",
