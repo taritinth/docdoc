@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, LogBox } from "react-native";
 // import SignIn from "./screens/SignIn";
 // import SignUp1 from "./screens/SignUp1";
 // import SignUp2 from "./screens/SignUp2";
@@ -18,6 +18,8 @@ const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
 export default function App() {
+  // console.disableYellowBox = true;
+  LogBox.ignoreAllLogs();
   return (
     // <SignIn></SignIn>
     // <SignUp2></SignUp2>
