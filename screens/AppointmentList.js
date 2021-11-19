@@ -57,7 +57,9 @@ export default function TabViewExample() {
     querySnapshot.forEach((res) => {
       const { time, month, year, date, appointmented, appointmenter } =
         res.data();
+      // console.log(res.id);
       all_data.push({
+        key: res.id,
         appointmenter,
         appointmented,
         month,
@@ -112,13 +114,20 @@ export default function TabViewExample() {
   }, []);
 
   // delete appointment
-  function deleteSubject(key) {
-    alert(key);
-    // const delSubjDoc = firebase.firestore().collection("appointment").doc(key);
-    // delSubjDoc.delete().then((res) => {
-    //   Alert.alert("Deleting Alert", "Delete Complete");
-    //   navigation.navigate("Appointment");
-    // });
+  function deleteSubject(item) {
+    let list = listdoc.appointmentlist;
+    let deleted = list.findIndex(
+      (element) => element == item.time + item.date + item.month + item.year
+    );
+    console.log(list.length);
+    console.log("----------------------");
+    list.splice(deleted, 1);
+    console.log(list.length);
+    // subjCollectiondoctor.update({ appointmentlist: list });
+    // const delSubjDoc = app.firestore().collection("appointment").doc(item.key);
+    // delSubjDoc.delete();
+    // alert("Delete Complete");
+    // navigation.navigate("Appointment");
   }
 
   const FirstRoute = () => (
@@ -153,7 +162,7 @@ export default function TabViewExample() {
                 <TouchableOpacity
                   style={[styles.appointmentdetail]}
                   onPress={() => {
-                    deleteSubject(element.key);
+                    deleteSubject(element);
                   }}
                 >
                   <Text style={styles.cancel}>Cancel</Text>
