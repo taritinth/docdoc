@@ -17,9 +17,10 @@ import {
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 // import MapView, { Marker } from "react-native-maps";
-import { app, auth } from "../database/firebaseDB";
+import { app, auth, storage } from "../database/firebaseDB";
 // import * as firebase from "firebase";
 import Loading from "../components/Loading";
+import * as ImagePicker from "expo-image-picker";
 
 const Chat = ({ route, navigation }) => {
   const [inputMethod, setInputMethod] = useState("text");
@@ -29,9 +30,37 @@ const Chat = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const [partnerInfo, setPartnerInfo] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   // const [chatInfo, setChatInfo] = useState(null);
 
   const { chatId } = route.params;
+
+  let openImagePickerAsync = async () => {
+    let permissionResult =
+      await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    console.log(pickerResult);
+    setSelectedImage({ localUri: pickerResult.uri });
+
+    let imagepath = selectedImage.localUri.substring(
+      selectedImage.localUri.lastIndexOf("/") + 1
+    );
+    console.log(imagepath);
+    const response = await fetch(selectedImage.localUri);
+    const blob = await response.blob();
+    const reference = storage.ref().child(imagepath);
+    await reference.put(blob);
+  };
 
   useEffect(() => {
     const subscriber = app
@@ -121,6 +150,8 @@ const Chat = ({ route, navigation }) => {
     setTimeout(() => {
       setInputMethod("image");
     }, 100);
+
+    openImagePickerAsync();
   };
 
   const onPressCalendar = () => {
