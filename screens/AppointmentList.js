@@ -128,7 +128,7 @@ export default function TabViewExample() {
   useEffect(() => {
     setLoading(true);
 
-    let doctorUid = [];
+    const doctorUid = [];
     const subscriber = app
       .firestore()
       .collection("appointment")
@@ -136,7 +136,7 @@ export default function TabViewExample() {
       .onSnapshot((querySnapshot) => {
         const allAppointment = [];
         querySnapshot.forEach((res) => {
-          console.log("res.data()", res.data());
+          // console.log("res.data()", res.data());
           const data = res.data();
           data.id = res.id;
 
@@ -145,35 +145,10 @@ export default function TabViewExample() {
           allAppointment.push(data);
         });
 
-        console.log("allAppointment", allAppointment);
+        // console.log("allAppointment", allAppointment);
 
         setListAppointment(allAppointment);
         setListinhistory(allAppointment);
-
-        console.log("doctorUid", doctorUid);
-
-        let listdoctor = [];
-        doctorUid.forEach(async (uid) => {
-          await app
-            .firestore()
-            .collection("doctor")
-            .doc(uid)
-            .get()
-            .then((doc) => {
-              console.log("doc data", doc.data());
-
-              const data = doc.data();
-              data.uid = doc.id;
-              listdoctor.push(data);
-            });
-
-          console.log("listdoctor", listdoctor);
-          setListdoc(listdoctor);
-        });
-
-        if (loading) {
-          setLoading(false);
-        }
 
         // sort by ????
         // console.log(all_data.appointmented);
@@ -222,8 +197,48 @@ export default function TabViewExample() {
         // console.log(listinfoappoint);
       });
 
+    const subscriber1 = app
+      .firestore()
+      .collection("doctor")
+      .onSnapshot((querySnapshot) => {
+        const listdoctor = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          data.uid = doc.id;
+          listdoctor.push(data);
+        });
+        setListdoc(listdoctor);
+        console.log(listdoctor);
+      });
+
+    // console.log("doctorUid", doctorUid);
+
+    // let listdoctor = [];
+    // doctorUid.forEach(async (uid) => {
+    //   await app
+    //     .firestore()
+    //     .collection("doctor")
+    //     .doc(uid)
+    //     .get()
+    //     .then((doc) => {
+    //       // console.log("doc data", doc.data());
+
+    //       const data = doc.data();
+    //       data.uid = doc.id;
+    //       listdoctor.push(data);
+    //     });
+
+    //   console.log("listdoctor", listdoctor);
+    //   setListdoc(listdoctor);
+    // });
+
+    if (loading) {
+      setLoading(false);
+    }
+
     return () => {
       subscriber();
+      subscriber1();
     };
   }, []);
 
@@ -255,10 +270,10 @@ export default function TabViewExample() {
     <View style={styles.container}>
       <ScrollView>
         {listAppointment.map((element, index) => {
-          console.log("element", element);
+          // console.log("element", element);
 
           const doc = getUserById(element.appointmented);
-          console.log("element doc data", doc);
+          // console.log("element doc data", doc);
 
           return (
             <View style={styles.appointment} key={index}>
@@ -274,15 +289,15 @@ export default function TabViewExample() {
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>doc.fullname</Text>
+                <Text>{doc.fullname}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
-                <Text>doc.type</Text>
+                <Text>{doc.type}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Place</Text>
-                <Text>doc.workplace</Text>
+                <Text>{doc.workplace}</Text>
               </View>
               {datenow + 1 <= element.date ? (
                 <TouchableOpacity
