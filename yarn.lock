@@ -5924,6 +5924,14 @@ react-native-pager-view@^5.4.7:
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.8.tgz#c0872989e3fa9ef05d5d8cf408e42fc1d3fbbd7c"
   integrity sha512-Zfsdirwu4LIKtPMAFgt5ctE/Yg9QKG3k2pom0mDyLbUXQD/O0/yeK36JBJjsMEd/z0JJ4PsrHZ+BcGyzNVgUaQ==
 
+react-native-password-strength-meter@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-password-strength-meter/-/react-native-password-strength-meter-0.0.5.tgz#7e5d38a844b2221937f893f0d80a8ffa575159b0"
+  integrity sha512-MRKcs0+xkS1ufTVNJsvcXJy30A8IXxZpfY8NYCuAovup8gHYsRP/jUOf/T55dBGBuaSbz7FHFDp2LmV8cBktkw==
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-speedometer "^1.0.0"
+
 react-native-ratings@8.0.4:
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-8.0.4.tgz#efd5ebad8acc08bf98d34d39b18fb7a6813ef991"
@@ -5952,6 +5960,13 @@ react-native-size-matters@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz#24d0cfc335a2c730f6d58bd7b43ea5a41be4b49f"
   integrity sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==
+
+react-native-speedometer@^1.0.0:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-speedometer/-/react-native-speedometer-1.0.5.tgz#228b0710d7cbf257b07ae4615825eda86f746d3d"
+  integrity sha512-vloJbiIATVFBMayTZXE9Zf5GD8daBJsUxU83xxNo/vynfX84omu3nMgwYxpAqwO4oDOI1Nj86pFzPkU7kPqGIA==
+  dependencies:
+    prop-types "^15.6.2"
 
 react-native-tab-view@^3.1.1:
   version "3.1.1"

@@ -6,10 +6,12 @@ import {
   TextInput,
   ScrollView,
   useWindowDimensions,
+  FlatList,
 } from "react-native";
 import React, { Component, useState, useEffect } from "react";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { app, auth } from "../database/firebaseDB";
+import Loading from "../components/Loading";
 
 export default function TabViewExample() {
   const layout = useWindowDimensions();
@@ -18,7 +20,7 @@ export default function TabViewExample() {
     { key: "first", title: "Upcoming" },
     { key: "second", title: "History" },
   ]);
-  const [listAppointment, setListAppointment] = useState([1, 2, 3, 4, 5, 6]);
+  const [listAppointment, setListAppointment] = useState([]);
   // let unsubscribe, unsubscribedoctor;
   const subjCollection = app
     .firestore()
@@ -47,6 +49,8 @@ export default function TabViewExample() {
     "Nov",
     "Dec",
   ]);
+
+  const [loading, setLoading] = useState(true);
 
   const getCollection = (querySnapshot) => {
     let all_data = [];
@@ -122,63 +126,55 @@ export default function TabViewExample() {
   };
 
   useEffect(() => {
-    const getResult = async () => {
-      let listdoctor = [];
-      await app
-        .firestore()
-        .collection("doctor")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            data.uid = doc.id;
-            listdoctor.push(data);
-            // console.log(data);
-          });
-          setListdoc(listdoctor);
-          // console.log("tuu");
+    setLoading(true);
 
-          // listdoctor.push(res.data());
-          // setListdoc(listdoctor);
-          // console.log(listdoctor);
-          // console.log(listdoc);
-        });
-    };
-    getResult();
-
-    // Update the document title using the browser API
-    const unsubscribe = app
+    let doctorUid = [];
+    const subscriber = app
       .firestore()
       .collection("appointment")
       .where("group", "array-contains", auth.currentUser.uid)
       .onSnapshot((querySnapshot) => {
-        let all_data = [];
-        let doctorUid = [];
+        const allAppointment = [];
         querySnapshot.forEach((res) => {
-          const {
-            time,
-            month,
-            year,
-            date,
-            appointmented,
-            appointmenter,
-            group,
-          } = res.data();
-          doctorUid.push(res.data().appointmented);
-          setAppointmenter(appointmenter);
-          // getUserById(appointmented);
-          // console.log(res.data());
-          all_data.push({
-            key: res.id,
-            appointmenter,
-            appointmented,
-            month,
-            year,
-            date,
-            time,
-            group,
-          });
+          console.log("res.data()", res.data());
+          const data = res.data();
+          data.id = res.id;
+
+          if (!doctorUid.includes(data.appointmented))
+            doctorUid.push(data.appointmented);
+          allAppointment.push(data);
         });
+
+        console.log("allAppointment", allAppointment);
+
+        setListAppointment(allAppointment);
+        setListinhistory(allAppointment);
+
+        console.log("doctorUid", doctorUid);
+
+        let listdoctor = [];
+        doctorUid.forEach(async (uid) => {
+          await app
+            .firestore()
+            .collection("doctor")
+            .doc(uid)
+            .get()
+            .then((doc) => {
+              console.log("doc data", doc.data());
+
+              const data = doc.data();
+              data.uid = doc.id;
+              listdoctor.push(data);
+            });
+
+          console.log("listdoctor", listdoctor);
+          setListdoc(listdoctor);
+        });
+
+        if (loading) {
+          setLoading(false);
+        }
+
         // sort by ????
         // console.log(all_data.appointmented);
 
@@ -192,44 +188,42 @@ export default function TabViewExample() {
         //   );
         // });
 
-        all_data.sort((item2, item1) => {
-          return (
-            item1.date < item2.date
-            // &&
-            // months.findIndex((element) => element == item1.month) <=
-            //   months.findIndex((element) => element == item2.month)
-          );
-          // console.log(item2);
-        });
-        // console.log(all_data);
-        setListinfoappoint(
-          all_data.filter(
-            (data) =>
-              data.appointmenter == appointmenter &&
-              // data.appointmented == appointmented &&
-              data.date >= datenow &&
-              months.findIndex((element) => element == data.month) >=
-                new Date().getMonth()
-          )
-        );
+        // all_data.sort((item2, item1) => {
+        //   return (
+        //     item1.date < item2.date
+        //     // &&
+        //     // months.findIndex((element) => element == item1.month) <=
+        //     //   months.findIndex((element) => element == item2.month)
+        //   );
+        //   // console.log(item2);
+        // });
+        // // console.log(all_data);
+        // setListinfoappoint(
+        //   all_data.filter(
+        //     (data) =>
+        //       data.appointmenter == appointmenter &&
+        //       // data.appointmented == appointmented &&
+        //       data.date >= datenow &&
+        //       months.findIndex((element) => element == data.month) >=
+        //         new Date().getMonth()
+        //   )
+        // );
 
-        setListinhistory(
-          all_data.filter(
-            (data) =>
-              data.appointmenter == appointmenter &&
-              // data.appointmented == appointmented &&
-              data.date < datenow &&
-              months.findIndex((element) => element == data.month) <=
-                new Date().getMonth()
-          )
-        );
+        // setListinhistory(
+        //   all_data.filter(
+        //     (data) =>
+        //       data.appointmenter == appointmenter &&
+        //       // data.appointmented == appointmented &&
+        //       data.date < datenow &&
+        //       months.findIndex((element) => element == data.month) <=
+        //         new Date().getMonth()
+        //   )
+        // );
         // console.log(listinfoappoint);
       });
 
-    // .onSnapshot(getCollection);
-
     return () => {
-      unsubscribe();
+      subscriber();
     };
   }, []);
 
@@ -260,11 +254,12 @@ export default function TabViewExample() {
   const FirstRoute = () => (
     <View style={styles.container}>
       <ScrollView>
-        {listinfoappoint.map((element, index) => {
-          console.log(element);
+        {listAppointment.map((element, index) => {
+          console.log("element", element);
 
-          let doc = getUserById(element.appointmented);
-          // console.log(doc);
+          const doc = getUserById(element.appointmented);
+          console.log("element doc data", doc);
+
           return (
             <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
@@ -279,15 +274,15 @@ export default function TabViewExample() {
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>{doc.fullname}</Text>
+                <Text>doc.fullname</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
-                <Text>{doc.type}</Text>
+                <Text>doc.type</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Place</Text>
-                <Text>{doc.workplace}</Text>
+                <Text>doc.workplace</Text>
               </View>
               {datenow + 1 <= element.date ? (
                 <TouchableOpacity
@@ -363,6 +358,9 @@ export default function TabViewExample() {
       inactiveColor="#A8A8A8"
     />
   );
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <TabView
@@ -372,6 +370,100 @@ export default function TabViewExample() {
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
     />
+    // <View style={styles.container}>
+    //   <FlatList
+    //     data={listAppointment}
+    //     keyExtractor={(item) => item.key}
+    //     renderItem={({ item }) => (
+    //       <View style={styles.appointment}>
+    //         <View style={styles.appointmentdetail}>
+    //           <Text>Date</Text>
+    //           <Text>
+    //             {item.date} {item.month} {item.year}
+    //           </Text>
+    //         </View>
+    //         <View style={styles.appointmentdetail}>
+    //           <Text>Time</Text>
+    //           <Text>{item.time}</Text>
+    //         </View>
+    //         <View style={styles.appointmentdetail}>
+    //           <Text>Doctor</Text>
+    //           <Text>doc.fullname</Text>
+    //         </View>
+    //         <View style={styles.appointmentdetail}>
+    //           <Text>Type</Text>
+    //           <Text>doc.type</Text>
+    //         </View>
+    //         <View style={styles.appointmentdetail}>
+    //           <Text>Place</Text>
+    //           <Text>doc.workplace</Text>
+    //         </View>
+    //         {datenow + 1 <= item.date ? (
+    //           <TouchableOpacity
+    //             style={[styles.appointmentdetail]}
+    //             onPress={() => {
+    //               deleteSubject(item);
+    //             }}
+    //           >
+    //             <Text style={styles.cancel}>Cancel</Text>
+    //           </TouchableOpacity>
+    //         ) : (
+    //           <View style={[styles.appointmentdetail]}>
+    //             <Text style={styles.noncancel}>Cancel</Text>
+    //           </View>
+    //         )}
+    //       </View>
+    //     )}
+    //   />
+    //   {/* <ScrollView>
+    //     {listAppointment.map((element, index) => {
+    //       console.log("element", element);
+
+    //       let doc = getUserById(element.appointmented);
+    //       // console.log(doc);
+    //       return (
+    //         <View style={styles.appointment} key={index}>
+    //           <View style={styles.appointmentdetail}>
+    //             <Text>Date</Text>
+    //             <Text>
+    //               {element.date} {element.month} {element.year}
+    //             </Text>
+    //           </View>
+    //           <View style={styles.appointmentdetail}>
+    //             <Text>Time</Text>
+    //             <Text>{element.time}</Text>
+    //           </View>
+    //           <View style={styles.appointmentdetail}>
+    //             <Text>Doctor</Text>
+    //             <Text>{doc.fullname}</Text>
+    //           </View>
+    //           <View style={styles.appointmentdetail}>
+    //             <Text>Type</Text>
+    //             <Text>{doc.type}</Text>
+    //           </View>
+    //           <View style={styles.appointmentdetail}>
+    //             <Text>Place</Text>
+    //             <Text>{doc.workplace}</Text>
+    //           </View>
+    //           {datenow + 1 <= element.date ? (
+    //             <TouchableOpacity
+    //               style={[styles.appointmentdetail]}
+    //               onPress={() => {
+    //                 deleteSubject(element);
+    //               }}
+    //             >
+    //               <Text style={styles.cancel}>Cancel</Text>
+    //             </TouchableOpacity>
+    //           ) : (
+    //             <View style={[styles.appointmentdetail]}>
+    //               <Text style={styles.noncancel}>Cancel</Text>
+    //             </View>
+    //           )}
+    //         </View>
+    //       );
+    //     })}
+    //   </ScrollView> */}
+    // </View>
   );
 }
 
