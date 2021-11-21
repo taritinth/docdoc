@@ -121,7 +121,7 @@ export default function TabViewExample() {
   };
 
   const getUserById = (userId) => {
-    console.log(listdoc.filter((user) => user.uid == userId)[0]);
+    // console.log(listdoc.filter((user) => user.uid == userId)[0]);
     return listdoc.filter((user) => user.uid == userId)[0];
   };
 
@@ -208,7 +208,7 @@ export default function TabViewExample() {
           listdoctor.push(data);
         });
         setListdoc(listdoctor);
-        console.log(listdoctor);
+        // console.log(listdoctor);
       });
 
     // console.log("doctorUid", doctorUid);
@@ -244,21 +244,25 @@ export default function TabViewExample() {
 
   // delete appointment
   function deleteSubject(item) {
-    let list = listdoc.appointmentlist;
-    let deleted = list.findIndex(
+    console.log(item);
+    let list = listdoc.filter((element) => {
+      // console.log(element.uid == item.appointmented);
+      return element.uid == item.appointmented;
+    });
+    // console.log(list[0].appointmentlist, "---------");
+    let deleted = list[0].appointmentlist.findIndex(
       (element) => element == item.time + item.date + item.month + item.year
     );
-    // console.log(list);
+    console.log(deleted);
     // console.log("----------------------", deleted);
     if (deleted < 0) {
       alert("Not found");
     } else {
       list.splice(deleted, 1);
-      subjCollectiondoctor.update({ appointmentlist: list });
-      const delSubjDoc = app
-        .firestore()
-        .collection("appointment")
-        .doc(item.key);
+      subjCollectiondoctor
+        .doc(item.appointmented)
+        .update({ appointmentlist: list });
+      const delSubjDoc = app.firestore().collection("appointment").doc(item.id);
       delSubjDoc.delete();
       alert("Delete Complete");
     }
@@ -324,6 +328,7 @@ export default function TabViewExample() {
     <View style={styles.container}>
       <ScrollView>
         {listinhistory.map((element, index) => {
+          const doc = getUserById(element.appointmented);
           return (
             <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
@@ -338,15 +343,15 @@ export default function TabViewExample() {
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Doctor</Text>
-                <Text>{listdoc.fullname}</Text>
+                <Text>{doc.fullname}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Type</Text>
-                <Text>{listdoc.type}</Text>
+                <Text>{doc.type}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Place</Text>
-                <Text>{listdoc.place}</Text>
+                <Text>{doc.workplace}</Text>
               </View>
               <View style={styles.appointmentdetail}>
                 <Text>Status</Text>
@@ -385,100 +390,6 @@ export default function TabViewExample() {
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
     />
-    // <View style={styles.container}>
-    //   <FlatList
-    //     data={listAppointment}
-    //     keyExtractor={(item) => item.key}
-    //     renderItem={({ item }) => (
-    //       <View style={styles.appointment}>
-    //         <View style={styles.appointmentdetail}>
-    //           <Text>Date</Text>
-    //           <Text>
-    //             {item.date} {item.month} {item.year}
-    //           </Text>
-    //         </View>
-    //         <View style={styles.appointmentdetail}>
-    //           <Text>Time</Text>
-    //           <Text>{item.time}</Text>
-    //         </View>
-    //         <View style={styles.appointmentdetail}>
-    //           <Text>Doctor</Text>
-    //           <Text>doc.fullname</Text>
-    //         </View>
-    //         <View style={styles.appointmentdetail}>
-    //           <Text>Type</Text>
-    //           <Text>doc.type</Text>
-    //         </View>
-    //         <View style={styles.appointmentdetail}>
-    //           <Text>Place</Text>
-    //           <Text>doc.workplace</Text>
-    //         </View>
-    //         {datenow + 1 <= item.date ? (
-    //           <TouchableOpacity
-    //             style={[styles.appointmentdetail]}
-    //             onPress={() => {
-    //               deleteSubject(item);
-    //             }}
-    //           >
-    //             <Text style={styles.cancel}>Cancel</Text>
-    //           </TouchableOpacity>
-    //         ) : (
-    //           <View style={[styles.appointmentdetail]}>
-    //             <Text style={styles.noncancel}>Cancel</Text>
-    //           </View>
-    //         )}
-    //       </View>
-    //     )}
-    //   />
-    //   {/* <ScrollView>
-    //     {listAppointment.map((element, index) => {
-    //       console.log("element", element);
-
-    //       let doc = getUserById(element.appointmented);
-    //       // console.log(doc);
-    //       return (
-    //         <View style={styles.appointment} key={index}>
-    //           <View style={styles.appointmentdetail}>
-    //             <Text>Date</Text>
-    //             <Text>
-    //               {element.date} {element.month} {element.year}
-    //             </Text>
-    //           </View>
-    //           <View style={styles.appointmentdetail}>
-    //             <Text>Time</Text>
-    //             <Text>{element.time}</Text>
-    //           </View>
-    //           <View style={styles.appointmentdetail}>
-    //             <Text>Doctor</Text>
-    //             <Text>{doc.fullname}</Text>
-    //           </View>
-    //           <View style={styles.appointmentdetail}>
-    //             <Text>Type</Text>
-    //             <Text>{doc.type}</Text>
-    //           </View>
-    //           <View style={styles.appointmentdetail}>
-    //             <Text>Place</Text>
-    //             <Text>{doc.workplace}</Text>
-    //           </View>
-    //           {datenow + 1 <= element.date ? (
-    //             <TouchableOpacity
-    //               style={[styles.appointmentdetail]}
-    //               onPress={() => {
-    //                 deleteSubject(element);
-    //               }}
-    //             >
-    //               <Text style={styles.cancel}>Cancel</Text>
-    //             </TouchableOpacity>
-    //           ) : (
-    //             <View style={[styles.appointmentdetail]}>
-    //               <Text style={styles.noncancel}>Cancel</Text>
-    //             </View>
-    //           )}
-    //         </View>
-    //       );
-    //     })}
-    //   </ScrollView> */}
-    // </View>
   );
 }
 
