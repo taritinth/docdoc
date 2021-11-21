@@ -11,7 +11,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { Entypo } from "@expo/vector-icons";
 import { app, auth } from "../database/firebaseDB";
 
-export default function Appointment({ navigation }) {
+export default function Appointment({ navigation, route }) {
   const [days, setDays] = useState([
     "Sun",
     "Mon",
@@ -49,6 +49,9 @@ export default function Appointment({ navigation }) {
 
   const [userinfo, setUserinfo] = useState([]);
 
+  const { appointmented, appointmenter } = route.params;
+  // console.log(route.params);
+
   const userInfojCollection = app
     .firestore()
     .collection("user")
@@ -57,7 +60,7 @@ export default function Appointment({ navigation }) {
   const docInfojCollection = app
     .firestore()
     .collection("doctor")
-    .doc("fdsUMdSk22QtffilTDnS");
+    .doc(appointmented);
 
   // useEffect(() => {
   //   userInfojCollection.get().then((res) => {
@@ -76,8 +79,8 @@ export default function Appointment({ navigation }) {
     });
   }, []);
 
-  const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
-  const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
+  // const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
+  // const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
 
   let dateBubble = [];
   let numOfDays = new Date(year, month, 0).getDate();
@@ -106,6 +109,7 @@ export default function Appointment({ navigation }) {
       year: year,
       date: selectdate,
       time: selecttime,
+      group: [appointmented, appointmenter],
     });
   }
 
