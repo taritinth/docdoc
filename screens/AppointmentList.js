@@ -129,6 +129,7 @@ export default function TabViewExample() {
     setLoading(true);
 
     const doctorUid = [];
+    setAppointmenter(auth.currentUser.uid);
     const subscriber = app
       .firestore()
       .collection("appointment")
@@ -146,9 +147,26 @@ export default function TabViewExample() {
         });
 
         // console.log("allAppointment", allAppointment);
-
-        setListAppointment(allAppointment);
-        setListinhistory(allAppointment);
+        allAppointment.sort((item2, item1) => {
+          return item1.date < item2.date;
+        });
+        console.log(allAppointment);
+        setListAppointment(
+          allAppointment.filter(
+            (data) =>
+              data.date >= datenow &&
+              months.findIndex((element) => element == data.month) >=
+                new Date().getMonth()
+          )
+        );
+        setListinhistory(
+          allAppointment.filter(
+            (data) =>
+              data.date < datenow &&
+              months.findIndex((element) => element == data.month) <=
+                new Date().getMonth()
+          )
+        );
 
         // sort by ????
         // console.log(all_data.appointmented);
