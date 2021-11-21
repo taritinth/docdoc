@@ -11,7 +11,7 @@ const firebaseConfig = {
   storageBucket: "docdoc-c44ef.appspot.com",
   messagingSenderId: "222523023886",
   appId: "1:222523023886:web:3db2b439e7557fbc17525f",
-  measurementId: "G-7BNSKWJY0P"
+  measurementId: "G-7BNSKWJY0P",
 };
 
 // Initialize Firebase
@@ -19,9 +19,10 @@ let app;
 if (firebase.apps.length === 0) {
   app = firebase.initializeApp(firebaseConfig);
 } else {
-  app = firebase.app()
+  app = firebase.app();
 }
 
-const auth = firebase.auth()
+const auth = firebase.auth();
+const storage = firebase.storage();
 
-export { auth, app };
+export { auth, app, storage };

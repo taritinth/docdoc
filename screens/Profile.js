@@ -11,30 +11,32 @@ import {
   Image,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { auth } from "../database/firebaseDB";
+import { auth, storage } from "../database/firebaseDB";
 // import firebase from "../database/firebaseDB";
 import { app } from "../database/firebaseDB";
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from "@react-navigation/native";
 
-const Profile = ({navigation }) => {
+const Profile = ({ navigation }) => {
   const [userinfo, setUserinfo] = useState([]);
   const [image, setImage] = useState("");
   const isFocused = useIsFocused();
 
-  
   useEffect(() => {
-    const subjCollection = app
+    app
       .firestore()
       .collection("user")
       .doc(auth.currentUser.uid)
       .get()
       .then((res) => {
         setUserinfo(res.data());
-        setImage(res.data().image);
+        storage
+          .ref("/" + res.data().image)
+          .getDownloadURL()
+          .then((url) => {
+            setImage(url);
+            console.log(image);
+          });
       });
-    return () => {
-      subjCollection;
-    };
   }, [isFocused]);
 
   const handleSignOut = () => {

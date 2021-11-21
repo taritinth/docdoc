@@ -34,6 +34,7 @@ const SignUp1 = ({ navigation }) => {
     if (pickerResult.cancelled === true) {
       return;
     }
+    console.log(pickerResult);
     setSelectedImage({ localUri: pickerResult.uri });
   };
 
@@ -101,6 +102,7 @@ const SignUp1 = ({ navigation }) => {
       <TextInput
         style={[styles.input, errorphone && styles.iserror]}
         placeholder="Phone"
+        keyboardType="numeric"
         maxLength={10}
         onChangeText={(text) => {
           if (text.length < 9) {

@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { auth, app } from "../database/firebaseDB";
+import { auth, app, storage } from "../database/firebaseDB";
 import RNPasswordStrengthMeter from "react-native-password-strength-meter";
+import { Button } from "react-native-elements/dist/buttons/Button";
 
 const Signup2 = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
@@ -15,22 +16,28 @@ const Signup2 = ({ route, navigation }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
-  const { signup1 } = route.params;
   const [image, setImage] = useState("");
+
   onChange = (password, score, { label, labelColor, activeBarColor }) => {
     console.log(password, score, { label, labelColor, activeBarColor });
   };
 
   useEffect(() => {
-    console.log(route.params);
     setName(route.params.fullname);
     setPhone(route.params.phone);
     setImage(route.params.image.localUri);
     console.log(route.params.image.localUri);
   }, []);
 
-  const handleSignUp = () => {
-    // if (password.length > 6 && )
+  const handleSignUp = async () => {
+    let imagepath = image.substring(image.lastIndexOf("/") + 1);
+    console.log(imagepath);
+    const response = await fetch(image);
+    const blob = await response.blob();
+    const reference = storage.ref().child(imagepath);
+    await reference.put(blob);
+
+
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
@@ -40,7 +47,7 @@ const Signup2 = ({ route, navigation }) => {
           username: username,
           phone: phone,
           fullname: name,
-          image: image,
+          image: imagepath,
         });
         console.log(user.uid);
         console.log("Registered with:", user.email);
@@ -65,15 +72,15 @@ const Signup2 = ({ route, navigation }) => {
       ></TextInput>
 
       <Text style={styles.password}>Password</Text>
-      {/* <TextInput
+      <TextInput
         secureTextEntry={true}
         style={styles.input}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
-      ></TextInput> */}
-      <View style={styles.input}>
+      ></TextInput>
+      {/* <View style={styles.input}>
         <RNPasswordStrengthMeter onChangeText={this.onChange} meterType="bar" />
-      </View>
+      </View> */}
       <TouchableOpacity
         onPress={handleSignUp}
         style={[styles.button, styles.buttonContainer]}

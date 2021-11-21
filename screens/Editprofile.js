@@ -17,7 +17,7 @@ import {
   Feather,
 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { app, auth } from "../database/firebaseDB";
+import { app, auth, storage } from "../database/firebaseDB";
 
 const Editprofile = ({ navigation }) => {
   const [username, changeUsername] = React.useState("");
@@ -47,8 +47,6 @@ const Editprofile = ({ navigation }) => {
     }
 
     setSelectedImage({ localUri: pickerResult.uri });
-
-    
   };
 
   useEffect(() => {
@@ -57,8 +55,14 @@ const Editprofile = ({ navigation }) => {
       changeUsername(res.data().username);
       changePhone(res.data().phone);
       changeFullname(res.data().fullname);
-      changeImage(res.data().image);
       changeEmail(res.data().email);
+      storage
+          .ref("/" + res.data().image)
+          .getDownloadURL()
+          .then((url) => {
+            changeImage(url);
+
+          });
     });
   }, []);
 
@@ -81,31 +85,39 @@ const Editprofile = ({ navigation }) => {
     }
   }
 
-  const editprofile = () => {
+  const editprofile = async () => {
     if (!!selectedImage) {
-      console.log("1");
+      let imagepath = selectedImage.localUri.substring(selectedImage.localUri.lastIndexOf("/") + 1);
+      console.log(imagepath);
+      const response = await fetch(selectedImage.localUri);
+      const blob = await response.blob();
+      const reference = storage.ref().child(imagepath);
+      await reference.put(blob);
       app.firestore().collection("user").doc(auth.currentUser.uid).set({
         username: username,
         phone: phone,
         email: email,
-        image: selectedImage.localUri,
+        image: imagepath,
         fullname: fullname,
       });
       navigation.navigate("Profile");
-    }else{
-      console.log("2");
+    } else {
+
+      let imagepath = image.substring(image.lastIndexOf("/") + 1);
+      console.log(imagepath);
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const reference = storage.ref().child(imagepath);
+      await reference.put(blob);
       app.firestore().collection("user").doc(auth.currentUser.uid).set({
         username: username,
         phone: phone,
         email: email,
-        image: image,
+        image: imagepath,
         fullname: fullname,
       });
       navigation.navigate("Profile");
     }
-
-
-    
   };
 
   return (
