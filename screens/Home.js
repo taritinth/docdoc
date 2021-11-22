@@ -212,7 +212,7 @@ export default function Home({ navigation }) {
                     color="#D7D7D7"
                     style={{ marginTop: 4 }}
                   />
-                  <Text style={styles.place}> {doctor.place}</Text>
+                  <Text style={styles.place}> {doctor.workplace}</Text>
                 </View>
               </View>
             </View>

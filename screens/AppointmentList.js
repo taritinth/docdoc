@@ -151,24 +151,30 @@ export default function TabViewExample({ navigation }) {
 
   // delete appointment
   function deleteSubject(item) {
-    // console.log(item);
     let list = listdoc.filter((element) => {
-      // console.log(element.uid == item.appointmented);
       return element.uid == item.appointmented;
-    });
-    // console.log(list[0].appointmentlist, "---------");
-    let deleted = list[0].appointmentlist.findIndex(
+    })[0];
+    // var set = new Set(list);
+    // console.log(set);
+    let deleted = list.appointmentlist.findIndex(
       (element) => element == item.time + item.date + item.month + item.year
     );
-    // console.log(deleted);
-    // console.log("----------------------", deleted);
+
+    let deleted2 = list.appointmentlist.filter((element) => {
+      return element != item.time + item.date + item.month + item.year;
+    });
+
+    // console.log(deleted2);
+    // console.log(list.splice(deleted, 1));
+
     if (deleted < 0) {
       alert("Not found");
     } else {
-      list.splice(deleted, 1);
+      // // list.splice(deleted, 1);
+      // console.log("delete", deleted2);
       subjCollectiondoctor
         .doc(item.appointmented)
-        .update({ appointmentlist: list });
+        .update({ appointmentlist: deleted2 });
       const delSubjDoc = app.firestore().collection("appointment").doc(item.id);
       delSubjDoc.delete();
       alert("Delete Complete");
