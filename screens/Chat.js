@@ -22,6 +22,7 @@ import { app, auth, storage } from "../database/firebaseDB";
 import Loading from "../components/Loading";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
+import Lightbox from "react-native-lightbox";
 
 const Chat = ({ route, navigation }) => {
   const [inputMethod, setInputMethod] = useState("text");
@@ -394,12 +395,33 @@ const Chat = ({ route, navigation }) => {
                     onLongPress={() => handleLongPress(msg.id)}
                   >
                     {msg.imageUrl ? (
-                      <Image
-                        style={styles.image}
-                        source={{
-                          uri: msg.imageUrl,
-                        }}
-                      />
+                      <TouchableOpacity>
+                        {/* <Lightbox>
+                          <Image
+                            style={styles.image}
+                            source={{
+                              uri: msg.imageUrl,
+                            }}
+                          />
+                        </Lightbox> */}
+                        <Lightbox
+                          renderContent={() => {
+                            return (
+                              <Image
+                                source={{uri: msg.imageUrl}}
+                                style={{ width: 420, height: 420 }}
+                                resizeMode="center"
+                              />
+                            );
+                          }}
+                        >
+                          <Image
+                            source={{uri: msg.imageUrl}}
+                            style={{ width: 210, height: 210 }}
+                            resizeMode="center"
+                          />
+                        </Lightbox>
+                      </TouchableOpacity>
                     ) : (
                       <Text
                         style={
