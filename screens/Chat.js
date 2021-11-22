@@ -153,7 +153,7 @@ const Chat = ({ route, navigation }) => {
           console.log(partner);
           setPartnerInfo(partner);
 
-          let chatTitle = `${partner.type == "doctor" && partner.title} ${
+          let chatTitle = `${partner.type == "doctor" ? partner.title : ""} ${
             partner.fullname
           }`;
 

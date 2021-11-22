@@ -26,21 +26,23 @@ const Profile = ({ navigation }) => {
 
   useEffect(() => {
     let colName = user.type == "doctor" ? "doctor" : "user";
-
     app
       .firestore()
       .collection(colName)
       .doc(auth.currentUser.uid)
       .get()
       .then((res) => {
-        setUserinfo(res.data());
-        storage
-          .ref("/" + res.data().image)
-          .getDownloadURL()
-          .then((url) => {
-            setImage(url);
-            console.log(image);
-          });
+        const data = res.data();
+
+        setUserinfo(data);
+        setImage(data.image);
+        // storage
+        //   .ref("/" + res.data().image)
+        //   .getDownloadURL()
+        //   .then((url) => {
+        //     setImage(url);
+        //     console.log(image);
+        //   });
       });
   }, [isFocused]);
 
@@ -58,10 +60,7 @@ const Profile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.image}>
-        <Image
-          style={styles.profileimg}
-          source={image ? { uri: image } : null}
-        />
+        <Image style={styles.profileimg} source={{ uri: userinfo.image }} />
 
         <TouchableOpacity
           style={styles.editprofile}
@@ -73,9 +72,28 @@ const Profile = ({ navigation }) => {
           <FontAwesome5 name="edit" size={36} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={{ fontSize: 18 }}>Name: {userinfo.fullname}</Text>
-      <TouchableOpacity onPress={handleSignOut} style={styles.logout}>
-        <Text style={{ color: "red" }}>Logout</Text>
+      <Text style={{ fontSize: 22, fontWeight: "bold", color: "#525252" }}>
+        {userinfo.type == "doctor" && userinfo.title} {userinfo.fullname}
+      </Text>
+
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={handleSignOut}
+      >
+        <View style={[styles.buttonContainer]}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={handleSignOut}
+      >
+        <View style={[styles.buttonContainer, { backgroundColor: "#f35454" }]}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -84,7 +102,7 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor:'orange',
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
@@ -117,6 +135,21 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     position: "absolute",
+  },
+  button: {
+    alignSelf: "stretch",
+    marginTop: 40,
+  },
+  buttonContainer: {
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
   },
 });
 

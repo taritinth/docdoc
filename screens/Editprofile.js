@@ -57,20 +57,24 @@ const Editprofile = ({ navigation }) => {
   useEffect(() => {
     console.log("a");
     subjCollection.get().then((res) => {
-      changeUsername(res.data().username);
-      changePhone(res.data().phone);
-      changeFullname(res.data().fullname);
-      changeEmail(res.data().email);
-      storage
-        .ref("/" + res.data().image)
-        .getDownloadURL()
-        .then((url) => {
-          changeImage(url);
-        });
+      const data = res.data();
+
+      changeUsername(data.username);
+      changePhone(data.phone);
+      changeFullname(data.fullname);
+      changeEmail(data.email);
+      changeImage(data.image);
+
+      // storage
+      //   .ref("/" + res.data().image)
+      //   .getDownloadURL()
+      //   .then((url) => {
+      //     changeImage(url);
+      //   });
     });
   }, []);
 
-  function img() {
+  function getImg() {
     if (selectedImage !== null) {
       return (
         <TouchableOpacity onPress={openImagePickerAsync}>
@@ -99,22 +103,35 @@ const Editprofile = ({ navigation }) => {
       const blob = await response.blob();
       const reference = storage.ref().child(imagepath);
       await reference.put(blob);
-      app.firestore().collection(colName).doc(auth.currentUser.uid).set({
+
+      let imageUrl = "";
+      await storage
+        .ref(imagepath)
+        .getDownloadURL()
+        .then((url) => {
+          imageUrl = url;
+        });
+
+      app.firestore().collection(colName).doc(auth.currentUser.uid).update({
         username: username,
         phone: phone,
         email: email,
-        image: imagepath,
+        image: imageUrl,
         fullname: fullname,
       });
+
       navigation.navigate("Profile");
     } else {
       let imagepath = image.substring(image.lastIndexOf("/") + 1);
+
       console.log(imagepath);
+
       const response = await fetch(image);
       const blob = await response.blob();
       const reference = storage.ref().child(imagepath);
       await reference.put(blob);
-      app.firestore().collection(colName).doc(auth.currentUser.uid).set({
+
+      app.firestore().collection(colName).doc(auth.currentUser.uid).update({
         username: username,
         phone: phone,
         email: email,
@@ -127,7 +144,18 @@ const Editprofile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.image}>{img()}</View>
+      <View style={styles.image}>
+        {getImg()}
+        <TouchableOpacity
+          style={styles.editprofile}
+          activeOpacity={0.8}
+          onPress={() => {
+            navigation.navigate("Editprofile");
+          }}
+        >
+          <FontAwesome5 name="edit" size={36} color="black" />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles}>
         <Ionicons name="person-outline" size={24} color="black" />
@@ -227,6 +255,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 18,
+  },
+  editprofile: {
+    flexDirection: "row-reverse",
+    right: 0,
+    bottom: 0,
+    position: "absolute",
   },
 });
 
