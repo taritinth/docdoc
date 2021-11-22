@@ -28,6 +28,7 @@ export default function TabViewExample({ navigation }) {
     .where("group", "array-contains", auth.currentUser.uid);
   const subjCollectiondoctor = app.firestore().collection("doctor");
   const datenow = new Date().getDate();
+  const monthnow = new Date().getMonth();
   const [appointmenter, setAppointmenter] = useState();
   // const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
 
@@ -95,17 +96,23 @@ export default function TabViewExample({ navigation }) {
         setListAppointment(
           allAppointment.filter(
             (data) =>
-              data.date >= datenow &&
-              months.findIndex((element) => element == data.month) >=
-                new Date().getMonth()
+              (data.date >= datenow &&
+                months.findIndex((element) => element == data.month) >=
+                  new Date().getMonth()) ||
+              (data.date <= datenow &&
+                months.findIndex((element) => element == data.month) >
+                  new Date().getMonth())
           )
         );
         setListinhistory(
           allAppointment.filter(
             (data) =>
-              data.date < datenow &&
-              months.findIndex((element) => element == data.month) <=
-                new Date().getMonth()
+              (data.date < datenow &&
+                months.findIndex((element) => element == data.month) <=
+                  new Date().getMonth()) ||
+              (data.date > datenow &&
+                months.findIndex((element) => element == data.month) <
+                  new Date().getMonth())
           )
         );
       });
@@ -260,7 +267,13 @@ export default function TabViewExample({ navigation }) {
                     <Text>Place</Text>
                     <Text>{doc != undefined ? doc.workplace : "loading"}</Text>
                   </View>
-                  {datenow + 1 <= element.date ? (
+
+                  {(datenow + 1 <= element.date &&
+                    monthnow <=
+                      months.findIndex((item) => item == element.month)) ||
+                  (datenow > element.date &&
+                    months.findIndex((item) => item == element.month) >=
+                      monthnow) ? (
                     <TouchableOpacity
                       style={[styles.appointmentdetail]}
                       onPress={() => {
