@@ -408,7 +408,7 @@ const Chat = ({ route, navigation }) => {
                           renderContent={() => {
                             return (
                               <Image
-                                source={{uri: msg.imageUrl}}
+                                source={{ uri: msg.imageUrl }}
                                 style={{ width: 420, height: 420 }}
                                 resizeMode="center"
                               />
@@ -416,7 +416,7 @@ const Chat = ({ route, navigation }) => {
                           }}
                         >
                           <Image
-                            source={{uri: msg.imageUrl}}
+                            source={{ uri: msg.imageUrl }}
                             style={{ width: 210, height: 210 }}
                             resizeMode="center"
                           />
