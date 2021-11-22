@@ -155,11 +155,11 @@ const Chat = ({ route, navigation }) => {
 
           console.log(partner);
           setPartnerInfo(partner);
-        });
 
-      if (loading) {
-        setLoading(false);
-      }
+          if (loading) {
+            setLoading(false);
+          }
+        });
     };
 
     getResult();
@@ -478,9 +478,9 @@ const Chat = ({ route, navigation }) => {
     );
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     <View style={styles.container}>
