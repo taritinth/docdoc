@@ -18,6 +18,7 @@ import {
 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { app, auth, storage } from "../database/firebaseDB";
+import { useSelector, useDispatch } from "react-redux";
 
 const Editprofile = ({ navigation }) => {
   const [username, changeUsername] = React.useState("");
@@ -25,9 +26,13 @@ const Editprofile = ({ navigation }) => {
   const [fullname, changeFullname] = React.useState("");
   const [image, changeImage] = useState("");
   const [email, changeEmail] = useState("");
+
+  const user = useSelector((state) => state.local.user);
+  let colName = user.type == "doctor" ? "doctor" : "user";
+
   const subjCollection = app
     .firestore()
-    .collection("user")
+    .collection(colName)
     .doc(auth.currentUser.uid);
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -57,12 +62,11 @@ const Editprofile = ({ navigation }) => {
       changeFullname(res.data().fullname);
       changeEmail(res.data().email);
       storage
-          .ref("/" + res.data().image)
-          .getDownloadURL()
-          .then((url) => {
-            changeImage(url);
-
-          });
+        .ref("/" + res.data().image)
+        .getDownloadURL()
+        .then((url) => {
+          changeImage(url);
+        });
     });
   }, []);
 
@@ -87,13 +91,15 @@ const Editprofile = ({ navigation }) => {
 
   const editprofile = async () => {
     if (!!selectedImage) {
-      let imagepath = selectedImage.localUri.substring(selectedImage.localUri.lastIndexOf("/") + 1);
+      let imagepath = selectedImage.localUri.substring(
+        selectedImage.localUri.lastIndexOf("/") + 1
+      );
       console.log(imagepath);
       const response = await fetch(selectedImage.localUri);
       const blob = await response.blob();
       const reference = storage.ref().child(imagepath);
       await reference.put(blob);
-      app.firestore().collection("user").doc(auth.currentUser.uid).set({
+      app.firestore().collection(colName).doc(auth.currentUser.uid).set({
         username: username,
         phone: phone,
         email: email,
@@ -102,14 +108,13 @@ const Editprofile = ({ navigation }) => {
       });
       navigation.navigate("Profile");
     } else {
-
       let imagepath = image.substring(image.lastIndexOf("/") + 1);
       console.log(imagepath);
       const response = await fetch(image);
       const blob = await response.blob();
       const reference = storage.ref().child(imagepath);
       await reference.put(blob);
-      app.firestore().collection("user").doc(auth.currentUser.uid).set({
+      app.firestore().collection(colName).doc(auth.currentUser.uid).set({
         username: username,
         phone: phone,
         email: email,

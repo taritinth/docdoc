@@ -15,16 +15,21 @@ import { auth, storage } from "../database/firebaseDB";
 // import firebase from "../database/firebaseDB";
 import { app } from "../database/firebaseDB";
 import { useIsFocused } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserinfo] = useState([]);
   const [image, setImage] = useState("");
   const isFocused = useIsFocused();
 
+  const user = useSelector((state) => state.local.user);
+
   useEffect(() => {
+    let colName = user.type == "doctor" ? "doctor" : "user";
+
     app
       .firestore()
-      .collection("user")
+      .collection(colName)
       .doc(auth.currentUser.uid)
       .get()
       .then((res) => {

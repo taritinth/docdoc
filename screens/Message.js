@@ -17,12 +17,15 @@ import AppointmentList from "./AppointmentList";
 import Signup1 from "./Signup1";
 import { app, auth } from "../database/firebaseDB";
 import Loading from "../components/Loading";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Message({ navigation }) {
   //   const [coloricon, setColoricon] = useState("AppointmentList");
   const [chats, setChats] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const user = useSelector((state) => state.local.user);
 
   const openChat = (chatId) => {
     navigation.navigate("Chat", { chatId });

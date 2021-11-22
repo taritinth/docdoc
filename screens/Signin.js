@@ -8,10 +8,14 @@ import {
   TextInput,
 } from "react-native";
 import { auth, app } from "../database/firebaseDB";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../store/actions/testAction";
 
 const Signin = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleLogin = () => {
     auth
@@ -24,13 +28,78 @@ const Signin = ({ navigation }) => {
       .catch((error) => alert(error.message));
   };
 
+  const getUserInfo = (uid) => {
+    //get user info
+    let user = null;
+    app
+      .firestore()
+      .collection("user")
+      .doc(uid)
+      .get()
+      .then((res) => {
+        user = res.data();
+        user.uid = res.id;
+
+        console.log("user", user);
+      });
+    return user;
+  };
+
+  const getDoctorInfo = async (uid) => {
+    //get user info
+    let doctor = null;
+    await app
+      .firestore()
+      .collection("doctor")
+      .doc(uid)
+      .get()
+      .then((res) => {
+        doctor = res.data();
+        doctor.uid = res.id;
+      });
+    return doctor;
+  };
+
   useEffect(() => {
+    const getUserInfo = async (uid) => {
+      console.log("userId", uid);
+
+      await app
+        .firestore()
+        .collection("user")
+        .doc(uid)
+        .get()
+        .then((res) => {
+          if (res.exists) {
+            user = res.data();
+            user.uid = res.id;
+
+            dispatch(setUser(user));
+          }
+        });
+
+      await app
+        .firestore()
+        .collection("doctor")
+        .doc(uid)
+        .get()
+        .then((res) => {
+          if (res.exists) {
+            user = res.data();
+            user.uid = res.id;
+
+            dispatch(setUser(user));
+          }
+        });
+
+      navigation.replace("NavigationTabbar");
+    };
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.replace("NavigationTabbar");
+        getUserInfo(user.uid);
       }
     });
-
     return unsubscribe;
   }, []);
 

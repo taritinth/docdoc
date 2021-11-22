@@ -15,10 +15,14 @@ import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
 import Chat from "./Chat";
+import { useSelector, useDispatch } from "react-redux";
 
 const docdocNavigator = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
+
 export default function Navigation() {
+  const user = useSelector((state) => state.local.user);
+
   return (
     <NavigationContainer>
       <docdocNavigator.Navigator

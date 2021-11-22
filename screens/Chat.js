@@ -33,6 +33,7 @@ const Chat = ({ route, navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [chatInfo, setChatInfo] = useState(null);
+  const user = useSelector((state) => state.local.user);
 
   const { chatId } = route.params;
 
@@ -136,11 +137,12 @@ const Chat = ({ route, navigation }) => {
       )[0];
       console.log("partnerId", partnerId);
 
+      let colName = user.type == "doctor" ? "doctor" : "user";
       //get partner info
       let partner;
       await app
         .firestore()
-        .collection("doctor")
+        .collection(colName)
         .doc(partnerId)
         .get()
         .then((res) => {

@@ -13,9 +13,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Constants from "expo-constants";
+import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
+import testReducer from "./store/reducers/testReducer";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
+
+const rootReducer = combineReducers({
+  local: testReducer,
+});
+
+const store = createStore(rootReducer);
 
 export default function App() {
   // console.disableYellowBox = true;
@@ -43,7 +52,9 @@ export default function App() {
 
     //   <Appointment></Appointment>
     // </View>
-    <Navigation></Navigation>
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
   );
 }
 
