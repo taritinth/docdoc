@@ -78,19 +78,13 @@ const Editprofile = ({ navigation }) => {
   function getImg() {
     if (selectedImage !== null) {
       return (
-        <TouchableOpacity onPress={openImagePickerAsync}>
-          <Image
-            source={{ uri: selectedImage.localUri }}
-            style={styles.profileimg}
-          />
-        </TouchableOpacity>
+        <Image
+          source={{ uri: selectedImage.localUri }}
+          style={styles.profileimg}
+        />
       );
     } else {
-      return (
-        <TouchableOpacity onPress={openImagePickerAsync}>
-          <Image source={{ uri: image }} style={styles.profileimg} />
-        </TouchableOpacity>
-      );
+      return <Image source={{ uri: image }} style={styles.profileimg} />;
     }
   }
 
@@ -152,7 +146,7 @@ const Editprofile = ({ navigation }) => {
           style={styles.editprofile}
           activeOpacity={0.8}
           onPress={() => {
-            navigation.navigate("Editprofile");
+            openImagePickerAsync();
           }}
         >
           <FontAwesome5 name="edit" size={36} color="black" />

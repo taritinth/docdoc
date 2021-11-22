@@ -61,7 +61,7 @@ const Profile = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.image}>
         <Image style={styles.profileimg} source={{ uri: userinfo.image }} />
-
+        {/* 
         <TouchableOpacity
           style={styles.editprofile}
           activeOpacity={0.8}
@@ -70,11 +70,28 @@ const Profile = ({ navigation }) => {
           }}
         >
           <FontAwesome5 name="edit" size={36} color="black" />
+        </TouchableOpacity> */}
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: "bold",
+            color: "#525252",
+            marginRight: 10,
+          }}
+        >
+          {userinfo.type == "doctor" && userinfo.title} {userinfo.fullname}
+        </Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            navigation.navigate("Editprofile");
+          }}
+        >
+          <FontAwesome5 name="edit" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={{ fontSize: 22, fontWeight: "bold", color: "#525252" }}>
-        {userinfo.type == "doctor" && userinfo.title} {userinfo.fullname}
-      </Text>
 
       <TouchableOpacity
         style={styles.button}
