@@ -298,7 +298,7 @@ export default function TabViewExample({ navigation }) {
                   </View>
                 </>
               ) : (
-                <View>
+                <>
                   <View style={styles.appointmentdetail}>
                     <Text>Doctor</Text>
                     <Text>{doc.fullname}</Text>
@@ -311,7 +311,7 @@ export default function TabViewExample({ navigation }) {
                     <Text>Place</Text>
                     <Text>{doc.workplace}</Text>
                   </View>
-                </View>
+                </>
               )}
               <View style={styles.appointmentdetail}>
                 <Text>Status</Text>
