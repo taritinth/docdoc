@@ -26,6 +26,7 @@ const Editprofile = ({ navigation }) => {
   const [fullname, changeFullname] = React.useState("");
   const [image, changeImage] = useState("");
   const [email, changeEmail] = useState("");
+  const [image2, setImage] = useState("");
 
   const user = useSelector((state) => state.local.user);
   let colName = user.type == "doctor" ? "doctor" : "user";
@@ -61,11 +62,12 @@ const Editprofile = ({ navigation }) => {
       changePhone(res.data().phone);
       changeFullname(res.data().fullname);
       changeEmail(res.data().email);
+      changeImage(res.data().image);
       storage
         .ref("/" + res.data().image)
         .getDownloadURL()
         .then((url) => {
-          changeImage(url);
+          setImage(url);
         });
     });
   }, []);
@@ -83,7 +85,7 @@ const Editprofile = ({ navigation }) => {
     } else {
       return (
         <TouchableOpacity onPress={openImagePickerAsync}>
-          <Image source={{ uri: image }} style={styles.profileimg} />
+          <Image source={{ uri: image2 }} style={styles.profileimg} />
         </TouchableOpacity>
       );
     }
@@ -99,6 +101,7 @@ const Editprofile = ({ navigation }) => {
       const blob = await response.blob();
       const reference = storage.ref().child(imagepath);
       await reference.put(blob);
+      storage.ref("/" + image).delete()
       app.firestore().collection(colName).doc(auth.currentUser.uid).set({
         username: username,
         phone: phone,
@@ -108,19 +111,14 @@ const Editprofile = ({ navigation }) => {
       });
       navigation.navigate("Profile");
     } else {
-      let imagepath = image.substring(image.lastIndexOf("/") + 1);
-      console.log(imagepath);
-      const response = await fetch(image);
-      const blob = await response.blob();
-      const reference = storage.ref().child(imagepath);
-      await reference.put(blob);
       app.firestore().collection(colName).doc(auth.currentUser.uid).set({
         username: username,
         phone: phone,
         email: email,
-        image: imagepath,
+        image: image,
         fullname: fullname,
       });
+      console.log(image);
       navigation.navigate("Profile");
     }
   };
