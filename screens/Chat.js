@@ -32,7 +32,7 @@ const Chat = ({ route, navigation }) => {
   const [partnerInfo, setPartnerInfo] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // const [chatInfo, setChatInfo] = useState(null);
+  const [chatInfo, setChatInfo] = useState(null);
 
   const { chatId } = route.params;
 
@@ -50,16 +50,52 @@ const Chat = ({ route, navigation }) => {
       return;
     }
     console.log(pickerResult);
-    setSelectedImage({ localUri: pickerResult.uri });
+    // setSelectedImage({ localUri: pickerResult.uri });
 
-    let imagepath = selectedImage.localUri.substring(
-      selectedImage.localUri.lastIndexOf("/") + 1
+    // if (!!selectedImage) {
+    let imagepath = pickerResult.uri.substring(
+      pickerResult.uri.lastIndexOf("/") + 1
     );
+
     console.log(imagepath);
-    const response = await fetch(selectedImage.localUri);
+    const response = await fetch(pickerResult.uri);
     const blob = await response.blob();
-    const reference = storage.ref().child(imagepath);
+    const reference = storage.ref(`${chatId}`).child(imagepath);
     await reference.put(blob);
+
+    let imageUrl = "";
+    await storage
+      .ref(`${chatId}/${imagepath}`)
+      .getDownloadURL()
+      .then((url) => {
+        imageUrl = url;
+      });
+
+    const timestamp = new Date().getTime();
+    await app
+      .firestore()
+      .collection("chats")
+      .doc(chatId)
+      .collection("messages")
+      .add({
+        type: "image",
+        imageUrl: imageUrl,
+        messageText: "ส่งรูปภาพ",
+        sentBy: auth.currentUser.uid,
+        timestamp: timestamp,
+      })
+      .then((docRef) => {
+        app.firestore().collection("chats").doc(chatId).update({
+          lastMessageId: docRef.id,
+          lastMessageType: "image",
+          lastSentBy: auth.currentUser.uid,
+          lastMessageText: "ส่งรูปภาพ",
+          lastTimestamp: timestamp,
+        });
+      });
+    // } else {
+    //   console.log("eiei");
+    // }
   };
 
   useEffect(() => {
@@ -91,6 +127,8 @@ const Chat = ({ route, navigation }) => {
         .get()
         .then((res) => {
           chat = res.data();
+          chat.id = res.id;
+          setChatInfo(chat);
         });
 
       let partnerId = chat.members.filter(
@@ -140,31 +178,32 @@ const Chat = ({ route, navigation }) => {
   };
 
   const onPressImage = () => {
-    if (inputMethod == "image") {
-      setInputMethod("text");
-      return;
-    }
+    // if (inputMethod == "image") {
+    //   setInputMethod("text");
+    //   return;
+    // }
 
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
 
-    setTimeout(() => {
-      setInputMethod("image");
-    }, 100);
+    // setTimeout(() => {
+    //   setInputMethod("image");
+    // }, 100);
 
     openImagePickerAsync();
   };
 
   const onPressCalendar = () => {
-    if (inputMethod == "calendar") {
-      setInputMethod("text");
-      return;
-    }
+    createAppointment();
+    // if (inputMethod == "calendar") {
+    //   setInputMethod("text");
+    //   return;
+    // }
 
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
 
-    setTimeout(() => {
-      setInputMethod("calendar");
-    }, 100);
+    // setTimeout(() => {
+    //   setInputMethod("calendar");
+    // }, 100);
   };
 
   const onFocusTextInput = () => {
@@ -253,14 +292,43 @@ const Chat = ({ route, navigation }) => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            const delSubjDoc = app
+          onPress: async () => {
+            //delete selected message
+            const delSubjDoc = await app
               .firestore()
               .collection("chats")
               .doc(chatId)
               .collection("messages")
               .doc(msgId);
-            delSubjDoc.delete().then((res) => {});
+            delSubjDoc.delete();
+
+            //Update last message
+            await app
+              .firestore()
+              .collection("chats")
+              .doc(chatId)
+              .collection("messages")
+              .orderBy("timestamp", "asc")
+              .get()
+              .then(async (querySnapshot) => {
+                //query latest message
+                let chatMessages = [];
+                querySnapshot.forEach((doc) => {
+                  const data = doc.data();
+                  data.id = doc.id;
+                  chatMessages.push(data);
+                });
+
+                let lastMessageObject = chatMessages[chatMessages.length - 1]; // get latest msg object
+
+                await app.firestore().collection("chats").doc(chatId).update({
+                  lastMessageId: lastMessageObject.id,
+                  lastMessageType: lastMessageObject.type,
+                  lastSentBy: lastMessageObject.sentBy,
+                  lastMessageText: lastMessageObject.messageText,
+                  lastTimestamp: lastMessageObject.timestamp,
+                });
+              });
           },
         },
       ]
@@ -276,16 +344,17 @@ const Chat = ({ route, navigation }) => {
           }}
           onContentSizeChange={() => scrollView.scrollToEnd({ animated: true })}
         >
-          {messages.map((msg) => {
+          {messages.map((msg, index) => {
             switch (msg.type) {
               case "text":
                 return (
                   <TouchableOpacity
-                    style={
+                    style={[
                       msg.sentBy == auth.currentUser.uid
                         ? styles.myChatBubble
-                        : styles.otherChatBubble
-                    }
+                        : styles.otherChatBubble,
+                      index + 1 == messages.length && { marginBottom: 20 },
+                    ]}
                     key={msg.id}
                     activeOpacity={0.9}
                     onLongPress={() => handleLongPress(msg.id)}
@@ -302,6 +371,38 @@ const Chat = ({ route, navigation }) => {
                   </TouchableOpacity>
                 );
               case "image":
+                return (
+                  <TouchableOpacity
+                    style={[
+                      msg.sentBy == auth.currentUser.uid
+                        ? styles.myChatBubbleImg
+                        : styles.otherChatBubbleImg,
+                      index + 1 == messages.length && { marginBottom: 20 },
+                    ]}
+                    key={msg.id}
+                    activeOpacity={0.9}
+                    onLongPress={() => handleLongPress(msg.id)}
+                  >
+                    {msg.imageUrl ? (
+                      <Image
+                        style={styles.image}
+                        source={{
+                          uri: msg.imageUrl,
+                        }}
+                      />
+                    ) : (
+                      <Text
+                        style={
+                          msg.sentBy == auth.currentUser.uid
+                            ? styles.myChatText
+                            : styles.otherChatText
+                        }
+                      >
+                        {"ส่งรูปภาพ"}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                );
                 break;
               default:
                 break;
@@ -432,6 +533,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
   },
+  otherChatBubbleImg: {
+    alignSelf: "flex-start",
+    maxWidth: "70%",
+    marginVertical: 5,
+    marginHorizontal: 10,
+  },
   myChatBubble: {
     alignSelf: "flex-end",
     maxWidth: "70%",
@@ -442,6 +549,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
   },
+  myChatBubbleImg: {
+    alignSelf: "flex-end",
+    maxWidth: "70%",
+    marginVertical: 5,
+    marginHorizontal: 10,
+  },
   otherChatText: {
     color: "black",
   },
@@ -449,7 +562,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   image: {
-    width: "100%",
+    width: 210,
+    height: 210,
+    borderRadius: 210 / 30,
     resizeMode: "contain",
   },
   map: {
