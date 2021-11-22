@@ -177,14 +177,14 @@ export default function TabViewExample({ navigation }) {
     // navigation.navigate("Appointment");
   }
 
-  // const handleSignOut = () => {
-  //   auth
-  //     .signOut()
-  //     .then(() => {
-  //       navigation.replace("Signin");
-  //     })
-  //     .catch((error) => alert(error.message));
-  // };
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.replace("Signin");
+      })
+      .catch((error) => alert(error.message));
+  };
 
   function getUserInfo(uid) {
     let listbuffer = listuser;
@@ -234,6 +234,11 @@ export default function TabViewExample({ navigation }) {
                     <Text>Place</Text>
                     <Text>{doc.workplace}</Text>
                   </View>
+
+                  <View style={styles.appointmentdetail}>
+                    <Text>Status</Text>
+                    <Text style={{ color: "blue" }}>Wait for treat</Text>
+                  </View>
                 </>
               ) : (
                 <>
@@ -249,12 +254,22 @@ export default function TabViewExample({ navigation }) {
                     <Text>Place</Text>
                     <Text>{doc != undefined ? doc.workplace : "loading"}</Text>
                   </View>
+                  {datenow + 1 <= element.date ? (
+                    <TouchableOpacity
+                      style={[styles.appointmentdetail]}
+                      onPress={() => {
+                        deleteSubject(element);
+                      }}
+                    >
+                      <Text style={styles.cancel}>Cancel</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={[styles.appointmentdetail]}>
+                      <Text style={styles.noncancel}>Cancel</Text>
+                    </View>
+                  )}
                 </>
               )}
-              <View style={styles.appointmentdetail}>
-                <Text>Status</Text>
-                <Text style={{ color: "blue" }}>Wait for treat</Text>
-              </View>
             </View>
           );
         })}
@@ -301,15 +316,15 @@ export default function TabViewExample({ navigation }) {
                 <>
                   <View style={styles.appointmentdetail}>
                     <Text>Doctor</Text>
-                    <Text>{doc.fullname}</Text>
+                    <Text>{doc != undefined ? doc.fullname : "loading"}</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Type</Text>
-                    <Text>{doc.type}</Text>
+                    <Text>{doc != undefined ? doc.type : "loading"}</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Place</Text>
-                    <Text>{doc.workplace}</Text>
+                    <Text>{doc != undefined ? doc.workplace : "loading"}</Text>
                   </View>
                 </>
               )}

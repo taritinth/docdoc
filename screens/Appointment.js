@@ -38,15 +38,17 @@ export default function Appointment({ navigation, route }) {
   ]);
 
   // fdsUMdSk22QtffilTDnS, qknN4caIqdpf1izJVwHO
-
-  const [month, setMonth] = useState(10); // 0-11
-  const [year, setYear] = useState(2021);
+  const monthnow = new Date().getMonth();
+  const yearnow = new Date().getFullYear();
+  // console.log(yearnow);
+  const [month, setMonth] = useState(monthnow); // 0-11
+  const [year, setYear] = useState(yearnow);
   const datenow = new Date().getDate();
   const [selectdate, setSelectdate] = useState(datenow + 1);
   const [selecttime, setSelecttime] = useState();
   const subjCollection = app.firestore().collection("appointment");
   const [doctorinfo, setDoctorinfo] = useState();
-
+  const [count, setCount] = useState(0);
   const [userinfo, setUserinfo] = useState([]);
 
   const { appointmented, appointmenter } = route.params;
@@ -101,11 +103,14 @@ export default function Appointment({ navigation, route }) {
     "03.00 p.m.",
   ]);
 
-  function storeSubject() {
+  const [usemonths, setUsemonths] = useState(months.splice(month, 12 - month));
+
+  function storeSubject(month2) {
+    console.log(month2, count);
     subjCollection.add({
       appointmented: appointmented,
       appointmenter: appointmenter,
-      month: months[month],
+      month: usemonths[month2],
       year: year,
       date: selectdate,
       time: selecttime,
@@ -120,12 +125,16 @@ export default function Appointment({ navigation, route }) {
     console.log(list);
     docInfojCollection.update({ appointmentlist: list });
   }
+
   // 01.00 p.m.19Sep2021
   function checktime(time, index) {
     let issametime = false;
     doctorinfo.appointmentlist.forEach((item) => {
       // console.log(time + selectdate + months[month] + year + "----" + item);
-      if (item == time + selectdate + months[month] + year) {
+      if (item == time + selectdate + usemonths[month] + year && count != 0) {
+        issametime = true;
+      }
+      if (item == time + selectdate + usemonths[0] + year && count == 0) {
         issametime = true;
       }
     });
@@ -165,7 +174,13 @@ export default function Appointment({ navigation, route }) {
     }
   }
 
-  for (let i = datenow + 1; i <= numOfDays; i++) {
+  // console.log(count);
+  let datenow2 = datenow + 1;
+  if (usemonths[0] != usemonths[month] && count != 0) {
+    datenow2 = 1;
+  }
+
+  for (let i = datenow2; i <= numOfDays; i++) {
     dateBubble.push(
       <TouchableOpacity
         key={i}
@@ -200,10 +215,18 @@ export default function Appointment({ navigation, route }) {
         activeOpacity={0.8}
       >
         <SelectDropdown
-          data={months}
-          defaultValue={months[month]}
+          data={usemonths}
+          defaultValue={usemonths[0]}
           onSelect={(selectedItem, index) => {
             setMonth(index);
+            // console.log(month);
+            setCount(count + 1);
+            if (index == 0) {
+              setSelectdate(datenow + 1);
+            } else {
+              setSelectdate(1);
+            }
+
             // setSelectdate();
             // console.log(selectedItem, index);
           }}
@@ -257,11 +280,20 @@ export default function Appointment({ navigation, route }) {
           activeOpacity={0.8}
           onPress={() => {
             if (!!selecttime) {
-              storeSubject();
-              addQueueDoctor(selecttime + selectdate + months[month] + year);
+              if (count == 0) {
+                storeSubject(0);
+
+                addQueueDoctor(selecttime + selectdate + usemonths[0] + year);
+              } else {
+                addQueueDoctor(
+                  selecttime + selectdate + usemonths[month] + year
+                );
+                storeSubject(month);
+              }
+              // usemonths[month];
+
               alert("add Successfully");
               navigation.navigate("Appointment");
-              // console.log(doctorinfo);
             } else {
               alert("Please enter time");
             }
