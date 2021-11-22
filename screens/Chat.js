@@ -138,7 +138,7 @@ const Chat = ({ route, navigation }) => {
       )[0];
       console.log("partnerId", partnerId);
 
-      let colName = user.type == "doctor" ? "doctor" : "user";
+      let colName = user.type == "doctor" ? "user" : "doctor"; // inverse
       //get partner info
       let partner;
       await app
@@ -149,12 +149,17 @@ const Chat = ({ route, navigation }) => {
         .then((res) => {
           partner = res.data();
           partner.uid = res.id;
-          navigation.setOptions({
-            title: `${partner.title} ${partner.fullname}` || "Unknown",
-          });
 
           console.log(partner);
           setPartnerInfo(partner);
+
+          let chatTitle = `${partner.type == "doctor" && partner.title} ${
+            partner.fullname
+          }`;
+
+          navigation.setOptions({
+            title: chatTitle,
+          });
 
           if (loading) {
             setLoading(false);
@@ -478,9 +483,9 @@ const Chat = ({ route, navigation }) => {
     );
   };
 
-  // if (loading) {
-  //   return <Loading />;
-  // }
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
