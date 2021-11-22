@@ -124,7 +124,7 @@ export default function Message({ navigation }) {
               </View>
               <View style={[styles.section, { flex: 1 }]}>
                 <Text style={styles.senderName}>
-                  {item.partnerInfo.fullname}
+                  {item.partnerInfo.title} {item.partnerInfo.fullname}
                 </Text>
                 <Text style={styles.lastMsg} numberOfLines={1}>
                   {item.lastMessageText}

@@ -146,7 +146,9 @@ const Chat = ({ route, navigation }) => {
         .then((res) => {
           partner = res.data();
           partner.uid = res.id;
-          navigation.setOptions({ title: partner.fullname || "Unknown" });
+          navigation.setOptions({
+            title: `${partner.title} ${partner.fullname}` || "Unknown",
+          });
 
           console.log(partner);
           setPartnerInfo(partner);
@@ -542,7 +544,7 @@ const styles = StyleSheet.create({
   myChatBubble: {
     alignSelf: "flex-end",
     maxWidth: "70%",
-    backgroundColor: "#0a95ff",
+    backgroundColor: "#32B5FF",
     borderRadius: 30,
     paddingHorizontal: 15,
     paddingVertical: 10,
@@ -572,7 +574,7 @@ const styles = StyleSheet.create({
     height: 210,
   },
   button: {
-    backgroundColor: "#0a95ff",
+    backgroundColor: "#32B5FF",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,

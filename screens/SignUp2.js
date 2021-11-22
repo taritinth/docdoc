@@ -18,9 +18,13 @@ const Signup2 = ({ route, navigation }) => {
   const [username, setUsername] = useState("");
   const [image, setImage] = useState("");
 
-  const onChange = (password2, score, { label, labelColor, activeBarColor }) => {
+  const onChange = (
+    password2,
+    score,
+    { label, labelColor, activeBarColor }
+  ) => {
     console.log(password2, score, { label, labelColor, activeBarColor });
-    setPassword(password2)
+    setPassword(password2);
     console.log(password);
   };
 
@@ -39,17 +43,25 @@ const Signup2 = ({ route, navigation }) => {
     const reference = storage.ref().child(imagepath);
     await reference.put(blob);
 
-
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
+
+        const c = name.toLowerCase();
+
+        var array = [];
+        for (let i = 1; i < c.length + 1; i++) {
+          array.push(c.substring(0, i));
+        }
+
         app.firestore().collection("user").doc(user.uid).set({
           email: user.email,
           username: username,
           phone: phone,
           fullname: name,
           image: imagepath,
+          nameAsArray: array,
         });
         console.log(user.uid);
         console.log("Registered with:", user.email);

@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   Image,
+  TextInput,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -23,6 +24,37 @@ export default function Home({ navigation }) {
   const [doctors, setDoctors] = useState([]);
   const [scrollView, setScrollView] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debounceSearch, setDebounceSearch] = useState(null);
+
+  const handleSearch = async (value) => {
+    setSearchTerm(value);
+
+    clearTimeout(debounceSearch);
+    setDebounceSearch(
+      setTimeout(async () => {
+        let getDoctors = await app.firestore().collection("doctor");
+
+        if (value) {
+          getDoctors = getDoctors.where(
+            "nameAsArray",
+            "array-contains",
+            value.toLowerCase()
+          );
+        }
+
+        getDoctors.get().then((querySnapshot) => {
+          const allDoctors = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            data.uid = doc.id;
+            allDoctors.push(data);
+          });
+          setDoctors(allDoctors);
+        });
+      }, 500)
+    );
+  };
 
   const openChat = (chatId) => {
     console.log(chatId);
@@ -92,11 +124,11 @@ export default function Home({ navigation }) {
   };
 
   useEffect(() => {
-    const allDoctors = [];
     const subscriber = app
       .firestore()
       .collection("doctor")
       .onSnapshot((querySnapshot) => {
+        const allDoctors = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           data.uid = doc.id;
@@ -121,59 +153,96 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        {/* <Text>home</Text>
+      {/* <Text>home</Text>
       <TouchableOpacity onPress={() => navigation.navigate("Appointment2")}>
         <Text>Appointment</Text>
       </TouchableOpacity> */}
-        <ScrollView
-          ref={(ref) => {
-            setScrollView(ref);
+
+      <ScrollView>
+        <View style={[styles.searchSection]}>
+          <MaterialIcons
+            name="search"
+            size={29}
+            color="#CBCBCB"
+            style={{ marginRight: 10 }}
+          />
+          <TextInput
+            style={styles.input}
+            value={searchTerm}
+            onChangeText={(value) => handleSearch(value)}
+            placeholder="ค้นหาแพทย์"
+          ></TextInput>
+        </View>
+
+        <View
+          style={{
+            paddingHorizontal: 15,
+            flex: 1,
+            marginVertical: 15,
           }}
-          onContentSizeChange={() => scrollView.scrollToEnd({ animated: true })}
         >
-          {doctors.map((doctor, index) => (
-            <View style={styles.chatbox} key={index}>
-              <View style={styles.appointment} key={doctor.uid}>
-                <Image
-                  style={styles.img}
-                  source={{
-                    uri: doctor.image,
-                  }}
-                />
-                <View style={styles.doctordetail}>
-                  <Text style={styles.name}>Dr. {doctor.fullname}</Text>
-                  <Text style={styles.type}>{doctor.type}</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <MaterialIcons
-                      name="location-on"
-                      size={14}
-                      color="gray"
-                      style={{ marginTop: 4 }}
-                    />
-                    <Text style={styles.place}> {doctor.place}</Text>
-                  </View>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 18,
+              color: "#525252",
+            }}
+          >
+            รายชื่อแพทย์
+          </Text>
+        </View>
+        {doctors.map((doctor, index) => (
+          <View style={styles.box} key={index}>
+            <View style={styles.appointment} key={doctor.uid}>
+              <Image
+                style={styles.img}
+                source={{
+                  uri: doctor.image,
+                }}
+              />
+              <View style={styles.doctordetail}>
+                <Text style={styles.name}>
+                  {doctor.title} {doctor.fullname}
+                </Text>
+                <Text style={styles.type}>{doctor.specialist}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <MaterialIcons
+                    name="location-on"
+                    size={14}
+                    color="#D7D7D7"
+                    style={{ marginTop: 4 }}
+                  />
+                  <Text style={styles.place}> {doctor.place}</Text>
                 </View>
               </View>
-
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={styles.chat}
-                onPress={() => setOneToOneChat(doctor)}
-              >
-                <View style={{ width: "40%" }} />
-                <Ionicons
-                  style={{ marginVertical: 10 }}
-                  name="chatbubble-ellipses-outline"
-                  size={24}
-                  color="black"
-                />
-                <Text style={{ marginVertical: 10 }}> แชท</Text>
-              </TouchableOpacity>
             </View>
-          ))}
-        </ScrollView>
-      </View>
+
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.chat}
+              onPress={() => setOneToOneChat(doctor)}
+            >
+              <View style={{ width: "40%" }} />
+              <Ionicons
+                style={{ marginVertical: 10 }}
+                name="chatbubble-ellipses-outline"
+                size={20}
+                color="#8A8A8A"
+              />
+              <Text
+                style={{
+                  color: "#8A8A8A",
+                  fontWeight: "bold",
+                  marginVertical: 10,
+                }}
+              >
+                {" "}
+                แชท
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -186,18 +255,37 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 20,
   },
-  box: {
+  input: {
+    flex: 1,
+    fontSize: 16,
+  },
+  searchSection: {
+    flex: 1,
     flexDirection: "row",
-    borderBottomWidth: 0.15,
-    borderBottomColor: "#A5A5A5",
-    paddingVertical: 2,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#F6F6F6",
+    height: 50,
+    marginTop: 10,
+    marginHorizontal: 15,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 30,
   },
+  // box: {
+  //   flexDirection: "row",
+  //   borderBottomWidth: 0.15,
+  //   borderBottomColor: "#A5A5A5",
+  //   paddingVertical: 2,
+  // },
   appointment: {
     flexWrap: "wrap",
     backgroundColor: "#ffffffff",
     flexDirection: "row",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingVertical: 5,
   },
   appointmentdetail: {
     // flex: 1,
@@ -205,8 +293,8 @@ const styles = StyleSheet.create({
     width: "33%",
   },
   img: {
-    width: 65,
-    height: 65,
+    width: 75,
+    height: 75,
     resizeMode: "cover",
     alignSelf: "flex-end",
     borderRadius: 150 / 2,
@@ -214,16 +302,17 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   name: {
-    fontSize: 20,
+    fontSize: 18,
     marginTop: 10,
-    color: "#000",
+    color: "#525252",
+    fontWeight: "bold",
   },
   doctordetail: {
     flexDirection: "column",
   },
   type: {
     alignSelf: "flex-start",
-    backgroundColor: "#BEE0FF",
+    backgroundColor: "#E3F2FF",
     color: "#41698E",
     padding: 5,
     borderRadius: 5,
@@ -232,21 +321,28 @@ const styles = StyleSheet.create({
   place: {
     fontSize: 14,
     marginBottom: 10,
+    color: "#6F6F6F",
   },
   chat: {
     backgroundColor: "#F6F6F6",
     textAlign: "center",
     // height: 40,
     // width: "100%",
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
     flexDirection: "row",
   },
-  chatbox: {
+  box: {
     shadowColor: "#000000",
     flexDirection: "column",
-    margin: 10,
-    borderRadius: 5,
+    borderWidth: 0.05,
+    borderRadius: 10,
+    marginHorizontal: 15,
+    marginVertical: 10,
+    shadowColor: "#6F6F6F",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
     elevation: 5,
   },
 });
