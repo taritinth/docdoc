@@ -26,6 +26,7 @@ const Editprofile = ({ navigation }) => {
   const [fullname, changeFullname] = React.useState("");
   const [image, changeImage] = useState("");
   const [email, changeEmail] = useState("");
+  const [image2, setImage] = useState("");
 
   const user = useSelector((state) => state.local.user);
   let colName = user.type == "doctor" ? "doctor" : "user";
@@ -135,9 +136,10 @@ const Editprofile = ({ navigation }) => {
         username: username,
         phone: phone,
         email: email,
-        image: imagepath,
+        image: image,
         fullname: fullname,
       });
+      console.log(image);
       navigation.navigate("Profile");
     }
   };

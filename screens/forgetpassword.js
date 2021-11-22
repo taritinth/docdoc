@@ -41,7 +41,7 @@ const Signin = ({ navigation }) => {
         onPress={forgotPassword}
       >
         <View style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text style={styles.buttonText}>Sent</Text>
         </View>
       </TouchableOpacity>
 
