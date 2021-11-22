@@ -13,7 +13,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { app, auth } from "../database/firebaseDB";
 import Loading from "../components/Loading";
 
-export default function TabViewExample() {
+export default function TabViewExample({ navigation }) {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -177,6 +177,15 @@ export default function TabViewExample() {
     // navigation.navigate("Appointment");
   }
 
+  // const handleSignOut = () => {
+  //   auth
+  //     .signOut()
+  //     .then(() => {
+  //       navigation.replace("Signin");
+  //     })
+  //     .catch((error) => alert(error.message));
+  // };
+
   function getUserInfo(uid) {
     let listbuffer = listuser;
     listbuffer = listbuffer.filter((data) => data.uid == uid);
@@ -230,21 +239,21 @@ export default function TabViewExample() {
                 <>
                   <View style={styles.appointmentdetail}>
                     <Text>Doctor</Text>
-                    <Text>{doc.fullname}</Text>
+                    <Text>{doc != undefined ? doc.fullname : "loading"}</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Type</Text>
-                    <Text>{doc.type}</Text>
+                    <Text>{doc != undefined ? doc.type : "loading"}</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Place</Text>
-                    <Text>{doc.workplace}</Text>
+                    <Text>{doc != undefined ? doc.workplace : "loading"}</Text>
                   </View>
                 </>
               )}
               <View style={styles.appointmentdetail}>
                 <Text>Status</Text>
-                <Text style={{ color: "blue" }}>wait fot treat</Text>
+                <Text style={{ color: "blue" }}>Wait for treat</Text>
               </View>
             </View>
           );
@@ -289,7 +298,7 @@ export default function TabViewExample() {
                   </View>
                 </>
               ) : (
-                <View>
+                <>
                   <View style={styles.appointmentdetail}>
                     <Text>Doctor</Text>
                     <Text>{doc.fullname}</Text>
@@ -302,7 +311,7 @@ export default function TabViewExample() {
                     <Text>Place</Text>
                     <Text>{doc.workplace}</Text>
                   </View>
-                </View>
+                </>
               )}
               <View style={styles.appointmentdetail}>
                 <Text>Status</Text>
@@ -312,6 +321,9 @@ export default function TabViewExample() {
           );
         })}
       </ScrollView>
+      {/* <TouchableOpacity onPress={handleSignOut} style={styles.logout}>
+        <Text style={{ color: "red" }}>Logout</Text>
+      </TouchableOpacity> */}
     </View>
   );
 
@@ -329,9 +341,9 @@ export default function TabViewExample() {
       inactiveColor="#A8A8A8"
     />
   );
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     <TabView

@@ -42,7 +42,7 @@ export default function Appointment({ navigation, route }) {
   const [month, setMonth] = useState(10); // 0-11
   const [year, setYear] = useState(2021);
   const datenow = new Date().getDate();
-  const [selectdate, setSelectdate] = useState(datenow);
+  const [selectdate, setSelectdate] = useState(datenow + 1);
   const [selecttime, setSelecttime] = useState();
   const subjCollection = app.firestore().collection("appointment");
   const [doctorinfo, setDoctorinfo] = useState();
@@ -165,7 +165,7 @@ export default function Appointment({ navigation, route }) {
     }
   }
 
-  for (let i = datenow; i <= numOfDays; i++) {
+  for (let i = datenow + 1; i <= numOfDays; i++) {
     dateBubble.push(
       <TouchableOpacity
         key={i}
