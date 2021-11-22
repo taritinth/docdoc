@@ -55,13 +55,13 @@ const Profile = ({ navigation }) => {
   }, [isFocused]);
 
   const handleSignOut = () => {
-    Alert.alert("Sign out?", "Are you sure to sign out?", [
+    Alert.alert("Sign Out?", "Are you sure to sign out?", [
       {
         text: "Cancel",
         style: "cancel",
       },
       {
-        text: "Sign out",
+        text: "Sign Out",
         style: "destructive",
         onPress: async () => {
           await auth
@@ -136,7 +136,7 @@ const Profile = ({ navigation }) => {
         onPress={handleSignOut}
       >
         <View style={[styles.buttonContainer, { backgroundColor: "#f35454" }]}>
-          <Text style={styles.buttonText}>Logout</Text>
+          <Text style={styles.buttonText}>Sign Out</Text>
         </View>
       </TouchableOpacity>
     </View>
