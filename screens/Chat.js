@@ -21,6 +21,7 @@ import { app, auth, storage } from "../database/firebaseDB";
 // import * as firebase from "firebase";
 import Loading from "../components/Loading";
 import * as ImagePicker from "expo-image-picker";
+import { useSelector, useDispatch } from "react-redux";
 
 const Chat = ({ route, navigation }) => {
   const [inputMethod, setInputMethod] = useState("text");
