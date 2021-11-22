@@ -58,7 +58,11 @@ export default function Navigation() {
           name="AppointmentList"
           component={AppointmentList}
         />
-        <docdocNavigator.Screen name="Editprofile" component={Editprofile} />
+        <docdocNavigator.Screen
+          name="Editprofile"
+          component={Editprofile}
+          options={{ title: "Edit Profile", headerShown: true }}
+        />
       </docdocNavigator.Navigator>
     </NavigationContainer>
   );

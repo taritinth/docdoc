@@ -477,13 +477,15 @@ const Chat = ({ route, navigation }) => {
           >
             <Icon name={"image"} size={22} color={"#ced4da"} />
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.toolbarItem}
-            onPress={() => onPressCalendar()}
-          >
-            <Icon name={"calendar"} size={22} color={"#ced4da"} />
-          </TouchableOpacity>
+          {user.type == "user" && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.toolbarItem}
+              onPress={() => onPressCalendar()}
+            >
+              <Icon name={"calendar"} size={22} color={"#ced4da"} />
+            </TouchableOpacity>
+          )}
           <TextInput
             value={text}
             style={[styles.input, styles.toolbarItem]}

@@ -57,11 +57,12 @@ const Signup2 = ({ route, navigation }) => {
 
         app.firestore().collection("user").doc(user.uid).set({
           email: user.email,
-          username: username,
+          // username: username,
           phone: phone,
           fullname: name,
           image: imagepath,
           nameAsArray: array,
+          type: "user",
         });
         console.log(user.uid);
         console.log("Registered with:", user.email);
@@ -78,12 +79,12 @@ const Signup2 = ({ route, navigation }) => {
         placeholder="Email"
         onChangeText={(text) => setEmail(text)}
       ></TextInput>
-      <Text style={styles.password}>Username</Text>
+      {/* <Text style={styles.password}>Username</Text>
       <TextInput
         style={styles.input}
         onChangeText={(text) => setUsername(text)}
         placeholder="Username"
-      ></TextInput>
+      ></TextInput> */}
 
       <Text style={styles.password}>Password</Text>
       {/* <TextInput
@@ -114,7 +115,7 @@ const Signup2 = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor:'red',
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     padding: 30,

@@ -9,6 +9,7 @@ import {
   Easing,
   Animated,
   Image,
+  Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { auth, storage } from "../database/firebaseDB";
@@ -16,15 +17,19 @@ import { auth, storage } from "../database/firebaseDB";
 import { app } from "../database/firebaseDB";
 import { useIsFocused } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
+import Loading from "../components/Loading";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserinfo] = useState([]);
   const [image, setImage] = useState("");
   const isFocused = useIsFocused();
+  const [loading, setLoading] = useState(true);
 
   const user = useSelector((state) => state.local.user);
 
   useEffect(() => {
+    setLoading(true);
+
     let colName = user.type == "doctor" ? "doctor" : "user";
     app
       .firestore()
@@ -43,19 +48,37 @@ const Profile = ({ navigation }) => {
         //     setImage(url);
         //     console.log(image);
         //   });
+        if (loading) {
+          setLoading(false);
+        }
       });
   }, [isFocused]);
 
   const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Signin");
-      })
-      .catch((error) => alert(error.message));
+    Alert.alert("Sign out?", "Are you sure to sign out?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Sign out",
+        style: "destructive",
+        onPress: async () => {
+          await auth
+            .signOut()
+            .then(() => {
+              navigation.replace("Signin");
+            })
+            .catch((error) => alert(error.message));
+        },
+      },
+    ]);
   };
 
   // const subjDoc = firebase.firestore().collection("user").doc("qknN4caIqdpf1izJVwHO");
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
@@ -72,7 +95,7 @@ const Profile = ({ navigation }) => {
           <FontAwesome5 name="edit" size={36} color="black" />
         </TouchableOpacity> */}
       </View>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", marginBottom: 50 }}>
         <Text
           style={{
             fontSize: 22,
@@ -83,23 +106,27 @@ const Profile = ({ navigation }) => {
         >
           {userinfo.type == "doctor" && userinfo.title} {userinfo.fullname}
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
             navigation.navigate("Editprofile");
           }}
         >
           <FontAwesome5 name="edit" size={24} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
-        onPress={handleSignOut}
+        onPress={() => {
+          navigation.navigate("Editprofile");
+        }}
       >
-        <View style={[styles.buttonContainer]}>
-          <Text style={styles.buttonText}>Logout</Text>
+        <View style={[styles.buttonContainer, { backgroundColor: "#F6F6F6" }]}>
+          <Text style={[styles.buttonText, { color: "#595959" }]}>
+            Edit Profile
+          </Text>
         </View>
       </TouchableOpacity>
 
@@ -155,7 +182,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: "stretch",
-    marginTop: 40,
+    marginTop: 10,
   },
   buttonContainer: {
     paddingVertical: 12,
