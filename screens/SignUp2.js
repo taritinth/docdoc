@@ -18,8 +18,10 @@ const Signup2 = ({ route, navigation }) => {
   const [username, setUsername] = useState("");
   const [image, setImage] = useState("");
 
-  onChange = (password, score, { label, labelColor, activeBarColor }) => {
-    console.log(password, score, { label, labelColor, activeBarColor });
+  const onChange = (password2, score, { label, labelColor, activeBarColor }) => {
+    console.log(password2, score, { label, labelColor, activeBarColor });
+    setPassword(password2)
+    console.log(password);
   };
 
   useEffect(() => {
@@ -72,15 +74,15 @@ const Signup2 = ({ route, navigation }) => {
       ></TextInput>
 
       <Text style={styles.password}>Password</Text>
-      <TextInput
+      {/* <TextInput
         secureTextEntry={true}
         style={styles.input}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
-      ></TextInput>
-      {/* <View style={styles.input}>
-        <RNPasswordStrengthMeter onChangeText={this.onChange} meterType="bar" />
-      </View> */}
+      ></TextInput> */}
+      <View style={styles.input}>
+        <RNPasswordStrengthMeter onChangeText={onChange} meterType="bar" />
+      </View>
       <TouchableOpacity
         onPress={handleSignUp}
         style={[styles.button, styles.buttonContainer]}
