@@ -34,6 +34,8 @@ export default function TabViewExample() {
   const [listinfoappoint, setListinfoappoint] = useState([]);
   const [listinhistory, setListinhistory] = useState([]);
   const [listdoc, setListdoc] = useState([]);
+  const [listuser, setLisuser] = useState([]);
+  const [isdoc, setIstdoc] = useState(false);
 
   const [months, setMonths] = useState([
     "Jan",
@@ -52,76 +54,11 @@ export default function TabViewExample() {
 
   const [loading, setLoading] = useState(true);
 
-  const getCollection = (querySnapshot) => {
-    let all_data = [];
-    let doctorUid = [];
-    querySnapshot.forEach((res) => {
-      const { time, month, year, date, appointmented, appointmenter, group } =
-        res.data();
-      doctorUid.push(res.data().appointmented);
-      setAppointmenter(appointmenter);
-      // getUserById(appointmented);
-      // console.log(res.data());
-      all_data.push({
-        key: res.id,
-        appointmenter,
-        appointmented,
-        month,
-        year,
-        date,
-        time,
-        group,
-      });
-    });
-    // sort by ????
-    // console.log(all_data.appointmented);
-
-    // subjCollectiondoctor = app.firestore().collection("doctor");
-
-    // doctorUid.forEach((userId) => {
-    //   subjCollectiondoctor = subjCollectiondoctor.where(
-    //     "members",
-    //     "==",
-    //     userId
-    //   );
-    // });
-
-    all_data.sort((item2, item1) => {
-      return (
-        item1.date < item2.date
-        // &&
-        // months.findIndex((element) => element == item1.month) <=
-        //   months.findIndex((element) => element == item2.month)
-      );
-      // console.log(item2);
-    });
-    // console.log(all_data);
-    setListinfoappoint(
-      all_data.filter(
-        (data) =>
-          data.appointmenter == appointmenter &&
-          // data.appointmented == appointmented &&
-          data.date >= datenow &&
-          months.findIndex((element) => element == data.month) >=
-            new Date().getMonth()
-      )
-    );
-
-    setListinhistory(
-      all_data.filter(
-        (data) =>
-          data.appointmenter == appointmenter &&
-          // data.appointmented == appointmented &&
-          data.date < datenow &&
-          months.findIndex((element) => element == data.month) <=
-            new Date().getMonth()
-      )
-    );
-    // console.log(listinfoappoint);
-  };
-
   const getUserById = (userId) => {
     // console.log(listdoc.filter((user) => user.uid == userId)[0]);
+    if (listdoc.findIndex((user) => user.uid == userId) == -1) {
+      let a = 1;
+    }
     return listdoc.filter((user) => user.uid == userId)[0];
   };
 
@@ -135,8 +72,12 @@ export default function TabViewExample() {
       .collection("appointment")
       .where("group", "array-contains", auth.currentUser.uid)
       .onSnapshot((querySnapshot) => {
+        // check doctor
         const allAppointment = [];
         querySnapshot.forEach((res) => {
+          if (auth.currentUser.uid == res.data().appointmented) {
+            setIstdoc(true);
+          }
           // console.log("res.data()", res.data());
           const data = res.data();
           data.id = res.id;
@@ -150,7 +91,7 @@ export default function TabViewExample() {
         allAppointment.sort((item2, item1) => {
           return item1.date < item2.date;
         });
-        console.log(allAppointment);
+        // console.log(allAppointment);
         setListAppointment(
           allAppointment.filter(
             (data) =>
@@ -167,52 +108,20 @@ export default function TabViewExample() {
                 new Date().getMonth()
           )
         );
+      });
 
-        // sort by ????
-        // console.log(all_data.appointmented);
-
-        // subjCollectiondoctor = app.firestore().collection("doctor");
-
-        // doctorUid.forEach((userId) => {
-        //   subjCollectiondoctor = subjCollectiondoctor.where(
-        //     "members",
-        //     "==",
-        //     userId
-        //   );
-        // });
-
-        // all_data.sort((item2, item1) => {
-        //   return (
-        //     item1.date < item2.date
-        //     // &&
-        //     // months.findIndex((element) => element == item1.month) <=
-        //     //   months.findIndex((element) => element == item2.month)
-        //   );
-        //   // console.log(item2);
-        // });
-        // // console.log(all_data);
-        // setListinfoappoint(
-        //   all_data.filter(
-        //     (data) =>
-        //       data.appointmenter == appointmenter &&
-        //       // data.appointmented == appointmented &&
-        //       data.date >= datenow &&
-        //       months.findIndex((element) => element == data.month) >=
-        //         new Date().getMonth()
-        //   )
-        // );
-
-        // setListinhistory(
-        //   all_data.filter(
-        //     (data) =>
-        //       data.appointmenter == appointmenter &&
-        //       // data.appointmented == appointmented &&
-        //       data.date < datenow &&
-        //       months.findIndex((element) => element == data.month) <=
-        //         new Date().getMonth()
-        //   )
-        // );
-        // console.log(listinfoappoint);
+    const subscriber2 = app
+      .firestore()
+      .collection("user")
+      .onSnapshot((querySnapshot) => {
+        const listuser = [];
+        querySnapshot.forEach((user) => {
+          const data = user.data();
+          data.uid = user.id;
+          listuser.push(data);
+        });
+        setLisuser(listuser);
+        // console.log(listuser);
       });
 
     const subscriber1 = app
@@ -229,27 +138,6 @@ export default function TabViewExample() {
         // console.log(listdoctor);
       });
 
-    // console.log("doctorUid", doctorUid);
-
-    // let listdoctor = [];
-    // doctorUid.forEach(async (uid) => {
-    //   await app
-    //     .firestore()
-    //     .collection("doctor")
-    //     .doc(uid)
-    //     .get()
-    //     .then((doc) => {
-    //       // console.log("doc data", doc.data());
-
-    //       const data = doc.data();
-    //       data.uid = doc.id;
-    //       listdoctor.push(data);
-    //     });
-
-    //   console.log("listdoctor", listdoctor);
-    //   setListdoc(listdoctor);
-    // });
-
     if (loading) {
       setLoading(false);
     }
@@ -257,12 +145,13 @@ export default function TabViewExample() {
     return () => {
       subscriber();
       subscriber1();
+      subscriber2();
     };
   }, []);
 
   // delete appointment
   function deleteSubject(item) {
-    console.log(item);
+    // console.log(item);
     let list = listdoc.filter((element) => {
       // console.log(element.uid == item.appointmented);
       return element.uid == item.appointmented;
@@ -271,7 +160,7 @@ export default function TabViewExample() {
     let deleted = list[0].appointmentlist.findIndex(
       (element) => element == item.time + item.date + item.month + item.year
     );
-    console.log(deleted);
+    // console.log(deleted);
     // console.log("----------------------", deleted);
     if (deleted < 0) {
       alert("Not found");
@@ -288,13 +177,24 @@ export default function TabViewExample() {
     // navigation.navigate("Appointment");
   }
 
+  function getUserInfo(uid) {
+    let listbuffer = listuser;
+    listbuffer = listbuffer.filter((data) => data.uid == uid);
+    return listbuffer;
+    // console.log(listbuffer);
+  }
+
   const FirstRoute = () => (
     <View style={styles.container}>
       <ScrollView>
         {listAppointment.map((element, index) => {
           // console.log("element", element);
-
+          let user = getUserInfo(element.appointmenter);
           const doc = getUserById(element.appointmented);
+          // if (user[0] != undefined) {
+          //   console.log(user[0]);
+          // }
+          // console.log(user[0]);
           // console.log("element doc data", doc);
 
           return (
@@ -309,32 +209,43 @@ export default function TabViewExample() {
                 <Text>Time</Text>
                 <Text>{element.time}</Text>
               </View>
-              <View style={styles.appointmentdetail}>
-                <Text>Doctor</Text>
-                <Text>{doc.fullname}</Text>
-              </View>
-              <View style={styles.appointmentdetail}>
-                <Text>Type</Text>
-                <Text>{doc.type}</Text>
-              </View>
-              <View style={styles.appointmentdetail}>
-                <Text>Place</Text>
-                <Text>{doc.workplace}</Text>
-              </View>
-              {datenow + 1 <= element.date ? (
-                <TouchableOpacity
-                  style={[styles.appointmentdetail]}
-                  onPress={() => {
-                    deleteSubject(element);
-                  }}
-                >
-                  <Text style={styles.cancel}>Cancel</Text>
-                </TouchableOpacity>
+              {isdoc ? (
+                <>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Patient</Text>
+                    <Text>
+                      {user[0] != undefined ? user[0].fullname : "loading"}
+                    </Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Type</Text>
+                    <Text>{doc.type}</Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Place</Text>
+                    <Text>{doc.workplace}</Text>
+                  </View>
+                </>
               ) : (
-                <View style={[styles.appointmentdetail]}>
-                  <Text style={styles.noncancel}>Cancel</Text>
-                </View>
+                <>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Doctor</Text>
+                    <Text>{doc.fullname}</Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Type</Text>
+                    <Text>{doc.type}</Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Place</Text>
+                    <Text>{doc.workplace}</Text>
+                  </View>
+                </>
               )}
+              <View style={styles.appointmentdetail}>
+                <Text>Status</Text>
+                <Text style={{ color: "blue" }}>wait fot treat</Text>
+              </View>
             </View>
           );
         })}
@@ -346,6 +257,7 @@ export default function TabViewExample() {
     <View style={styles.container}>
       <ScrollView>
         {listinhistory.map((element, index) => {
+          let user = getUserInfo(element.appointmenter);
           const doc = getUserById(element.appointmented);
           return (
             <View style={styles.appointment} key={index}>
@@ -359,18 +271,39 @@ export default function TabViewExample() {
                 <Text>Time</Text>
                 <Text>{element.time}</Text>
               </View>
-              <View style={styles.appointmentdetail}>
-                <Text>Doctor</Text>
-                <Text>{doc.fullname}</Text>
-              </View>
-              <View style={styles.appointmentdetail}>
-                <Text>Type</Text>
-                <Text>{doc.type}</Text>
-              </View>
-              <View style={styles.appointmentdetail}>
-                <Text>Place</Text>
-                <Text>{doc.workplace}</Text>
-              </View>
+              {isdoc ? (
+                <>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Patient</Text>
+                    <Text>
+                      {user[0] != undefined ? user[0].fullname : "loading"}
+                    </Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Type</Text>
+                    <Text>{doc.type}</Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Place</Text>
+                    <Text>{doc.workplace}</Text>
+                  </View>
+                </>
+              ) : (
+                <View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Doctor</Text>
+                    <Text>{doc.fullname}</Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Type</Text>
+                    <Text>{doc.type}</Text>
+                  </View>
+                  <View style={styles.appointmentdetail}>
+                    <Text>Place</Text>
+                    <Text>{doc.workplace}</Text>
+                  </View>
+                </View>
+              )}
               <View style={styles.appointmentdetail}>
                 <Text>Status</Text>
                 <Text style={{ color: "green" }}>treated</Text>
@@ -456,7 +389,7 @@ const styles = StyleSheet.create({
   appointmentdetail: {
     // flex: 1,
     padding: 10,
-    width: "33%",
+    width: "32%",
   },
   cancel: {
     color: "red",
