@@ -17,6 +17,7 @@ import Editprofile from "./Editprofile";
 import SignIn from "./Signin";
 import SignUp1 from "./Signup1";
 import SignUp2 from "./SignUp2";
+import Signup3 from "./SignUp3";
 import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
@@ -55,6 +56,7 @@ const Navigation = ({ navigation }) => {
         />
         <docdocNavigator.Screen name="Signup1" component={SignUp1} />
         <docdocNavigator.Screen name="Signup2" component={SignUp2} />
+        <docdocNavigator.Screen name="Signup3" component={SignUp3} />
         <docdocNavigator.Screen
           name="Forgetpassword"
           component={Forgetpassword}

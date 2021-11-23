@@ -1,112 +1,104 @@
+// "use strict";
+
 import React, { Component, useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
   Text,
+  Button,
   TouchableOpacity,
   TextInput,
+  Image,
 } from "react-native";
-import { auth, app, storage } from "../database/firebaseDB";
-import RNPasswordStrengthMeter from "react-native-password-strength-meter";
-import { Button } from "react-native-elements/dist/buttons/Button";
+import * as ImagePicker from "expo-image-picker";
+import { useValidation } from "react-native-form-validator";
+import DatePicker from 'react-native-datepicker';
 
-const Signup2 = ({ route, navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const SignUp2 = ({ route, navigation }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [username, setUsername] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
+  // const [age, setAge] = useState("");
+  const [job, setJob] = useState("");
+  const [disease, setDisease] = useState("");
+  const [date, setDate] = useState(new Date());
 
-  const onChange = (
-    password2,
-    score,
-    { label, labelColor, activeBarColor }
-  ) => {
-    console.log(password2, score, { label, labelColor, activeBarColor });
-    setPassword(password2);
-    console.log(password);
-  };
 
   useEffect(() => {
     setName(route.params.fullname);
     setPhone(route.params.phone);
     setImage(route.params.image.localUri);
-    console.log(route.params.image.localUri);
   }, []);
 
-  const handleSignUp = async () => {
-    let imagepath = image.substring(image.lastIndexOf("/") + 1);
-    console.log(imagepath);
-    const response = await fetch(image);
-    const blob = await response.blob();
-    const reference = storage.ref().child(imagepath);
-    await reference.put(blob);
-
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-
-        const c = name.toLowerCase();
-
-        var array = [];
-        for (let i = 1; i < c.length + 1; i++) {
-          array.push(c.substring(0, i));
-        }
-
-        app.firestore().collection("user").doc(user.uid).set({
-          email: user.email,
-          // username: username,
-          phone: phone,
-          fullname: name,
-          image: imagepath,
-          nameAsArray: array,
-          type: "user",
-        });
-        console.log(user.uid);
-        console.log("Registered with:", user.email);
-      })
-      .catch((error) => alert(error.message));
-  };
+  function nextpage() {
+    console.log(date);
+    navigation.navigate("Signup3", {
+      fullname: name,
+      phone: phone,
+      image: image,
+      age: date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric'}),
+      job: job,
+      disease: disease,
+    });
+  }
+  
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
-      <Text style={styles.email}>Email</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={(text) => setEmail(text)}
-      ></TextInput>
-      {/* <Text style={styles.password}>Username</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setUsername(text)}
-        placeholder="Username"
-      ></TextInput> */}
+      <Text style={styles.fullname}>AGE</Text>
 
-      <Text style={styles.password}>Password</Text>
-      {/* <TextInput
-        secureTextEntry={true}
+      <DatePicker
+          style={styles.datePickerStyle}
+          date={date} // Initial date from state
+          format="YYYY-MM-DD"
+          placeholder="select date"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0
+            },
+            dateInput: {
+              marginLeft: 36
+            }
+
+          }}
+          onDateChange={(date) => {
+            setDate(date);
+            console.log(date);
+          }}
+        />
+
+
+      <Text style={styles.phone}>Job</Text>
+      <TextInput
         style={styles.input}
-        onChangeText={(text) => setPassword(text)}
-        placeholder="Password"
-      ></TextInput> */}
-      <View style={styles.input}>
-        <RNPasswordStrengthMeter onChangeText={onChange} meterType="bar" />
-      </View>
+        placeholder="Job"
+        onChangeText={(text) => {
+          setJob(text);
+        }}
+      ></TextInput>
+      <Text style={styles.phone}>Disease</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Disease"
+        onChangeText={(text) => {
+          setDisease(text);
+        }}
+      ></TextInput>
+
       <TouchableOpacity
-        onPress={handleSignUp}
-        style={[styles.button, styles.buttonContainer]}
+        style={styles.button}
+        activeOpacity={0.8}
+        onPress={() => nextpage()}
       >
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Signup1")}
-        style={[styles.button, styles.buttonContainer]}
-      >
-        <Text style={styles.buttonText}>BACK</Text>
+        <View style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>Next</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -120,13 +112,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 30,
   },
+  image: {
+    zIndex: 1,
+    top: -80,
+  },
   title: {
     color: "#525252",
     fontWeight: "bold",
     fontSize: 40,
     marginLeft: 10,
     marginBottom: 110,
-    marginBottom: 50,
     alignSelf: "flex-start",
   },
   input: {
@@ -138,14 +133,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 30,
   },
-  email: {
+  iserror: {
+    borderWidth: 1,
+    borderColor: "red",
+  },
+  fullname: {
     fontSize: 18,
     marginLeft: 10,
     color: "#595959",
     fontWeight: "bold",
     alignSelf: "flex-start",
   },
-  password: {
+  phone: {
     fontSize: 18,
     marginLeft: 10,
     color: "#595959",
@@ -153,11 +152,19 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginTop: 25,
   },
-  forgetPassword: {
-    marginTop: 10,
-    color: "#595959",
-    alignSelf: "flex-end",
+  profileimg: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    overflow: "hidden",
+    borderWidth: 2,
+    alignSelf: "center",
   },
+  datePickerStyle: {
+    width: 200,
+    marginTop: 20,
+  },
+
   button: {
     alignSelf: "stretch",
     marginTop: 40,
@@ -175,4 +182,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-export default Signup2;
+export default SignUp2;
