@@ -276,12 +276,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 30,
     backgroundColor: "white",
   },
   image: {
-    marginBottom: 20,
+    marginTop: 25,
+    marginBottom: 10,
   },
 
   // editprofile: {

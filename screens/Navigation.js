@@ -3,10 +3,16 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { FontAwesome5, AntDesign, Ionicons } from "@expo/vector-icons";
+import {
+  FontAwesome5,
+  AntDesign,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import Home from "./Home";
 import Message from "./Message";
 import Profile from "./Profile";
+import OtherProfile from "./OtherProfile";
 import Editprofile from "./Editprofile";
 import SignIn from "./Signin";
 import SignUp1 from "./Signup1";
@@ -16,12 +22,20 @@ import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
 import Chat from "./Chat";
 import { useSelector, useDispatch } from "react-redux";
+import { auth } from "../database/firebaseDB";
 
 const docdocNavigator = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
-export default function Navigation() {
+const Navigation = ({ navigation }) => {
   const user = useSelector((state) => state.local.user);
+
+  const getUserIdByChatId = (chatId) => {
+    let uid1 = chatId.slice(0, 28);
+    let uid2 = chatId.slice(28);
+    let array = [uid1, uid2];
+    return array.filter((uid) => uid != auth.currentUser.uid)[0];
+  };
 
   return (
     <NavigationContainer>
@@ -47,7 +61,23 @@ export default function Navigation() {
         <docdocNavigator.Screen
           name="Chat"
           component={Chat}
-          options={{ title: "Chat", headerShown: true }}
+          options={({ route, navigation }) => ({
+            headerRight: () => (
+              <MaterialIcons
+                name="person"
+                size={30}
+                color={"#595959"}
+                onPress={() => {
+                  console.log(route.params.chatId);
+                  navigation.navigate("OtherProfile", {
+                    otherUid: getUserIdByChatId(route.params.chatId),
+                  });
+                }}
+              />
+            ),
+            title: "Chat",
+            headerShown: true,
+          })}
         />
         <docdocNavigator.Screen
           name="Appointment2"
@@ -63,10 +93,15 @@ export default function Navigation() {
           component={Editprofile}
           options={{ title: "Edit Profile", headerShown: true }}
         />
+        <docdocNavigator.Screen
+          name="OtherProfile"
+          component={OtherProfile}
+          options={{ title: "Other Profile", headerShown: true }}
+        />
       </docdocNavigator.Navigator>
     </NavigationContainer>
   );
-}
+};
 
 const NavigationTabbar = () => {
   return (
@@ -112,3 +147,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+
+export default Navigation;

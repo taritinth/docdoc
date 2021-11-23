@@ -95,7 +95,7 @@ const Profile = ({ navigation }) => {
           <FontAwesome5 name="edit" size={36} color="black" />
         </TouchableOpacity> */}
       </View>
-      <View style={{ flexDirection: "row", marginBottom: 50 }}>
+      <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 25 }}>
         <Text
           style={{
             fontSize: 22,
@@ -133,6 +133,20 @@ const Profile = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
+        onPress={() => {
+          navigation.navigate("Editprofile");
+        }}
+      >
+        <View style={[styles.buttonContainer, { backgroundColor: "#F6F6F6" }]}>
+          <Text style={[styles.buttonText, { color: "#595959" }]}>
+            Edit Personal Information
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
         onPress={handleSignOut}
       >
         <View style={[styles.buttonContainer, { backgroundColor: "#f35454" }]}>
@@ -148,11 +162,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 30,
   },
   image: {
-    top: -100,
+    marginTop: 25,
     // backgroundColor: "red",
     // marginBottom: 1,
     // alignSelf: "center",

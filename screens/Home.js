@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   TextInput,
+  TouchableOpacityBase,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -157,92 +158,105 @@ export default function Home({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate("Appointment2")}>
         <Text>Appointment</Text>
       </TouchableOpacity> */}
+      {user.type != "doctor" ? (
+        <ScrollView>
+          <View style={[styles.searchSection]}>
+            <MaterialIcons
+              name="search"
+              size={29}
+              color="#CBCBCB"
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={styles.input}
+              value={searchTerm}
+              onChangeText={(value) => handleSearch(value)}
+              placeholder="ค้นหาแพทย์"
+            ></TextInput>
+          </View>
 
-      <ScrollView>
-        <View style={[styles.searchSection]}>
-          <MaterialIcons
-            name="search"
-            size={29}
-            color="#CBCBCB"
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            style={styles.input}
-            value={searchTerm}
-            onChangeText={(value) => handleSearch(value)}
-            placeholder="ค้นหาแพทย์"
-          ></TextInput>
-        </View>
-
-        <View
-          style={{
-            paddingHorizontal: 15,
-            flex: 1,
-            marginVertical: 15,
-          }}
-        >
-          <Text
+          <View
             style={{
-              fontWeight: "bold",
-              fontSize: 18,
-              color: "#525252",
+              paddingHorizontal: 15,
+              flex: 1,
+              marginVertical: 15,
             }}
           >
-            รายชื่อแพทย์
-          </Text>
-        </View>
-        {doctors.map((doctor, index) => (
-          <View style={styles.box} key={index}>
-            <View style={styles.appointment} key={doctor.uid}>
-              <Image
-                style={styles.img}
-                source={{
-                  uri: doctor.image,
-                }}
-              />
-              <View style={styles.doctordetail}>
-                <Text style={styles.name}>
-                  {doctor.title} {doctor.fullname}
-                </Text>
-                <Text style={styles.type}>{doctor.specialist}</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <MaterialIcons
-                    name="location-on"
-                    size={14}
-                    color="#D7D7D7"
-                    style={{ marginTop: 4 }}
-                  />
-                  <Text style={styles.place}> {doctor.workplace}</Text>
-                </View>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              activeOpacity={0.9}
-              style={styles.chat}
-              onPress={() => setOneToOneChat(doctor)}
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+                color: "#525252",
+              }}
             >
-              <View style={{ width: "40%" }} />
-              <Ionicons
-                style={{ marginVertical: 10 }}
-                name="chatbubble-ellipses-outline"
-                size={20}
-                color="#8A8A8A"
-              />
-              <Text
-                style={{
-                  color: "#8A8A8A",
-                  fontWeight: "bold",
-                  marginVertical: 10,
-                }}
-              >
-                {" "}
-                แชท
-              </Text>
-            </TouchableOpacity>
+              รายชื่อแพทย์
+            </Text>
           </View>
-        ))}
-      </ScrollView>
+          {doctors.map((doctor, index) => (
+            <TouchableOpacity
+              activeOpacity={1}
+              key={doctor.uid}
+              onPress={() => {
+                navigation.navigate("OtherProfile", {
+                  otherUid: doctor.uid,
+                });
+              }}
+            >
+              <View style={styles.box} key={index}>
+                <View style={styles.appointment} key={doctor.uid}>
+                  <Image
+                    style={styles.img}
+                    source={{
+                      uri: doctor.image,
+                    }}
+                  />
+                  <View style={styles.doctordetail}>
+                    <Text style={styles.name}>
+                      {doctor.title} {doctor.fullname}
+                    </Text>
+                    <Text style={styles.type}>{doctor.specialist}</Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <MaterialIcons
+                        name="location-on"
+                        size={14}
+                        color="#D7D7D7"
+                        style={{ marginTop: 4 }}
+                      />
+                      <Text style={styles.place}> {doctor.workplace}</Text>
+                    </View>
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={styles.chat}
+                  onPress={() => setOneToOneChat(doctor)}
+                >
+                  <View style={{ width: "40%" }} />
+                  <Ionicons
+                    style={{ marginVertical: 10 }}
+                    name="chatbubble-ellipses-outline"
+                    size={20}
+                    color="#8A8A8A"
+                  />
+                  <Text
+                    style={{
+                      color: "#8A8A8A",
+                      fontWeight: "bold",
+                      marginVertical: 10,
+                    }}
+                  >
+                    {" "}
+                    แชท
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      ) : (
+        <View></View>
+      )}
     </View>
   );
 }

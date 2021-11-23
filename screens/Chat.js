@@ -24,7 +24,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import Lightbox from "react-native-lightbox";
 
-const Chat = ({ route, navigation }) => {
+const Chat = ({ route, navigation, props }) => {
   const [inputMethod, setInputMethod] = useState("text");
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
@@ -169,6 +169,8 @@ const Chat = ({ route, navigation }) => {
     };
 
     getResult();
+
+    console.log(props);
 
     return () => {
       subscriber();
