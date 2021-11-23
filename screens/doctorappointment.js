@@ -194,6 +194,7 @@ export default function doctorAppointment({ navigation, route }) {
             ]}
             activeOpacity={0.8}
           >
+            {console.log(usemonths)}
             <SelectDropdown
               data={usemonths}
               defaultValue={usemonths[0]}
@@ -243,7 +244,7 @@ export default function doctorAppointment({ navigation, route }) {
           label="เปิด-ปิด"
           labelStyle={{ color: "black", fontWeight: "100" }}
           size="large"
-          animationSpeed="200"
+          animationSpeed={200}
           onToggle={(isOn) => {
             setQueueallday(!queueallday);
             docInfojCollection.update({ busy: !isOn });
