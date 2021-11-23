@@ -141,11 +141,15 @@ export default function Appointment({ navigation, route }) {
     if (issametime) {
       return (
         <View
-          style={[styles.buttonContainer, { backgroundColor: "red" }]}
+          style={[styles.buttonContainer, { backgroundColor: "#e0e0e0" }]}
           key={index}
         >
           <Text
-            style={[styles.buttonText, selecttime == time && { color: "#fff" }]}
+            style={[
+              styles.buttonText,
+              { color: "#8f8f8f" },
+              selecttime == time && { color: "#fff" },
+            ]}
           >
             {time}
           </Text>
@@ -155,6 +159,7 @@ export default function Appointment({ navigation, route }) {
       // console.log(time, index);
       return (
         <TouchableOpacity
+          activeOpacity={0.8}
           style={[
             styles.buttonContainer,
             selecttime == time ? styles.selecteddate : styles.notselectdate,
@@ -183,6 +188,7 @@ export default function Appointment({ navigation, route }) {
   for (let i = datenow2; i <= numOfDays; i++) {
     dateBubble.push(
       <TouchableOpacity
+        activeOpacity={0.8}
         key={i}
         style={[
           styles.buttondate,
@@ -390,7 +396,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "black",
-
     fontSize: 14,
   },
   july: {

@@ -37,7 +37,7 @@ const SignUp3 = ({ route, navigation }) => {
     setImage(route.params.image);
     setAge(route.params.age);
     setWeight(route.params.weight);
-    setHeight(route.params.height)
+    setHeight(route.params.height);
     setDisease(route.params.disease);
     console.log(route.params);
   }, []);
@@ -78,7 +78,7 @@ const SignUp3 = ({ route, navigation }) => {
           image: imageUrl,
           dateOfBirth: age,
           weight: weight,
-          height:height,
+          height: height,
           disease: disease,
           nameAsArray: array,
           type: "user",
@@ -115,17 +115,29 @@ const SignUp3 = ({ route, navigation }) => {
       {/* <View style={styles.input}>
         <RNPasswordStrengthMeter onChangeText={onChange} meterType="bar" />
       </View> */}
+
       <TouchableOpacity
+        activeOpacity={0.8}
         onPress={handleSignUp}
-        style={[styles.button, styles.buttonContainer]}
+        style={[
+          styles.button,
+          styles.buttonContainer,
+          { backgroundColor: "#32B5FF", marginTop: 40 },
+        ]}
       >
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
+        activeOpacity={0.8}
         onPress={() => navigation.navigate("Signup2")}
-        style={[styles.button, styles.buttonContainer]}
+        style={[
+          styles.button,
+          styles.buttonContainer,
+          { backgroundColor: "#F6F6F6", marginTop: 15 },
+        ]}
       >
-        <Text style={styles.buttonText}>BACK</Text>
+        <Text style={[styles.buttonText, { color: "#595959" }]}>Back</Text>
       </TouchableOpacity>
     </View>
   );
@@ -179,10 +191,8 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: "stretch",
-    marginTop: 40,
   },
   buttonContainer: {
-    backgroundColor: "#32B5FF",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,

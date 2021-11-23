@@ -182,7 +182,7 @@ const OtherProfile = ({ navigation, route }) => {
             color="#8A8A8A"
             style={{ marginRight: 10 }}
           />
-          <Text style={[styles.buttonText, { color: "#595959" }]}>แชท</Text>
+          <Text style={[styles.buttonText, { color: "#595959" }]}>Message</Text>
         </View>
       </TouchableOpacity>
       {userinfo.type == "doctor" && (
@@ -198,7 +198,7 @@ const OtherProfile = ({ navigation, route }) => {
               <FontAwesome name="stethoscope" size={18} color="white" />
             </View>
             <View style={{ flexDirection: "column" }}>
-              <Text style={{ fontWeight: "bold" }}> ความชำนาญเฉพาะทาง</Text>
+              <Text style={{ fontWeight: "bold" }}> Specialist</Text>
               <Text> {userinfo.specialist}</Text>
             </View>
           </View>
@@ -213,7 +213,7 @@ const OtherProfile = ({ navigation, route }) => {
               <MaterialIcons name="location-on" size={18} color="white" />
             </View>
             <View style={{ flexDirection: "column" }}>
-              <Text style={{ fontWeight: "bold" }}> สถานที่ทำงาน</Text>
+              <Text style={{ fontWeight: "bold" }}> Workplace</Text>
               <Text> {userinfo.workplace}</Text>
             </View>
           </View>

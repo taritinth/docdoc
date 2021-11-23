@@ -12,6 +12,12 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useValidation } from "react-native-form-validator";
+import {
+  FontAwesome5,
+  Ionicons,
+  FontAwesome,
+  Feather,
+} from "@expo/vector-icons";
 
 const SignUp1 = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -38,22 +44,20 @@ const SignUp1 = ({ navigation }) => {
     setSelectedImage({ localUri: pickerResult.uri });
   };
 
-  function img() {
+  function getImg() {
     if (selectedImage !== null) {
       return (
-        <TouchableOpacity onPress={openImagePickerAsync}>
-          <Image
-            source={{ uri: selectedImage.localUri }}
-            style={styles.profileimg}
-          />
-        </TouchableOpacity>
+        <Image
+          source={{ uri: selectedImage.localUri }}
+          style={styles.profileimg}
+        />
       );
     } else {
       return (
-        <TouchableOpacity
-          onPress={openImagePickerAsync}
+        <Image
+          source={require("../assets/profile_img.png")}
           style={styles.profileimg}
-        ></TouchableOpacity>
+        />
       );
     }
   }
@@ -82,7 +86,19 @@ const SignUp1 = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
-      <View style={styles.image}>{img()}</View>
+      <View style={styles.image}>
+        {getImg()}
+        <TouchableOpacity
+          style={styles.editImgButton}
+          activeOpacity={1}
+          onPress={() => {
+            openImagePickerAsync();
+          }}
+        >
+          <FontAwesome5 name="pen" size={16} color="white" />
+        </TouchableOpacity>
+      </View>
+      {/* <View style={styles.image}>{img()}</View> */}
       <Text style={styles.fullname}>Fullname</Text>
       <TextInput
         style={[styles.input, errorname && styles.iserror]}
@@ -200,6 +216,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 18,
+  },
+  editImgButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 100,
+    backgroundColor: "#32B5FF",
+    flexDirection: "row-reverse",
+    right: 0,
+    bottom: 0,
+    position: "absolute",
+    borderWidth: 2,
+    borderColor: "white",
   },
 });
 export default SignUp1;

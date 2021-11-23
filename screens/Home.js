@@ -171,7 +171,7 @@ export default function Home({ navigation }) {
               style={styles.input}
               value={searchTerm}
               onChangeText={(value) => handleSearch(value)}
-              placeholder="ค้นหาแพทย์"
+              placeholder="Find a doctor"
             ></TextInput>
           </View>
 
@@ -189,7 +189,7 @@ export default function Home({ navigation }) {
                 color: "#525252",
               }}
             >
-              รายชื่อแพทย์
+              List of doctors
             </Text>
           </View>
           {doctors.map((doctor, index) => (
@@ -247,7 +247,7 @@ export default function Home({ navigation }) {
                     }}
                   >
                     {" "}
-                    แชท
+                    Message
                   </Text>
                 </TouchableOpacity>
               </View>

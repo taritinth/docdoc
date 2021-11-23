@@ -195,7 +195,7 @@ export default function doctorAppointment({ navigation, route }) {
       <View
         style={({ justifyContent: "space-between" }, { flexDirection: "row" })}
       >
-        {queueallday ? (
+        {!queueallday ? (
           <TouchableOpacity
             style={[
               styles.button,

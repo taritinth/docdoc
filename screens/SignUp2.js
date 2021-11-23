@@ -70,11 +70,11 @@ const SignUp2 = ({ route, navigation }) => {
           dateInput: {
             flex: 1,
             backgroundColor: "#F6F6F6",
-            alignItems:"flex-start",
+            alignItems: "flex-start",
             height: 50,
             paddingVertical: 5,
-            paddingHorizontal:30,
-            borderWidth:0,
+            paddingHorizontal: 30,
+            borderWidth: 0,
             borderRadius: 30,
           },
         }}
@@ -102,7 +102,6 @@ const SignUp2 = ({ route, navigation }) => {
         }}
       ></TextInput>
 
-
       <Text style={styles.phone}>Disease</Text>
       <TextInput
         style={styles.input}
@@ -117,9 +116,26 @@ const SignUp2 = ({ route, navigation }) => {
         activeOpacity={0.8}
         onPress={() => nextpage()}
       >
-        <View style={styles.buttonContainer}>
+        <View
+          style={[
+            styles.buttonContainer,
+            { backgroundColor: "#32B5FF", marginTop: 40 },
+          ]}
+        >
           <Text style={styles.buttonText}>Next</Text>
         </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => navigation.navigate("Signup1")}
+        style={[
+          styles.button,
+          styles.buttonContainer,
+          { backgroundColor: "#F6F6F6", marginTop: 15 },
+        ]}
+      >
+        <Text style={[styles.buttonText, { color: "#595959" }]}>Back</Text>
       </TouchableOpacity>
     </View>
   );
@@ -187,10 +203,8 @@ const styles = StyleSheet.create({
 
   button: {
     alignSelf: "stretch",
-    marginTop: 40,
   },
   buttonContainer: {
-    backgroundColor: "#32B5FF",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,

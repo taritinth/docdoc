@@ -99,12 +99,12 @@ const Navigation = ({ navigation }) => {
         <docdocNavigator.Screen
           name="OtherProfile"
           component={OtherProfile}
-          options={{ title: "Other Profile", headerShown: true }}
+          options={{ title: "Profile", headerShown: true }}
         />
         <docdocNavigator.Screen
           name="doctorAppointment"
           component={doctorAppointment}
-          options={{ title: "DoctorAppointment", headerShown: true }}
+          options={{ title: "Edit Appointment", headerShown: true }}
         />
       </docdocNavigator.Navigator>
     </NavigationContainer>

@@ -229,50 +229,56 @@ export default function TabViewExample({ navigation }) {
           return (
             <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
-                <Text>Date</Text>
-                <Text>
+                <Text style={styles.textHeader}>Date</Text>
+                <Text style={styles.textData}>
                   {element.date} {element.month} {element.year}
                 </Text>
               </View>
               <View style={styles.appointmentdetail}>
-                <Text>Time</Text>
-                <Text>{element.time}</Text>
+                <Text style={styles.textHeader}>Time</Text>
+                <Text style={styles.textData}>{element.time}</Text>
               </View>
               {isdoc ? (
                 <>
                   <View style={styles.appointmentdetail}>
-                    <Text>Patient</Text>
-                    <Text>
+                    <Text style={styles.textHeader}>Patient</Text>
+                    <Text style={styles.textData}>
                       {user[0] != undefined ? user[0].fullname : "loading"}
                     </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Type</Text>
-                    <Text>{doc.type}</Text>
+                    <Text style={styles.textData}>"ทั่วไป"</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Place</Text>
-                    <Text>{doc.workplace}</Text>
+                    <Text style={styles.textHeader}>Place</Text>
+                    <Text style={styles.textData}>{doc.workplace}</Text>
                   </View>
 
                   <View style={styles.appointmentdetail}>
-                    <Text>Status</Text>
-                    <Text style={{ color: "blue" }}>Wait for treat</Text>
+                    <Text style={styles.textHeader}>Status</Text>
+                    <Text style={{ color: "blue" }}>รอการตรวจ</Text>
                   </View>
                 </>
               ) : (
                 <>
                   <View style={styles.appointmentdetail}>
-                    <Text>Doctor</Text>
-                    <Text>{doc != undefined ? doc.fullname : "loading"}</Text>
+                    <Text style={styles.textHeader}>Doctor</Text>
+                    <Text style={styles.textData}>
+                      {doc != undefined ? doc.fullname : "loading"}
+                    </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Type</Text>
-                    <Text>{doc != undefined ? doc.type : "loading"}</Text>
+                    <Text style={styles.textData}>
+                      {doc != undefined ? "ทั่วไป" : "loading"}
+                    </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Place</Text>
-                    <Text>{doc != undefined ? doc.workplace : "loading"}</Text>
+                    <Text style={styles.textHeader}>Place</Text>
+                    <Text style={styles.textData}>
+                      {doc != undefined ? doc.workplace : "loading"}
+                    </Text>
                   </View>
 
                   {(datenow + 1 <= element.date &&
@@ -290,7 +296,7 @@ export default function TabViewExample({ navigation }) {
                       <Text style={styles.cancel}>Cancel</Text>
                     </TouchableOpacity>
                   ) : (
-                    <View style={[styles.appointmentdetail]}>
+                    <View style={[styles.appointmentdetail, { opacity: 0.3 }]}>
                       <Text style={styles.noncancel}>Cancel</Text>
                     </View>
                   )}
@@ -312,51 +318,57 @@ export default function TabViewExample({ navigation }) {
           return (
             <View style={styles.appointment} key={index}>
               <View style={styles.appointmentdetail}>
-                <Text>Date</Text>
-                <Text>
+                <Text style={styles.textHeader}>Date</Text>
+                <Text style={styles.textData}>
                   {element.date} {element.month} {element.year}
                 </Text>
               </View>
               <View style={styles.appointmentdetail}>
-                <Text>Time</Text>
-                <Text>{element.time}</Text>
+                <Text style={styles.textHeader}>Time</Text>
+                <Text style={styles.textData}>{element.time}</Text>
               </View>
               {isdoc ? (
                 <>
                   <View style={styles.appointmentdetail}>
-                    <Text>Patient</Text>
-                    <Text>
+                    <Text style={styles.textHeader}>Patient</Text>
+                    <Text style={styles.textData}>
                       {user[0] != undefined ? user[0].fullname : "loading"}
                     </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Type</Text>
-                    <Text>{doc.type}</Text>
+                    <Text style={styles.textData}>"ทั่วไป"</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Place</Text>
-                    <Text>{doc.workplace}</Text>
+                    <Text style={styles.textHeader}>Place</Text>
+                    <Text style={styles.textData}>{doc.workplace}</Text>
                   </View>
                 </>
               ) : (
                 <>
                   <View style={styles.appointmentdetail}>
-                    <Text>Doctor</Text>
-                    <Text>{doc != undefined ? doc.fullname : "loading"}</Text>
+                    <Text style={styles.textHeader}>Doctor</Text>
+                    <Text style={styles.textData}>
+                      {doc != undefined ? doc.fullname : "loading"}
+                    </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text>Type</Text>
-                    <Text>{doc != undefined ? doc.type : "loading"}</Text>
+                    <Text style={styles.textData}>
+                      {doc != undefined ? "ทั่วไป" : "loading"}
+                    </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Place</Text>
-                    <Text>{doc != undefined ? doc.workplace : "loading"}</Text>
+                    <Text style={styles.textHeader}>Place</Text>
+                    <Text style={styles.textData}>
+                      {doc != undefined ? doc.workplace : "loading"}
+                    </Text>
                   </View>
                 </>
               )}
               <View style={styles.appointmentdetail}>
-                <Text>Status</Text>
-                <Text style={{ color: "green" }}>treated</Text>
+                <Text style={styles.textHeader}>Status</Text>
+                <Text style={{ color: "green" }}>ตรวจแล้ว</Text>
               </View>
             </View>
           );
@@ -428,10 +440,18 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     margin: 10,
     backgroundColor: "#ffffffff",
-    borderRadius: 4,
     flexDirection: "row",
-    shadowColor: "#000000",
-    elevation: 8,
+    // shadowColor: "#000000",
+    // borderWidth: 0.05,
+    borderRadius: 10,
+    marginHorizontal: 15,
+    marginVertical: 10,
+    shadowColor: "#6F6F6F",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    padding: 10,
   },
   textupcoming: {
     fontSize: 24,
@@ -460,4 +480,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
   },
+  textData: { fontWeight: "bold", color: "#525252" },
+  textHeader: { color: "#6F6F6F" },
 });
