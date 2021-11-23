@@ -20,6 +20,7 @@ import SignUp2 from "./SignUp2";
 import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
+import doctorAppointment from "./doctorappointment";
 import Chat from "./Chat";
 import { useSelector, useDispatch } from "react-redux";
 import { auth } from "../database/firebaseDB";
@@ -98,12 +99,17 @@ const Navigation = ({ navigation }) => {
           component={OtherProfile}
           options={{ title: "Other Profile", headerShown: true }}
         />
+        <docdocNavigator.Screen
+          name="doctorAppointment"
+          component={doctorAppointment}
+          options={{ title: "DoctorAppointment", headerShown: true }}
+        />
       </docdocNavigator.Navigator>
     </NavigationContainer>
   );
 };
 
-const NavigationTabbar = () => {
+const NavigationTabbar = ({ navigation }) => {
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -135,7 +141,27 @@ const NavigationTabbar = () => {
     >
       <BottomTab.Screen name="Home" component={Home} />
       <BottomTab.Screen name="Message" component={Message} />
-      <BottomTab.Screen name="Appointment" component={AppointmentList} />
+      <BottomTab.Screen
+        name="Appointment"
+        component={AppointmentList}
+        options={{
+          title: "Appointment",
+          headerShown: true,
+          headerRight: () => {
+            return (
+              user.type == "doctor" && (
+                <AntDesign
+                  onPress={() => navigation.navigate("doctorAppointment")}
+                  style={{ marginRight: 15 }}
+                  name="setting"
+                  size={24}
+                  color="black"
+                />
+              )
+            );
+          },
+        }}
+      />
       <BottomTab.Screen name="Profile" component={Profile} />
     </BottomTab.Navigator>
   );

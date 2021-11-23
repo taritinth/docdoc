@@ -10,8 +10,10 @@ import {
 import SelectDropdown from "react-native-select-dropdown";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { app, auth } from "../database/firebaseDB";
+import { useSelector, useDispatch } from "react-redux";
+import ToggleSwitch from "toggle-switch-react-native";
 
-export default function Appointment({ navigation, route }) {
+export default function doctorAppointment({ navigation, route }) {
   const [days, setDays] = useState([
     "Sun",
     "Mon",
@@ -46,31 +48,15 @@ export default function Appointment({ navigation, route }) {
   const datenow = new Date().getDate();
   const [selectdate, setSelectdate] = useState(datenow + 1);
   const [selecttime, setSelecttime] = useState();
-  const subjCollection = app.firestore().collection("appointment");
   const [doctorinfo, setDoctorinfo] = useState();
   const [count, setCount] = useState(0);
-  const [userinfo, setUserinfo] = useState([]);
-
-  const { appointmented, appointmenter } = route.params;
+  const user = useSelector((state) => state.local.user);
   // console.log(route.params);
-
-  const userInfojCollection = app
-    .firestore()
-    .collection("user")
-    .doc(auth.currentUser.uid);
 
   const docInfojCollection = app
     .firestore()
     .collection("doctor")
-    .doc(appointmented);
-
-  // useEffect(() => {
-  //   userInfojCollection.get().then((res) => {
-  //     // console.log(res.data());
-  //     setUserinfo(res.data());
-  //     // console.log(userinfo);
-  //   });
-  // }, []);
+    .doc(auth.currentUser.uid);
 
   useEffect(() => {
     docInfojCollection.get().then((res) => {
@@ -80,9 +66,6 @@ export default function Appointment({ navigation, route }) {
       // console.log("AAAAAA");
     });
   }, []);
-
-  // const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
-  // const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
 
   let dateBubble = [];
   let numOfDays = new Date(year, month, 0).getDate();
@@ -104,25 +87,12 @@ export default function Appointment({ navigation, route }) {
   ]);
 
   const [usemonths, setUsemonths] = useState(months.splice(month, 12 - month));
-
-  function storeSubject(month2) {
-    console.log(month2, count);
-    subjCollection.add({
-      appointmented: appointmented,
-      appointmenter: appointmenter,
-      month: usemonths[month2],
-      year: year,
-      date: selectdate,
-      time: selecttime,
-      group: [appointmented, appointmenter],
-    });
-  }
-
+  const [queueallday, setQueueallday] = useState(docInfojCollection.busy);
   function addQueueDoctor(queue) {
     // alert(queue);
     let list = [queue];
     doctorinfo.appointmentlist.forEach((item) => list.push(item));
-    console.log(list);
+    // console.log(list);
     docInfojCollection.update({ appointmentlist: list });
   }
 
@@ -210,7 +180,78 @@ export default function Appointment({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {!!doctorinfo && doctorinfo.busy && (
+      <View
+        style={({ justifyContent: "space-between" }, { flexDirection: "row" })}
+      >
+        {queueallday ? (
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { marginLeft: 20 },
+              { marginRight: 100 },
+              { width: "30%" },
+            ]}
+            activeOpacity={0.8}
+          >
+            <SelectDropdown
+              data={usemonths}
+              defaultValue={usemonths[0]}
+              onSelect={(selectedItem, index) => {
+                setMonth(index);
+                // console.log(month);
+                setCount(count + 1);
+                if (index == 0) {
+                  setSelectdate(datenow + 1);
+                } else {
+                  setSelectdate(1);
+                }
+
+                // setSelectdate();
+                // console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+              renderDropdownIcon={() => {
+                return <Entypo name="chevron-down" size={24} color="black" />;
+              }}
+              buttonStyle={styles.selectmonth}
+              buttonTextStyle={styles.textselectmonth}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={[
+              styles.button,
+              { marginLeft: 20 },
+              { marginRight: 100 },
+              { width: "30%" },
+            ]}
+          >
+            <View style={styles.selectmonth}></View>
+          </View>
+        )}
+
+        <ToggleSwitch
+          isOn={queueallday}
+          onColor="#32B5FF"
+          offColor="gray"
+          label="เปิด-ปิด"
+          labelStyle={{ color: "black", fontWeight: "100" }}
+          size="large"
+          animationSpeed="200"
+          onToggle={(isOn) => {
+            setQueueallday(!queueallday);
+            docInfojCollection.update({ busy: !isOn });
+            // console.log("date to : ", setSelectdate);
+            // console.log("changed to : ", isOn);
+          }}
+        />
+      </View>
+      {!queueallday && (
         <View style={styles.busy}>
           <FontAwesome
             style={({ zIndex: 3 }, { top: -50 })}
@@ -219,45 +260,10 @@ export default function Appointment({ navigation, route }) {
             color="gray"
           />
           <Text style={({ zIndex: 3 }, { top: -20 }, { color: "gray" })}>
-            {doctorinfo.title} {doctorinfo.fullname} ปิดรับการจอง
+            คุณปิดรับการจอง
           </Text>
         </View>
       )}
-      {/* {console.log(doctorinfo.busy)} */}
-      <TouchableOpacity
-        style={[styles.button, , { marginLeft: 20 }]}
-        activeOpacity={0.8}
-      >
-        <SelectDropdown
-          data={usemonths}
-          defaultValue={usemonths[0]}
-          onSelect={(selectedItem, index) => {
-            setMonth(index);
-            // console.log(month);
-            setCount(count + 1);
-            if (index == 0) {
-              setSelectdate(datenow + 1);
-            } else {
-              setSelectdate(1);
-            }
-
-            // setSelectdate();
-            // console.log(selectedItem, index);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            return item;
-          }}
-          renderDropdownIcon={() => {
-            return <Entypo name="chevron-down" size={24} color="black" />;
-          }}
-          buttonStyle={styles.selectmonth}
-          buttonTextStyle={styles.textselectmonth}
-        />
-      </TouchableOpacity>
-
       <View style={styles.rect}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {dateBubble}
@@ -295,17 +301,13 @@ export default function Appointment({ navigation, route }) {
           onPress={() => {
             if (!!selecttime) {
               if (count == 0) {
-                storeSubject(0);
-
                 addQueueDoctor(selecttime + selectdate + usemonths[0] + year);
               } else {
                 addQueueDoctor(
                   selecttime + selectdate + usemonths[month] + year
                 );
-                storeSubject(month);
               }
               // usemonths[month];
-
               alert("add Successfully");
               navigation.navigate("Appointment");
             } else {
@@ -413,7 +415,7 @@ const styles = StyleSheet.create({
   selectmonth: {
     // F8F8F8
     backgroundColor: "#F8F8F8",
-    width: "25%",
+    width: "80%",
     height: 50,
   },
   textselectmonth: {
