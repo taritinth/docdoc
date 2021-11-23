@@ -185,6 +185,60 @@ const OtherProfile = ({ navigation, route }) => {
           <Text style={[styles.buttonText, { color: "#595959" }]}>Message</Text>
         </View>
       </TouchableOpacity>
+
+      {userinfo.type == "user" && (
+        <View style={styles.detail}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 20,
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
+              <Text style={{ fontWeight: "bold" }}> Date Of Birth</Text>
+              <Text> {userinfo.dateOfBirth}</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 20,
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
+              <Text style={{ fontWeight: "bold" }}> Weight</Text>
+              <Text> {userinfo.weight}</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 20,
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
+              <Text style={{ fontWeight: "bold" }}> Height</Text>
+              <Text> {userinfo.height}</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 20,
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
+              <Text style={{ fontWeight: "bold" }}> Disease</Text>
+              <Text> {userinfo.disease}</Text>
+            </View>
+          </View>
+        </View>
+      )}
+
       {userinfo.type == "doctor" && (
         <View style={styles.detail}>
           <View
@@ -315,6 +369,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#768692",
     borderWidth: 2,
     borderColor: "white",
+    marginRight: 10,
   },
   chat: {
     backgroundColor: "#F6F6F6",

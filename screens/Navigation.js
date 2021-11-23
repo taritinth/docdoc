@@ -14,6 +14,7 @@ import Message from "./Message";
 import Profile from "./Profile";
 import OtherProfile from "./OtherProfile";
 import Editprofile from "./Editprofile";
+import EditPersonal from "./EditPersonal";
 import SignIn from "./Signin";
 import SignUp1 from "./Signup1";
 import SignUp2 from "./SignUp2";
@@ -97,6 +98,11 @@ const Navigation = ({ navigation }) => {
           options={{ title: "Edit Profile", headerShown: true }}
         />
         <docdocNavigator.Screen
+          name="EditPersonal"
+          component={EditPersonal}
+          options={{ title: "Edit Personal", headerShown: true }}
+        />
+        <docdocNavigator.Screen
           name="OtherProfile"
           component={OtherProfile}
           options={{ title: "Profile", headerShown: true }}
@@ -124,7 +130,7 @@ const NavigationTabbar = ({ navigation }) => {
           if (route.name === "Home") {
             iconName = focused ? "home-outline" : "home-outline";
           }
-          if (route.name === "Message") {
+          if (route.name === "Messages") {
             iconName = focused
               ? "md-chatbubble-ellipses-outline"
               : "md-chatbubble-ellipses-outline";
@@ -142,7 +148,7 @@ const NavigationTabbar = ({ navigation }) => {
       })}
     >
       <BottomTab.Screen name="Home" component={Home} />
-      <BottomTab.Screen name="Message" component={Message} />
+      <BottomTab.Screen name="Messages" component={Message} />
       <BottomTab.Screen
         name="Appointment"
         component={AppointmentList}
@@ -157,7 +163,7 @@ const NavigationTabbar = ({ navigation }) => {
                   style={{ marginRight: 15 }}
                   name="setting"
                   size={24}
-                  color="black"
+                  color="#595959"
                 />
               )
             );

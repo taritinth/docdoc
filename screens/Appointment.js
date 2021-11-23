@@ -10,8 +10,11 @@ import {
 import SelectDropdown from "react-native-select-dropdown";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { app, auth } from "../database/firebaseDB";
+import Loading from "../components/Loading";
 
 export default function Appointment({ navigation, route }) {
+  const [loading, setLoading] = useState(true);
+
   const [days, setDays] = useState([
     "Sun",
     "Mon",
@@ -77,6 +80,9 @@ export default function Appointment({ navigation, route }) {
       const a = res.data();
       // return a;
       setDoctorinfo(a);
+      if (loading) {
+        setLoading(false);
+      }
       // console.log("AAAAAA");
     });
   }, []);
@@ -214,6 +220,10 @@ export default function Appointment({ navigation, route }) {
     );
   }
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <View style={styles.container}>
       {!!doctorinfo && doctorinfo.busy && (
@@ -225,7 +235,7 @@ export default function Appointment({ navigation, route }) {
             color="gray"
           />
           <Text style={({ zIndex: 3 }, { top: -20 }, { color: "gray" })}>
-            {doctorinfo.title} {doctorinfo.fullname} ปิดรับการจอง
+            {doctorinfo.title} {doctorinfo.fullname} is closed for booking
           </Text>
         </View>
       )}
@@ -312,11 +322,14 @@ export default function Appointment({ navigation, route }) {
               }
               // usemonths[month];
 
-              alert("add Successfully");
+              alert(
+                `Successfully booking on ${selectdate} ${usemonths[0]} ${year} ${selecttime}`
+              );
               navigation.navigate("Appointment");
-            } else {
-              alert("Please enter time");
             }
+            // else {
+            //   alert("Please enter time");
+            // }
           }}
         >
           <View style={styles.buttonContainer2}>
@@ -336,7 +349,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
   },
   rect: {
-    marginTop: 20,
     paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -367,7 +379,6 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: "stretch",
     marginTop: 10,
-    marginBottom: 5,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -389,7 +400,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 3,
+    elevation: 1,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -408,7 +419,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     shadowColor: "#000",
-    elevation: 3,
+    elevation: 2,
     height: 85,
     minWidth: 70,
     marginVertical: 10,

@@ -134,7 +134,7 @@ const Profile = ({ navigation }) => {
         style={styles.button}
         activeOpacity={0.8}
         onPress={() => {
-          navigation.navigate("Editprofile");
+          navigation.navigate("EditPersonal");
         }}
       >
         <View style={[styles.buttonContainer, { backgroundColor: "#F6F6F6" }]}>

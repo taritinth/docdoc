@@ -191,7 +191,7 @@ export default function TabViewExample({ navigation }) {
         .update({ appointmentlist: deleted2 });
       const delSubjDoc = app.firestore().collection("appointment").doc(item.id);
       delSubjDoc.delete();
-      alert("Delete Complete");
+      alert("The booking has been cancelled.");
     }
     // console.log(list);
     // navigation.navigate("Appointment");
@@ -247,8 +247,8 @@ export default function TabViewExample({ navigation }) {
                     </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Type</Text>
-                    <Text style={styles.textData}>"ทั่วไป"</Text>
+                    <Text style={styles.textHeader}>Type</Text>
+                    <Text style={styles.textData}>ทั่วไป</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text style={styles.textHeader}>Place</Text>
@@ -269,7 +269,7 @@ export default function TabViewExample({ navigation }) {
                     </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Type</Text>
+                    <Text style={styles.textHeader}>Type</Text>
                     <Text style={styles.textData}>
                       {doc != undefined ? "ทั่วไป" : "loading"}
                     </Text>
@@ -336,8 +336,8 @@ export default function TabViewExample({ navigation }) {
                     </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Type</Text>
-                    <Text style={styles.textData}>"ทั่วไป"</Text>
+                    <Text style={styles.textHeader}>Type</Text>
+                    <Text style={styles.textData}>ทั่วไป</Text>
                   </View>
                   <View style={styles.appointmentdetail}>
                     <Text style={styles.textHeader}>Place</Text>
@@ -353,7 +353,7 @@ export default function TabViewExample({ navigation }) {
                     </Text>
                   </View>
                   <View style={styles.appointmentdetail}>
-                    <Text>Type</Text>
+                    <Text style={styles.textHeader}>Type</Text>
                     <Text style={styles.textData}>
                       {doc != undefined ? "ทั่วไป" : "loading"}
                     </Text>

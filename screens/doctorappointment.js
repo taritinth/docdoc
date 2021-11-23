@@ -257,7 +257,7 @@ export default function doctorAppointment({ navigation, route }) {
           isOn={!queueallday}
           onColor="#32B5FF"
           offColor="gray"
-          label="เปิด-ปิด"
+          label="OFF-ON"
           labelStyle={{ color: "black", fontWeight: "100" }}
           size="large"
           animationSpeed={200}
@@ -278,7 +278,7 @@ export default function doctorAppointment({ navigation, route }) {
             color="gray"
           />
           <Text style={({ zIndex: 3 }, { top: -20 }, { color: "gray" })}>
-            คุณปิดรับการจอง
+            You are closed for booking
           </Text>
         </View>
       )}
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 3,
+    elevation: 1,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -422,8 +422,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     paddingHorizontal: 20,
     borderRadius: 5,
-    shadowColor: "#000",
-    elevation: 3,
+    shadowColor: "#6F6F6F",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 2,
     height: 85,
     minWidth: 70,
     marginVertical: 10,
