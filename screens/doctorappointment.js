@@ -12,6 +12,7 @@ import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { app, auth } from "../database/firebaseDB";
 import { useSelector, useDispatch } from "react-redux";
 import ToggleSwitch from "toggle-switch-react-native";
+import Loading from "../components/Loading";
 
 export default function doctorAppointment({ navigation, route }) {
   const [days, setDays] = useState([
@@ -50,6 +51,8 @@ export default function doctorAppointment({ navigation, route }) {
   const [selecttime, setSelecttime] = useState();
   const [doctorinfo, setDoctorinfo] = useState();
   const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
   const user = useSelector((state) => state.local.user);
   // console.log(route.params);
 
@@ -64,6 +67,10 @@ export default function doctorAppointment({ navigation, route }) {
       // return a;
       setQueueallday(a.busy);
       setDoctorinfo(a);
+      if (loading) {
+        setLoading(false);
+      }
+
       // console.log("AAAAAA");
     });
   }, []);
@@ -177,6 +184,10 @@ export default function doctorAppointment({ navigation, route }) {
         </Text>
       </TouchableOpacity>
     );
+  }
+
+  if (loading) {
+    return <Loading />;
   }
 
   return (
