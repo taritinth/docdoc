@@ -18,6 +18,8 @@ const SignUp3 = ({ route, navigation }) => {
   const [age, setAge] = useState("");
   const [job, setJob] = useState("");
   const [disease, setDisease] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
 
   const onChange = (
     password2,
@@ -34,7 +36,8 @@ const SignUp3 = ({ route, navigation }) => {
     setPhone(route.params.phone);
     setImage(route.params.image);
     setAge(route.params.age);
-    setJob(route.params.job);
+    setWeight(route.params.weight);
+    setHeight(route.params.height)
     setDisease(route.params.disease);
     console.log(route.params);
   }, []);
@@ -75,7 +78,8 @@ const SignUp3 = ({ route, navigation }) => {
           fullname: name,
           image: imageUrl,
           dateOfBirth: age,
-          job: job,
+          weight: weight,
+          height:height,
           disease: disease,
           nameAsArray: array,
           type: "user",

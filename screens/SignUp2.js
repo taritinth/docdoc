@@ -12,17 +12,17 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useValidation } from "react-native-form-validator";
-import DatePicker from 'react-native-datepicker';
+import DatePicker from "react-native-datepicker";
 
 const SignUp2 = ({ route, navigation }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [image, setImage] = useState(null);
   // const [age, setAge] = useState("");
-  const [job, setJob] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
   const [disease, setDisease] = useState("");
   const [date, setDate] = useState(new Date());
-
 
   useEffect(() => {
     setName(route.params.fullname);
@@ -36,52 +36,73 @@ const SignUp2 = ({ route, navigation }) => {
       fullname: name,
       phone: phone,
       image: image,
-      age: date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric'}),
-      job: job,
+      age: date.toLocaleString([], {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      }),
+      weight: weight,
+      height: height,
       disease: disease,
     });
   }
-  
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
-      <Text style={styles.fullname}>AGE</Text>
+      <Text style={styles.fullname}>Date Of Birth</Text>
 
       <DatePicker
-          style={styles.datePickerStyle}
-          date={date} // Initial date from state
-          format="YYYY-MM-DD"
-          placeholder="select date"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          customStyles={{
-            dateIcon: {
-              position: 'absolute',
-              left: 0,
-              top: 4,
-              marginLeft: 0
-            },
-            dateInput: {
-              marginLeft: 36
-            }
+        style={styles.datePickerStyle}
+        date={date} // Initial date from state
+        format="YYYY-MM-DD"
+        placeholder="select date"
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        showIcon={false}
+        customStyles={{
+          dateIcon: {
+            position: "absolute",
+            left: 0,
+            top: 4,
+            marginLeft: 0,
+          },
+          dateInput: {
+            flex: 1,
+            backgroundColor: "#F6F6F6",
+            alignItems:"flex-start",
+            height: 50,
+            paddingVertical: 5,
+            paddingHorizontal:30,
+            borderWidth:0,
+            borderRadius: 30,
+          },
+        }}
+        onDateChange={(date) => {
+          setDate(date);
+          console.log(date);
+        }}
+      />
 
-          }}
-          onDateChange={(date) => {
-            setDate(date);
-            console.log(date);
-          }}
-        />
-
-
-      <Text style={styles.phone}>Job</Text>
+      <Text style={styles.phone}>Weight</Text>
       <TextInput
         style={styles.input}
-        placeholder="Job"
+        placeholder="Weight"
         onChangeText={(text) => {
-          setJob(text);
+          setWeight(text);
         }}
       ></TextInput>
+
+      <Text style={styles.phone}>Height</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Height"
+        onChangeText={(text) => {
+          setHeight(text);
+        }}
+      ></TextInput>
+
+
       <Text style={styles.phone}>Disease</Text>
       <TextInput
         style={styles.input}
@@ -157,11 +178,10 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     overflow: "hidden",
-    borderWidth: 2,
     alignSelf: "center",
   },
   datePickerStyle: {
-    width: 200,
+    width: "100%",
     marginTop: 20,
   },
 
