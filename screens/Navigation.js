@@ -120,7 +120,7 @@ const Navigation = ({ navigation }) => {
 const NavigationTabbar = ({ navigation }) => {
   return (
     <BottomTab.Navigator
-      initialRouteName="Home"
+      initialRouteName={user.type == "user" ? "Home" : "Messages"}
       screenOptions={({ route }) => ({
         tabBarStyle: { backgroundColor: "#ffffff" },
         tabBarLabelStyle: { fontSize: 13, marginTop: -5, marginBottom: 5 },
@@ -147,7 +147,7 @@ const NavigationTabbar = ({ navigation }) => {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <BottomTab.Screen name="Home" component={Home} />
+      {user.type == "user" && <BottomTab.Screen name="Home" component={Home} />}
       <BottomTab.Screen name="Messages" component={Message} />
       <BottomTab.Screen
         name="Appointment"
