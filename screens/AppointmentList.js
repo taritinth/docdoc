@@ -92,6 +92,13 @@ export default function TabViewExample({ navigation }) {
         allAppointment.sort((item2, item1) => {
           return item1.date < item2.date;
         });
+        allAppointment.sort((item2, item1) => {
+          // console.log(months.findIndex((element) => element == item1.month));
+          return (
+            months.findIndex((element) => element == item1.month) <=
+            months.findIndex((element) => element == item2.month)
+          );
+        });
         // console.log(allAppointment);
         setListAppointment(
           allAppointment.filter(
