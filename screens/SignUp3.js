@@ -9,7 +9,7 @@ import {
 import { auth, app, storage } from "../database/firebaseDB";
 import RNPasswordStrengthMeter from "react-native-password-strength-meter";
 
-const Signup3 = ({ route, navigation }) => {
+const SignUp3 = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -191,4 +191,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-export default Signup3;
+export default SignUp3;
