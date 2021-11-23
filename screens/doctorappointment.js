@@ -194,7 +194,6 @@ export default function doctorAppointment({ navigation, route }) {
             ]}
             activeOpacity={0.8}
           >
-            {console.log(usemonths)}
             <SelectDropdown
               data={usemonths}
               defaultValue={usemonths[0]}
@@ -236,9 +235,9 @@ export default function doctorAppointment({ navigation, route }) {
             <View style={styles.selectmonth}></View>
           </View>
         )}
-
+        {console.log(queueallday)}
         <ToggleSwitch
-          isOn={queueallday}
+          isOn={!queueallday}
           onColor="#32B5FF"
           offColor="gray"
           label="เปิด-ปิด"
@@ -253,7 +252,7 @@ export default function doctorAppointment({ navigation, route }) {
           }}
         />
       </View>
-      {!queueallday && (
+      {queueallday && (
         <View style={styles.busy}>
           <FontAwesome
             style={({ zIndex: 3 }, { top: -50 })}
