@@ -267,7 +267,6 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     overflow: "hidden",
-    borderWidth: 2,
     alignSelf: "center",
   },
   profile: {
