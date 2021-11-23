@@ -52,13 +52,12 @@ const SignUp3 = ({ route, navigation }) => {
     await reference.put(blob);
 
     let imageUrl = "";
-      await storage
-        .ref(imagepath)
-        .getDownloadURL()
-        .then((url) => {
-          imageUrl = url;
-        });
-
+    await storage
+      .ref(imagepath)
+      .getDownloadURL()
+      .then((url) => {
+        imageUrl = url;
+      });
 
     auth
       .createUserWithEmailAndPassword(email, password)
