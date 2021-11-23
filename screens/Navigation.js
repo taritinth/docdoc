@@ -17,7 +17,7 @@ import Editprofile from "./Editprofile";
 import SignIn from "./Signin";
 import SignUp1 from "./Signup1";
 import SignUp2 from "./SignUp2";
-import Signup3 from "./SignUp3";
+import SignUp3 from "./SignUp3";
 import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
