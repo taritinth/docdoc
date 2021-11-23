@@ -62,6 +62,7 @@ export default function doctorAppointment({ navigation, route }) {
     docInfojCollection.get().then((res) => {
       const a = res.data();
       // return a;
+      setQueueallday(a.busy);
       setDoctorinfo(a);
       // console.log("AAAAAA");
     });
@@ -87,7 +88,7 @@ export default function doctorAppointment({ navigation, route }) {
   ]);
 
   const [usemonths, setUsemonths] = useState(months.splice(month, 12 - month));
-  const [queueallday, setQueueallday] = useState(docInfojCollection.busy);
+  const [queueallday, setQueueallday] = useState();
   function addQueueDoctor(queue) {
     // alert(queue);
     let list = [queue];
