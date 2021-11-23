@@ -8,9 +8,10 @@ import {
   Platform,
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { app, auth } from "../database/firebaseDB";
 import { useSelector, useDispatch } from "react-redux";
+import ToggleSwitch from "toggle-switch-react-native";
 
 export default function doctorAppointment({ navigation, route }) {
   const [days, setDays] = useState([
@@ -86,7 +87,7 @@ export default function doctorAppointment({ navigation, route }) {
   ]);
 
   const [usemonths, setUsemonths] = useState(months.splice(month, 12 - month));
-
+  const [queueallday, setQueueallday] = useState(docInfojCollection.busy);
   function addQueueDoctor(queue) {
     // alert(queue);
     let list = [queue];
@@ -179,40 +180,90 @@ export default function doctorAppointment({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.button, , { marginLeft: 20 }]}
-        activeOpacity={0.8}
+      <View
+        style={({ justifyContent: "space-between" }, { flexDirection: "row" })}
       >
-        <SelectDropdown
-          data={usemonths}
-          defaultValue={usemonths[0]}
-          onSelect={(selectedItem, index) => {
-            setMonth(index);
-            // console.log(month);
-            setCount(count + 1);
-            if (index == 0) {
-              setSelectdate(datenow + 1);
-            } else {
-              setSelectdate(1);
-            }
+        {queueallday ? (
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { marginLeft: 20 },
+              { marginRight: 100 },
+              { width: "30%" },
+            ]}
+            activeOpacity={0.8}
+          >
+            <SelectDropdown
+              data={usemonths}
+              defaultValue={usemonths[0]}
+              onSelect={(selectedItem, index) => {
+                setMonth(index);
+                // console.log(month);
+                setCount(count + 1);
+                if (index == 0) {
+                  setSelectdate(datenow + 1);
+                } else {
+                  setSelectdate(1);
+                }
 
-            // setSelectdate();
-            // console.log(selectedItem, index);
+                // setSelectdate();
+                // console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+              renderDropdownIcon={() => {
+                return <Entypo name="chevron-down" size={24} color="black" />;
+              }}
+              buttonStyle={styles.selectmonth}
+              buttonTextStyle={styles.textselectmonth}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={[
+              styles.button,
+              { marginLeft: 20 },
+              { marginRight: 100 },
+              { width: "30%" },
+            ]}
+          >
+            <View style={styles.selectmonth}></View>
+          </View>
+        )}
+
+        <ToggleSwitch
+          isOn={queueallday}
+          onColor="#32B5FF"
+          offColor="gray"
+          label="เปิด-ปิด"
+          labelStyle={{ color: "black", fontWeight: "100" }}
+          size="large"
+          animationSpeed="200"
+          onToggle={(isOn) => {
+            setQueueallday(!queueallday);
+            docInfojCollection.update({ busy: !isOn });
+            // console.log("date to : ", setSelectdate);
+            // console.log("changed to : ", isOn);
           }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            return item;
-          }}
-          renderDropdownIcon={() => {
-            return <Entypo name="chevron-down" size={24} color="black" />;
-          }}
-          buttonStyle={styles.selectmonth}
-          buttonTextStyle={styles.textselectmonth}
         />
-      </TouchableOpacity>
-
+      </View>
+      {!queueallday && (
+        <View style={styles.busy}>
+          <FontAwesome
+            style={({ zIndex: 3 }, { top: -50 })}
+            name="calendar-times-o"
+            size={100}
+            color="gray"
+          />
+          <Text style={({ zIndex: 3 }, { top: -20 }, { color: "gray" })}>
+            คุณปิดรับการจอง
+          </Text>
+        </View>
+      )}
       <View style={styles.rect}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {dateBubble}
@@ -364,7 +415,7 @@ const styles = StyleSheet.create({
   selectmonth: {
     // F8F8F8
     backgroundColor: "#F8F8F8",
-    width: "25%",
+    width: "80%",
     height: 50,
   },
   textselectmonth: {
@@ -393,5 +444,15 @@ const styles = StyleSheet.create({
   buttonText2: {
     color: "white",
     fontSize: 18,
+  },
+  busy: {
+    // position: "absolute",
+    backgroundColor: "#F8F8F9",
+    opacity: 0.9,
+    width: "100%",
+    height: "100%",
+    zIndex: 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

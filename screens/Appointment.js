@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { app, auth } from "../database/firebaseDB";
 
 export default function Appointment({ navigation, route }) {
@@ -210,6 +210,20 @@ export default function Appointment({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      {!!doctorinfo && doctorinfo.busy && (
+        <View style={styles.busy}>
+          <FontAwesome
+            style={({ zIndex: 3 }, { top: -50 })}
+            name="calendar-times-o"
+            size={100}
+            color="gray"
+          />
+          <Text style={({ zIndex: 3 }, { top: -20 }, { color: "gray" })}>
+            {doctorinfo.title} {doctorinfo.fullname} ปิดรับการจอง
+          </Text>
+        </View>
+      )}
+      {/* {console.log(doctorinfo.busy)} */}
       <TouchableOpacity
         style={[styles.button, , { marginLeft: 20 }]}
         activeOpacity={0.8}
@@ -428,5 +442,15 @@ const styles = StyleSheet.create({
   buttonText2: {
     color: "white",
     fontSize: 18,
+  },
+  busy: {
+    // position: "absolute",
+    backgroundColor: "#F8F8F9",
+    opacity: 0.9,
+    width: "100%",
+    height: "100%",
+    zIndex: 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
