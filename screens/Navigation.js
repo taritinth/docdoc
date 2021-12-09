@@ -23,6 +23,7 @@ import Appointment from "./Appointment";
 import AppointmentList from "./AppointmentList";
 import Forgetpassword from "./forgetpassword";
 import doctorAppointment from "./doctorappointment";
+import changeappointment from "./changeappointment";
 import Chat from "./Chat";
 import { useSelector, useDispatch } from "react-redux";
 import { auth } from "../database/firebaseDB";
@@ -111,6 +112,11 @@ const Navigation = ({ navigation }) => {
           name="doctorAppointment"
           component={doctorAppointment}
           options={{ title: "Edit Appointment", headerShown: true }}
+        />
+        <docdocNavigator.Screen
+          name="changeappointment"
+          component={changeappointment}
+          options={{ title: "Change Appointment", headerShown: true }}
         />
       </docdocNavigator.Navigator>
     </NavigationContainer>

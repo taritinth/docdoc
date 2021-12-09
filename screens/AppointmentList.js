@@ -12,6 +12,7 @@ import React, { Component, useState, useEffect } from "react";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { app, auth } from "../database/firebaseDB";
 import Loading from "../components/Loading";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function TabViewExample({ navigation }) {
   const layout = useWindowDimensions();
@@ -197,14 +198,14 @@ export default function TabViewExample({ navigation }) {
     // navigation.navigate("Appointment");
   }
 
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Signin");
-      })
-      .catch((error) => alert(error.message));
-  };
+  // const handleSignOut = () => {
+  //   auth
+  //     .signOut()
+  //     .then(() => {
+  //       navigation.replace("Signin");
+  //     })
+  //     .catch((error) => alert(error.message));
+  // };
 
   function getUserInfo(uid) {
     let listbuffer = listuser;
@@ -228,6 +229,20 @@ export default function TabViewExample({ navigation }) {
 
           return (
             <View style={styles.appointment} key={index}>
+              <FontAwesome5
+                style={styles.edit}
+                name="edit"
+                size={24}
+                color="black"
+                onPress={() => {
+                  navigation.navigate("changeappointment", {
+                    appointmented: element.appointmented,
+                    appointmenter: auth.currentUser.uid,
+                    appointmentinfo: element,
+                    appointmentid: element.id,
+                  });
+                }}
+              />
               <View style={styles.appointmentdetail}>
                 <Text style={styles.textHeader}>Date</Text>
                 <Text style={styles.textData}>
@@ -482,4 +497,9 @@ const styles = StyleSheet.create({
   },
   textData: { fontWeight: "bold", color: "#525252" },
   textHeader: { color: "#6F6F6F" },
+  edit: {
+    position: "absolute",
+    right: 0,
+    color: "#525252",
+  },
 });
