@@ -53,6 +53,8 @@ export default function changeappointment({ navigation, route }) {
   const [doctorinfo, setDoctorinfo] = useState();
   const [count, setCount] = useState(0);
   const [userinfo, setUserinfo] = useState([]);
+  const [deletedlist, setDeletedlist] = useState([]);
+  const [isconfirm, setIsconfirm] = useState(true);
 
   const { appointmented, appointmenter, appointmentinfo, appointmentid } =
     route.params;
@@ -84,9 +86,9 @@ export default function changeappointment({ navigation, route }) {
       if (loading) {
         setLoading(false);
       }
-      // console.log("AAAAAA");
+      console.log("AAAAAA");
     });
-  }, []);
+  }, [selecttime, selectdate, month, isconfirm]);
 
   // const [appointmented, setAppointmented] = useState("fdsUMdSk22QtffilTDnS");
   // const [appointmenter, setAppointmenter] = useState("qknN4caIqdpf1izJVwHO");
@@ -125,15 +127,21 @@ export default function changeappointment({ navigation, route }) {
     });
   }
 
-  function addQueueDoctor(queue) {
-    // alert(queue);
+  function addQueueDoctor(queue, deleted2) {
+    // const list2 = docInfojCollection.get().then((res) => {
+    //   return res.data();
+    // });
+
+    // console.log(doctorinfo.appointmentlist);
+
     let list = [queue];
-    doctorinfo.appointmentlist.forEach((item) => list.push(item));
-    // console.log(list);
+    // ติดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดดด
+    deleted2.forEach((item) => list.push(item));
+    // console.log(list, deletedlist);
     docInfojCollection.update({ appointmentlist: list });
   }
 
-  function delappointment() {
+  function delappointment(month1) {
     const delSubjDoc = app
       .firestore()
       .collection("appointment")
@@ -151,9 +159,14 @@ export default function changeappointment({ navigation, route }) {
           appointmentinfo.year
       );
     });
-    console.log(deleted2, "del2");
+    // console.log(deleted2, "del2");
     // console.log(delAppoint, "appointmentlist");
-    delAppoint.update({ appointmentlist: deleted2 });
+    addQueueDoctor(
+      selecttime + selectdate + usemonths[month1] + year,
+      deleted2
+    );
+    // delAppoint.update({ appointmentlist: deleted2 });
+    // () => setDeletedlist(deleted2);
     alert("Change Appointment Complete");
   }
 
@@ -334,18 +347,18 @@ export default function changeappointment({ navigation, route }) {
           style={styles.confirmButton}
           activeOpacity={0.8}
           onPress={() => {
+            setIsconfirm(!isconfirm);
             if (!!selecttime) {
-              storeSubject(0);
               if (count == 0) {
-                addQueueDoctor(selecttime + selectdate + usemonths[0] + year);
-
-                delappointment();
+                storeSubject(0);
+                delappointment(0);
+                // addQueueDoctor(selecttime + selectdate + usemonths[0] + year);
               } else {
                 storeSubject(month);
-                addQueueDoctor(
-                  selecttime + selectdate + usemonths[month] + year
-                );
-                delappointment();
+                delappointment(month);
+                // addQueueDoctor(
+                //   selecttime + selectdate + usemonths[month] + year
+                // );
               }
 
               navigation.navigate("Appointment");
