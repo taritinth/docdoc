@@ -198,7 +198,7 @@ export default function TabViewExample({ navigation }) {
     if (isdoc) {
       sendmessage(item);
     }
-    sendmessage(item);
+    // sendmessage(item);
     // console.log(item);
     // console.log(list);
     // navigation.navigate("Appointment");
