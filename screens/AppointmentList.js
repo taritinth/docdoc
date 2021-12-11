@@ -194,6 +194,10 @@ export default function TabViewExample({ navigation }) {
       delSubjDoc.delete();
       alert("The booking has been cancelled.");
     }
+
+    if (isdoc) {
+      sendmessage(item);
+    }
     sendmessage(item);
     // console.log(item);
     // console.log(list);
