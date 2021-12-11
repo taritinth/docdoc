@@ -194,9 +194,60 @@ export default function TabViewExample({ navigation }) {
       delSubjDoc.delete();
       alert("The booking has been cancelled.");
     }
+    sendmessage(item);
+    // console.log(item);
     // console.log(list);
     // navigation.navigate("Appointment");
+    // ----------------------------------
   }
+
+  function sendmessage(item) {
+    const timestamp = new Date().getTime();
+    let chatId = generateDocId(item.appointmenter, item.appointmented);
+    app
+      .firestore()
+      .collection("chats")
+      .doc(chatId)
+      .collection("messages")
+      .add({
+        type: "text",
+        sentBy: auth.currentUser.uid,
+        messageText:
+          "หมอ" +
+          "ได้ยกเลิกนัดของท่าน" +
+          "ในวันที่ " +
+          item.date +
+          " " +
+          item.month +
+          " " +
+          item.year +
+          " เวลา " +
+          item.time,
+        timestamp: timestamp,
+      })
+      .then((docRef) => {
+        app
+          .firestore()
+          .collection("chats")
+          .doc(chatId)
+          .update({
+            lastMessageId: docRef.id,
+            lastMessageType: "text",
+            lastSentBy: auth.currentUser.uid,
+            lastMessageText:
+              "หมอ" + "ได้ยกเลิกนัดของท่าน" + "ในวันที่ " + item.date,
+            lastTimestamp: timestamp,
+          });
+      });
+  }
+
+  const generateDocId = (uid1, uid2) => {
+    if (uid1 < uid2) {
+      return uid1 + uid2;
+    } else {
+      return uid2 + uid1;
+    }
+  };
 
   // const handleSignOut = () => {
   //   auth
@@ -229,20 +280,23 @@ export default function TabViewExample({ navigation }) {
 
           return (
             <View style={styles.appointment} key={index}>
-              <FontAwesome5
-                style={styles.edit}
-                name="edit"
-                size={24}
-                color="black"
-                onPress={() => {
-                  navigation.navigate("changeappointment", {
-                    appointmented: element.appointmented,
-                    appointmenter: auth.currentUser.uid,
-                    appointmentinfo: element,
-                    appointmentid: element.id,
-                  });
-                }}
-              />
+              {!isdoc && (
+                <FontAwesome5
+                  style={styles.edit}
+                  name="edit"
+                  size={24}
+                  color="black"
+                  onPress={() => {
+                    navigation.navigate("changeappointment", {
+                      appointmented: element.appointmented,
+                      appointmenter: auth.currentUser.uid,
+                      appointmentinfo: element,
+                      appointmentid: element.id,
+                    });
+                  }}
+                />
+              )}
+
               <View style={styles.appointmentdetail}>
                 <Text style={styles.textHeader}>Date</Text>
                 <Text style={styles.textData}>
@@ -270,10 +324,15 @@ export default function TabViewExample({ navigation }) {
                     <Text style={styles.textData}>{doc.workplace}</Text>
                   </View>
 
-                  <View style={styles.appointmentdetail}>
-                    <Text style={styles.textHeader}>Status</Text>
-                    <Text style={{ color: "blue" }}>รอการตรวจ</Text>
-                  </View>
+                  <TouchableOpacity
+                    style={[styles.appointmentdetail]}
+                    onPress={() => {
+                      // console.log(element);
+                      deleteSubject(element);
+                    }}
+                  >
+                    <Text style={styles.cancel}>Cancel</Text>
+                  </TouchableOpacity>
                 </>
               ) : (
                 <>
