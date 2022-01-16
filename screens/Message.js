@@ -130,7 +130,7 @@ export default function Message({ navigation }) {
                   {item.partnerInfo.type == "doctor" && item.partnerInfo.title}{" "}
                   {item.partnerInfo.fullname}
                 </Text>
-                <Text style={styles.lastMsg} numberOfLines={1}>
+                <Text style={styles.lastMsg} numberOfLines={2}>
                   {item.lastMessageText}
                 </Text>
               </View>

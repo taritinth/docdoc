@@ -127,7 +127,7 @@ export default function Appointment({ navigation, route }) {
   function addQueueDoctor(queue) {
     // alert(queue);
     let list = [queue];
-    doctorinfo.appointmentlist.forEach((item) => list.push(item));
+    doctorinfo.appointmentlist?.forEach((item) => list.push(item));
     console.log(list);
     docInfojCollection.update({ appointmentlist: list });
   }
@@ -135,7 +135,7 @@ export default function Appointment({ navigation, route }) {
   // 01.00 p.m.19Sep2021
   function checktime(time, index) {
     let issametime = false;
-    doctorinfo.appointmentlist.forEach((item) => {
+    doctorinfo.appointmentlist?.forEach((item) => {
       // console.log(time + selectdate + months[month] + year + "----" + item);
       if (item == time + selectdate + usemonths[month] + year && count != 0) {
         issametime = true;
