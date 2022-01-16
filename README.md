@@ -4,18 +4,9 @@
 - โครงงานนี้เป็นส่วนหนึ่งของวิชา Mobile Device Programming คณะเทคโนโลยีสารสนเทศ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
 
 ## Setup
-1. To run this project, please make sure you have installed expo-cli , `if not yet` install it first.
-```
-$ yarn add global expo-cli
-```
-
-2. Install project dependencies.
-```
-$ cd docdoc
-$ yarn
-```
-
-3. You need to config your web app's firebase configuration in `database/firebaseDB.js`.
+### 1. Firestore
+1. Create `firestore` database (**not firebase realtime database**)
+2. Get firebase configuration from `Firebase Console` > `Yout Project` > `Project settings`, that config will look like this :
 ```
 const firebaseConfig = {
   apiKey: "XXXXXX",
@@ -27,10 +18,21 @@ const firebaseConfig = {
   measurementId: "XXXXXX",
 };
 ```
+3. Replace your web app's firebase configuration in `database/firebaseDB.js`.
 
-***You can copy it from Firebase Console > Project settings*** 
+### 2. Application
+1. To run this project, please make sure you have installed expo-cli , `if not yet` install it first.
+```
+$ yarn add global expo-cli
+```
 
-4. run project
+2. Install project dependencies.
+```
+$ cd docdoc
+$ yarn
+```
+
+3. Run your application.
 ```
 $ expo start
 ```
