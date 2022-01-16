@@ -4,13 +4,13 @@
 - โครงงานนี้เป็นส่วนหนึ่งของวิชา Mobile Device Programming คณะเทคโนโลยีสารสนเทศ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
 
 ## Setup
-To run this project, please make sure you have expo-cli , `if not yet install it first`
+To run this project, please make sure you have installed expo-cli , `if not yet` install it first.
 
 ```
 $ yarn add global expo-cli
 ```
 
-install project dependencies
+install project dependencies.
 
 ```
 $ cd docdoc
